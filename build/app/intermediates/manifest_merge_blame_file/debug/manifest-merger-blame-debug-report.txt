@@ -1,0 +1,106 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.abw4v.random_app_flutter.random_app"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+9        android:targetSdkVersion="31" />
+10    <!--
+11         The INTERNET permission is required for development. Specifically,
+12         the Flutter tool needs it to communicate with the running application
+13         to allow setting breakpoints, to provide hot reload, etc.
+14    -->
+15    <uses-permission android:name="android.permission.INTERNET" />
+15-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/debug/AndroidManifest.xml:7:5-66
+15-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/debug/AndroidManifest.xml:7:22-64
+16    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+16-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:4:5-80
+16-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:4:22-77
+17    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+17-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:5:5-81
+17-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:5:22-78
+18    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+18-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:6:5-80
+18-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:6:22-77
+19    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+19-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:7:5-80
+19-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:7:22-77
+20    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+20-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:8:5-82
+20-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:8:22-79
+21    <uses-permission android:name="android.permission.ACTION_MANAGE_WRITE_SETTINGS" />
+21-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:9:5-87
+21-->/Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:9:22-84
+22
+23    <queries>
+23-->[:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:11:5-17:15
+24        <intent>
+24-->[:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:12:9-16:18
+25            <action android:name="android.intent.action.GET_CONTENT" />
+25-->[:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-72
+25-->[:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:13:21-69
+26
+27            <data android:mimeType="*/*" />
+27-->[:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-44
+27-->[:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/debug/AndroidManifest.xml:15:19-41
+28        </intent>
+29    </queries>
+30
+31    <application
+32        android:name="android.app.Application"
+33        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+33-->[androidx.core:core:1.6.0] /Users/adamwilson/.gradle/caches/transforms-3/acbce933e4b464a5224ed377a62db1f5/transformed/core-1.6.0/AndroidManifest.xml:24:18-86
+34        android:debuggable="true"
+35        android:icon="@mipmap/launcher_icon"
+36        android:label="Random App" >
+37        <activity
+38            android:name="com.abw4v.random_app_flutter.random_app.MainActivity"
+39            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+40            android:exported="true"
+41            android:hardwareAccelerated="true"
+42            android:launchMode="singleTop"
+43            android:requestLegacyExternalStorage="true"
+44            android:theme="@style/LaunchTheme"
+45            android:windowSoftInputMode="adjustResize" >
+46
+47            <!--
+48                 Specifies an Android theme to apply to this Activity as soon as
+49                 the Android process has started. This theme is visible to the user
+50                 while the Flutter UI initializes. After that, this theme continues
+51                 to determine the Window background behind the Flutter UI.
+52            -->
+53            <meta-data
+54                android:name="io.flutter.embedding.android.NormalTheme"
+55                android:resource="@style/NormalTheme" />
+56
+57            <intent-filter>
+58                <action android:name="android.intent.action.MAIN" />
+59
+60                <category android:name="android.intent.category.LAUNCHER" />
+61            </intent-filter>
+62        </activity>
+63        <!--
+64             Don't delete the meta-data below.
+65             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+66        -->
+67        <meta-data
+68            android:name="flutterEmbedding"
+69            android:value="2" />
+70
+71        <uses-library
+71-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
+72            android:name="androidx.window.extensions"
+72-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
+73            android:required="false" />
+73-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
+74        <uses-library
+74-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
+75            android:name="androidx.window.sidecar"
+75-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
+76            android:required="false" />
+76-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
+77    </application>
+78
+79</manifest>
