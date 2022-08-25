@@ -7,6 +7,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+bool darkMode = true;
+
+Color dialogColor = const Color.fromARGB(255, 63, 63, 63);
+
 ThemeData lightTheme = ThemeData(
     primarySwatch: Colors.green,
     scaffoldBackgroundColor: Colors.white,
@@ -31,7 +35,7 @@ ThemeData lightTheme = ThemeData(
 );
 
 ThemeData darkTheme = ThemeData(
-    primarySwatch: Colors.deepOrange,
+    primarySwatch: Colors.deepPurple,
     scaffoldBackgroundColor: Colors.black87,
     dialogBackgroundColor: Colors.grey,
     canvasColor: Colors.black,
@@ -57,19 +61,25 @@ void main() {
   runApp(const MyApp());
 }
 
+final ValueNotifier<ThemeMode> _notifier = ValueNotifier(ThemeMode.dark);
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.light,
-      title: 'List Master',
-      home: const MyHomePage(title: 'List Master'),
-    );
+    return ValueListenableBuilder<ThemeMode>(
+        valueListenable: _notifier,
+        builder: (_, mode, __) {
+          return MaterialApp(
+            title: 'List Master',
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: mode,
+            home: const MyHomePage(title: 'List Master'),
+          );
+        });
   }
 }
 
@@ -83,23 +93,22 @@ class MyHomePage extends StatefulWidget {
 
 class DisplayItem {
   String trueData = '';
-  num index = -1;
   bool selected = false;
 
-  DisplayItem(this.trueData, this.index);
+  DisplayItem(this.trueData);
 
   String getDisplayData() {
     Directory d = Directory(trueData);
     String sep = Platform.isAndroid ? '/' : '\\';
     try {
       if (d.existsSync()) {
-        return trueData.split(sep).last;
+        return trueData.split(sep).last.replaceAll('_', ' ');
         //return d.path.split('\\').last;
       } else {
-        return trueData.split(sep).last;
+        return trueData.split(sep).last.replaceAll('_', ' ');
       }
     } catch(e) {
-      return trueData;
+      return trueData.replaceAll('_', ' ');
     }
   }
 }
@@ -130,7 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ].request();
     }
     loadDirectory();
-    loadFile(defaultFile);
+    await loadFile(defaultFile);
+    _notifier.value = darkMode ? ThemeMode.dark : ThemeMode.light;
     setState(() {});
   }
 
@@ -165,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.list),
+                        icon: Icon(Icons.list, color: darkMode ? Colors.white70 : Colors.black87,),
                         tooltip: 'Lists',
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute<void>(
@@ -176,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.settings),
+                        icon: Icon(Icons.settings, color: darkMode ? Colors.white70 : Colors.black87,),
                         tooltip: 'Settings',
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute<void>(
@@ -195,14 +205,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.shuffle),
+                        icon: Icon(Icons.shuffle, color: darkMode ? Colors.white70 : Colors.black87,),
                         tooltip: 'Shuffle',
                         onPressed: () {
                           shuffle();
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.sort_by_alpha),
+                        icon: Icon(Icons.sort_by_alpha, color: darkMode ? Colors.white70 : Colors.black87,),
                         tooltip: 'Sort',
                         onPressed: () {
                           sort();
@@ -227,12 +237,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         showDialog(context: context, builder: (BuildContext context) => getAdvancedDialog(displayList[index], index));
                       },
                       child: Card(
+                        color: !darkMode ? Colors.black12 : Colors.white10,
                         margin: const EdgeInsets.all(4.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                              flex: 9,
+                              flex: 8,
                               child: Container(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Center(
@@ -241,11 +252,11 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             Expanded(
-                              flex: 1,
+                              flex: 2,
                               child: Container(
                                 padding: const EdgeInsets.all(8.0),
                                 child: IconButton(
-                                  icon: const Icon(Icons.move_down),
+                                  icon: Icon(Icons.move_down, color: darkMode ? Colors.white70 : Colors.black87,),
                                   tooltip: 'Move to Bottom',
                                   onPressed: () {
                                     var d = displayList.removeAt(index);
@@ -264,7 +275,14 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             )
           ],
-        )
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showDialog(context: context, builder: (BuildContext context) => getAddDialog());
+          },
+          backgroundColor: Colors.deepPurple,
+          child: const Icon(Icons.add),
+        ),
     );
   }
 
@@ -300,6 +318,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _addController = TextEditingController();
 
   Widget getListScreen() {
     return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
@@ -311,21 +330,21 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Row(children: [
                 TextButton(
-                    child: Text('Import List'),
+                    child: Text('Import List', style: TextStyle(color: darkMode ? Colors.white70 : Colors.deepPurple,),),
                     onPressed: () {
                       openFile(context, state);
                       state((){});
                     }
                 ),
                 TextButton(
-                    child: Text('Export List'),
+                    child: Text('Export List', style: TextStyle(color: darkMode ? Colors.white70 : Colors.deepPurple,)),
                     onPressed: () {
                       //openFile(context);
                       state((){});
                     }
                 ),
                 TextButton(
-                    child: Text('Choose Default List'),
+                    child: Text('Choose Default List', style: TextStyle(color: darkMode ? Colors.white70 : Colors.deepPurple,)),
                     onPressed: () {
                       chooseDefaultDir(context);
                       state((){});
@@ -343,15 +362,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                         onTap: () async {
                           await load(listList[index].trueData);
-                          listList[index].selected = !listList[index].selected;
+                          setListSelected(index);
                           setState(() {});
                           state((){});
                         },
                         child: Card(
                             margin: const EdgeInsets.all(4.0),
-                            color: listList[index].selected ?
-                            const Color.fromARGB(63, 255, 234, 0) :
-                            const Color.fromARGB(210, 255, 255, 255),
+                            color: getSelectedCardColor(listList[index].selected),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -372,13 +389,108 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               )
             ],
-          )
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+            showDialog(context: context, builder: (BuildContext context) => getAddListDialog(state));
+          },
+      backgroundColor: Colors.deepPurple,
+      child: const Icon(Icons.add),
+      ),
       );
     });
   }
 
+  void setListSelected(int index) {
+    listList[index].selected = !listList[index].selected;
+    for (int i = 0; i < listList.length; i++) {
+      if (i != index) {
+        listList[i].selected = false;
+      }
+    }
+  }
+
+  Dialog getAddListDialog(StateSetter outerState) {
+    return Dialog(
+        backgroundColor: darkMode ? dialogColor : Colors.white,
+        elevation: 10,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        child: StatefulBuilder(builder: (BuildContext context, state) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                style: TextStyle(color: darkMode ? Colors.white : Colors.black),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: darkMode ? Colors.white60 : Colors.black54),
+                  ),
+                  hintStyle: TextStyle(color: darkMode ? Colors.white60 : Colors.black54),
+                  hintText: 'Name',
+                  filled: true,
+                  fillColor: !darkMode ? Colors.white : dialogColor,),
+                controller: _addController,
+              ),
+              TextButton(
+                  child: const Text('Add', style: TextStyle(color: Colors.blue),),
+                  onPressed: () {
+                    displayList.add(DisplayItem(_addController.text));
+                    createFile(_addController.text, context, outerState);
+                    _addController.text = '';
+                    Navigator.pop(context);
+                  }
+              ),
+            ],
+          );
+        }
+        )
+    );
+  }
+
+  Dialog getAddDialog() {
+    return Dialog(
+        backgroundColor: darkMode ? dialogColor : Colors.white,
+        elevation: 10,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        child: StatefulBuilder(builder: (BuildContext context, state) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                  style: TextStyle(color: darkMode ? Colors.white : Colors.black),
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: darkMode ? Colors.white60 : Colors.black54),
+                    ),
+                    hintStyle: TextStyle(color: darkMode ? Colors.white60 : Colors.black54),
+                    hintText: 'Name',
+                    filled: true,
+                    fillColor: !darkMode ? Colors.white : dialogColor,),
+                  controller: _addController,
+              ),
+              TextButton(
+                  child: const Text('Add', style: TextStyle(color: Colors.blue),),
+                  onPressed: () {
+                    displayList.add(DisplayItem(_addController.text));
+                    writeFile();
+                    _addController.text = '';
+                    setState((){});
+                    state((){});
+                    Navigator.pop(context);
+                  }
+              ),
+            ],
+          );
+        }
+        )
+    );
+  }
+
   Dialog getAdvancedDialog(DisplayItem displayItem, int index) {
     return Dialog(
+        backgroundColor: darkMode ? dialogColor : Colors.white,
         elevation: 10,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
         child: StatefulBuilder(builder: (BuildContext context, state) {
@@ -397,6 +509,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
               ),
               TextField(
+                  style: TextStyle(color: darkMode ? Colors.white : Colors.black),
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: darkMode ? Colors.white60 : Colors.black54),
+                    ),
+                    hintStyle: TextStyle(color: darkMode ? Colors.white60 : Colors.black54),
+                    hintText: 'Name',
+                    filled: true,
+                    fillColor: !darkMode ? Colors.white : dialogColor,),
                   controller: _controller..text = displayList[index].trueData,
                   onChanged: (text) {
                     displayList[index].trueData = text;
@@ -419,6 +540,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Dialog getAdvancedListDialog(DisplayItem displayItem, StateSetter outerState) {
     return Dialog(
+        backgroundColor: darkMode ? dialogColor : Colors.white,
         elevation: 10,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
         child: StatefulBuilder(builder: (BuildContext context, state) {
@@ -447,6 +569,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Color getSelectedCardColor(bool selected) {
+    var themeColor = !darkMode ? Colors.white70 : Colors.black87;
+    return selected ? const Color.fromARGB(63, 255, 234, 0) : themeColor;
+  }
+
   void clearDefaultFile() {
     defaultFile = '';
     prefs.setString('defaultFile', '');
@@ -470,18 +597,22 @@ class _MyHomePageState extends State<MyHomePage> {
     if (path.isEmpty) return;
 
     displayList.clear();
-    File file = File(path);
-    var s = file.openRead().map(utf8.decode);
-    var str = '';
-    await s.forEach((element) {
-      str += element;
-    });
-    var fileList = str.split('\n');
-    for(int i = 0; i < fileList.length; i++) {
-      var element = fileList[i];
-      if (element.trim().isEmpty) continue;
-      var displayItem = DisplayItem(element, i);
-      displayList.add(displayItem);
+    try {
+      File file = File(path);
+      var s = file.openRead().map(utf8.decode);
+      var str = '';
+      await s.forEach((element) {
+        str += element;
+      });
+      var fileList = str.split('\n');
+      for(int i = 0; i < fileList.length; i++) {
+        var element = fileList[i];
+        if (element.trim().isEmpty) continue;
+        var displayItem = DisplayItem(element);
+        displayList.add(displayItem);
+      }
+    } catch (err) {
+      print(err);
     }
     String temp = path;
     if (Platform.isAndroid) {
@@ -508,14 +639,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return file.writeAsString(tempStr);
   }
 
-  void loadDirectory({String directory = ''}) async {
+  void loadDirectory({String directory = ''}) {
     listList.clear();
     if (directory.isNotEmpty) {
       Directory d = Directory(directory);
       var fileList = d.listSync();
       for(int i = 0; i < fileList.length; i++) {
         var element = fileList[i];
-        var displayItem = DisplayItem(element.path, i);
+        var displayItem = DisplayItem(element.path);
         listList.add(displayItem);
       }
     } else if (defaultDir.isNotEmpty) {
@@ -523,7 +654,7 @@ class _MyHomePageState extends State<MyHomePage> {
       var fileList = d.listSync();
       for(int i = 0; i < fileList.length; i++) {
         var element = fileList[i];
-        var displayItem = DisplayItem(element.path, i);
+        var displayItem = DisplayItem(element.path);
         listList.add(displayItem);
       }
     }
@@ -533,7 +664,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void openFile(BuildContext context, StateSetter state) async {
     final documentsDir = await getApplicationDocumentsDirectory();
     FilePickerResult? result = await FilePicker.platform.pickFiles(initialDirectory: documentsDir.path);
-
     if (result != null) {
       String? path = result.files.single.path;
       await loadFile(path!);
@@ -543,6 +673,13 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       // User canceled the picker
     }
+  }
+
+  void createFile(String path, BuildContext context, StateSetter state) async {
+    await loadFile(androidDir+'/'+path.replaceAll(' ', '_'));
+    loadDirectory();
+    setState((){});
+    state((){});
   }
 
   void chooseDefaultDir(BuildContext context) async {
