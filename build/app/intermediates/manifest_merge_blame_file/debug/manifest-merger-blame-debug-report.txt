@@ -51,7 +51,7 @@
 31    <application
 32        android:name="android.app.Application"
 33        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-33-->[androidx.core:core:1.6.0] /Users/adamwilson/.gradle/caches/transforms-3/acbce933e4b464a5224ed377a62db1f5/transformed/core-1.6.0/AndroidManifest.xml:24:18-86
+33-->[androidx.core:core:1.7.0] /Users/adamwilson/.gradle/caches/transforms-3/5e083c06c9925c2309f02468fc66e376/transformed/core-1.7.0/AndroidManifest.xml:24:18-86
 34        android:debuggable="true"
 35        android:icon="@mipmap/launcher_icon"
 36        android:label="Random App" >
@@ -89,18 +89,45 @@
 68            android:name="flutterEmbedding"
 69            android:value="2" />
 70
-71        <uses-library
-71-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
-72            android:name="androidx.window.extensions"
-72-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
-73            android:required="false" />
-73-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
-74        <uses-library
-74-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
-75            android:name="androidx.window.sidecar"
-75-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
-76            android:required="false" />
-76-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
-77    </application>
-78
-79</manifest>
+71        <provider
+71-->[:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-18:20
+72            android:name="dev.fluttercommunity.plus.share.ShareFileProvider"
+72-->[:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-77
+73            android:authorities="com.abw4v.random_app_flutter.random_app.flutter.share_provider"
+73-->[:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-74
+74            android:exported="false"
+74-->[:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-37
+75            android:grantUriPermissions="true" >
+75-->[:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/debug/AndroidManifest.xml:14:13-47
+76            <meta-data
+76-->[:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/debug/AndroidManifest.xml:15:13-17:68
+77                android:name="android.support.FILE_PROVIDER_PATHS"
+77-->[:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/debug/AndroidManifest.xml:16:17-67
+78                android:resource="@xml/flutter_share_file_paths" />
+78-->[:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/debug/AndroidManifest.xml:17:17-65
+79        </provider>
+80
+81        <activity
+81-->[:url_launcher_android] /Users/adamwilson/Documents/GitHub/random_flutter/build/url_launcher_android/intermediates/merged_manifest/debug/AndroidManifest.xml:10:9-13:74
+82            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+82-->[:url_launcher_android] /Users/adamwilson/Documents/GitHub/random_flutter/build/url_launcher_android/intermediates/merged_manifest/debug/AndroidManifest.xml:11:13-74
+83            android:exported="false"
+83-->[:url_launcher_android] /Users/adamwilson/Documents/GitHub/random_flutter/build/url_launcher_android/intermediates/merged_manifest/debug/AndroidManifest.xml:12:13-37
+84            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+84-->[:url_launcher_android] /Users/adamwilson/Documents/GitHub/random_flutter/build/url_launcher_android/intermediates/merged_manifest/debug/AndroidManifest.xml:13:13-71
+85
+86        <uses-library
+86-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
+87            android:name="androidx.window.extensions"
+87-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
+88            android:required="false" />
+88-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
+89        <uses-library
+89-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
+90            android:name="androidx.window.sidecar"
+90-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
+91            android:required="false" />
+91-->[androidx.window:window:1.0.0-beta04] /Users/adamwilson/.gradle/caches/transforms-3/49bc944d29f70d45aa5add8e43e3247e/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
+92    </application>
+93
+94</manifest>

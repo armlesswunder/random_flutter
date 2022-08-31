@@ -1,4 +1,4 @@
-#Thu Aug 25 09:46:11 CDT 2022
+#Mon Aug 29 11:15:43 CDT 2022
 base.0=/Users/adamwilson/Documents/GitHub/random_flutter/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

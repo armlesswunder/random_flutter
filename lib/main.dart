@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -99,7 +100,7 @@ class DisplayItem {
 
   String getDisplayData() {
     Directory d = Directory(trueData);
-    String sep = Platform.isAndroid ? '/' : '\\';
+    String sep = trueData.contains('/') ? '/' : '\\';
     try {
       if (d.existsSync()) {
         return trueData.split(sep).last.replaceAll('_', ' ');
@@ -339,7 +340,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 TextButton(
                     child: Text('Export List', style: TextStyle(color: darkMode ? Colors.white70 : Colors.deepPurple,)),
                     onPressed: () {
-                      //openFile(context);
+                      exportFile();
                       state((){});
                     }
                 ),
@@ -399,6 +400,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       );
     });
+  }
+
+  Future<void> exportFile() async {
+    if (Platform.isAndroid) {
+      File file = File(defaultFile);
+      await Share.shareFiles([file.path], text: 'Export Data');
+    }
   }
 
   void setListSelected(int index) {
