@@ -1,12 +1,18 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:encrypt/encrypt.dart' as ec;
 import 'package:shared_preferences/shared_preferences.dart';
+
+final key = ec.Key.fromUtf8('hAWnzuoKakJqgyPbNTVjxzRsDIhUnzKU');
+final iv = ec.IV.fromLength(16);
+final encrypter = ec.Encrypter(ec.AES(key));
 
 bool darkMode = true;
 
@@ -82,6 +88,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
+String getDisplayTimestamp(DateTime now) {
+  return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} - ${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}";
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -148,7 +158,17 @@ class _MyHomePageState extends State<MyHomePage> {
     loadDirectory();
     await loadFile(defaultFile);
     _notifier.value = darkMode ? ThemeMode.dark : ThemeMode.light;
+    findSelectedList();
     setState(() {});
+  }
+
+  void findSelectedList() {
+    for (DisplayItem item in listList) {
+      if (item.trueData == defaultFile) {
+        item.selected = true;
+        break;
+      }
+    }
   }
 
   Future getSettings() async {
@@ -164,6 +184,55 @@ class _MyHomePageState extends State<MyHomePage> {
     defaultDir =
         Platform.isAndroid ? androidDir : prefs.getString('defaultDir') ?? '';
     defaultFile = prefs.getString('defaultFile') ?? '';
+    getAuditData();
+  }
+
+  List<String> auditData = [];
+
+  void getAuditData() {
+    var audit = prefs.getString('auditData') ?? '';
+    if (audit.isNotEmpty) {
+      auditData = audit.split(';');
+    }
+    auditData
+        .removeWhere((element) => element.isEmpty || !element.contains(':'));
+    var x = 0;
+  }
+
+  Future saveAuditData() async {
+    String auditStr = '';
+    for (String str in auditData) {
+      auditStr += '$str;';
+    }
+    await prefs.setString('auditData', auditStr);
+  }
+
+  Future addAuditData(String toAdd) async {
+    while (auditData.length >= 25) {
+      auditData.removeAt(0);
+    }
+    auditData.add('$toAdd:${getTimestamp()}');
+    await saveAuditData();
+  }
+
+  void removeLastAudit() {
+    int latestTime = 0;
+    int latestIndex = 0;
+    int i = 0;
+    for (String str in auditData) {
+      var arr = str.split(':');
+      var t = int.parse(arr[1]);
+      if (latestTime == 0 || t < latestTime) {
+        latestTime = t;
+        latestIndex = i;
+      }
+      i++;
+    }
+    auditData.removeAt(latestIndex);
+  }
+
+  int getTimestamp() {
+    return DateTime.now().millisecondsSinceEpoch;
   }
 
   @override
@@ -260,7 +329,14 @@ class _MyHomePageState extends State<MyHomePage> {
               key: UniqueKey(),
               child: RefreshIndicator(
                   onRefresh: () {
-                    shuffle();
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            getConfirmDialog('Shuffle', () {
+                              shuffle();
+                              Navigator.pop(context);
+                              setState(() {});
+                            }));
                     return Future(() => null);
                   },
                   child: ListView.builder(
@@ -304,9 +380,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 : Colors.black87,
                                           ),
                                           tooltip: 'Move to Bottom',
-                                          onPressed: () {
+                                          onPressed: () async {
                                             var d = displayList.removeAt(index);
                                             displayList.add(d);
+                                            await addAuditData(
+                                                d.getDisplayData());
                                             setState(() {});
                                             writeFile();
                                           },
@@ -351,20 +429,286 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  bool auditCurrent = true;
+  int mode = 2;
+  int modeSearch = 1;
+  int modeAudit = 2;
+  int modeEncrypt = 3;
+
+  List<DisplayItem> searchList = [];
+
   Widget getSettingsScreen() {
     return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
       return Scaffold(
           appBar: AppBar(
             title: const Text('Settings'),
           ),
-          body: Column(
-            children: [],
-          ));
+          body: getSettingsBody(context, state));
     });
+  }
+
+  Widget getSettingsBody(BuildContext context, StateSetter state) {
+    if (mode == modeAudit) {
+      return getAuditScreen(context, state);
+    }
+    if (mode == modeSearch) {
+      return getSearchScreen(context, state);
+    }
+    if (mode == modeEncrypt) {
+      return getEncryptScreen(context, state);
+    } else {
+      return getSettingsHeader(context, state);
+    }
+  }
+
+  Widget getSettingsHeader(BuildContext context, StateSetter state) {
+    return Row(children: [
+      IconButton(
+        icon: Icon(
+          Icons.search,
+          color: darkMode ? Colors.white70 : Colors.black87,
+        ),
+        tooltip: 'Search',
+        onPressed: () {
+          mode = modeSearch;
+          state(() {});
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.menu_book,
+          color: darkMode ? Colors.white70 : Colors.black87,
+        ),
+        tooltip: 'Audit',
+        onPressed: () {
+          mode = modeAudit;
+          state(() {});
+        },
+      ),
+    ]);
+  }
+
+  final TextEditingController _eC = TextEditingController();
+  final TextEditingController _dC = TextEditingController();
+
+  ec.Encrypted encrypt(String input) {
+    return encrypter.encrypt(input, iv: iv);
+  }
+
+  String decrypt(String input) {
+    return encrypter.decrypt16(input, iv: iv);
+  }
+
+  Widget getEncryptScreen(BuildContext context, StateSetter state) {
+    return Column(children: [
+      getSettingsHeader(context, state),
+      Row(children: [
+        Expanded(
+            child: TextField(
+          onChanged: (text) {
+            if (text.isNotEmpty) {
+              try {
+                _dC.text = decrypt(text);
+              } catch (e) {
+                _dC.text = '';
+              }
+            }
+          },
+          style: TextStyle(color: darkMode ? Colors.white : Colors.black),
+          decoration: InputDecoration(
+            enabledBorder: UnderlineInputBorder(
+              borderSide:
+                  BorderSide(color: darkMode ? Colors.white60 : Colors.black54),
+            ),
+            hintStyle:
+                TextStyle(color: darkMode ? Colors.white60 : Colors.black54),
+            hintText: 'Enc',
+            filled: true,
+            fillColor: !darkMode ? Colors.white : dialogColor,
+          ),
+          controller: _eC,
+        )),
+        IconButton(
+          icon: Icon(
+            Icons.copy,
+            color: darkMode ? Colors.white70 : Colors.black87,
+          ),
+          tooltip: 'Copy',
+          onPressed: () async {
+            await Clipboard.setData(ClipboardData(text: _eC.text));
+          },
+        ),
+      ]),
+      Row(children: [
+        Expanded(
+            child: TextField(
+          onChanged: (text) {
+            if (text.isNotEmpty) {
+              _eC.text = encrypt(text).base16;
+            }
+          },
+          style: TextStyle(color: darkMode ? Colors.white : Colors.black),
+          decoration: InputDecoration(
+            enabledBorder: UnderlineInputBorder(
+              borderSide:
+                  BorderSide(color: darkMode ? Colors.white60 : Colors.black54),
+            ),
+            hintStyle:
+                TextStyle(color: darkMode ? Colors.white60 : Colors.black54),
+            hintText: 'Dec',
+            filled: true,
+            fillColor: !darkMode ? Colors.white : dialogColor,
+          ),
+          controller: _dC,
+        )),
+        IconButton(
+          icon: Icon(
+            Icons.copy,
+            color: darkMode ? Colors.white70 : Colors.black87,
+          ),
+          tooltip: 'Copy',
+          onPressed: () async {
+            await Clipboard.setData(ClipboardData(text: _dC.text));
+          },
+        ),
+      ])
+    ]);
+  }
+
+  Widget getSearchScreen(BuildContext context, StateSetter state) {
+    return Column(children: [
+      getSettingsHeader(context, state),
+      TextField(
+        onChanged: (text) {
+          if (text == 'Hayhat12\$') {
+            mode = modeEncrypt;
+            state(() {});
+          } else {
+            searchList = displayList
+                .where((element) => element
+                    .getDisplayData()
+                    .toLowerCase()
+                    .contains(text.toLowerCase()))
+                .toList();
+
+            state(() {});
+          }
+        },
+        style: TextStyle(color: darkMode ? Colors.white : Colors.black),
+        decoration: InputDecoration(
+          enabledBorder: UnderlineInputBorder(
+            borderSide:
+                BorderSide(color: darkMode ? Colors.white60 : Colors.black54),
+          ),
+          hintStyle:
+              TextStyle(color: darkMode ? Colors.white60 : Colors.black54),
+          hintText: 'Search',
+          filled: true,
+          fillColor: !darkMode ? Colors.white : dialogColor,
+        ),
+        controller: _searchController,
+      ),
+      Expanded(
+          child: ListView.builder(
+              itemCount: searchList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                    color: !darkMode ? Colors.black12 : Colors.white10,
+                    margin: const EdgeInsets.all(4.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                                child:
+                                    Text(searchList[index].getDisplayData())),
+                          ),
+                        ),
+                      ],
+                    ));
+              })),
+    ]);
+  }
+
+  Widget getAuditScreen(BuildContext context, StateSetter state) {
+    List<Map<String, dynamic>> tempData = [];
+    List<String> tempArr = [];
+    for (var d in displayList) {
+      tempArr.add(d.getDisplayData());
+    }
+    //getAuditData();
+    for (String str in auditData) {
+      var s = str.split(':');
+      if (!auditCurrent || tempArr.contains(s.first)) {
+        tempData.add({'name': s.first, 'time': s.last});
+      }
+    }
+    tempData.sort((a, b) {
+      return b['time'].compareTo(a['time']);
+    });
+    return Column(children: [
+      getSettingsHeader(context, state),
+      Text('---Audit---'),
+      Row(children: [
+        const Text('Current List only? '),
+        Checkbox(
+            value: auditCurrent,
+            onChanged: (b) {
+              auditCurrent = b ?? true;
+              state(() {});
+            })
+      ]),
+      Expanded(
+          child: ListView.builder(
+              itemCount: tempData.length,
+              itemBuilder: (BuildContext context, int index) {
+                String s = 'Invalid';
+                String t = 'Invalid';
+                try {
+                  s = tempData[index]['name'];
+                  DateTime time = DateTime.fromMicrosecondsSinceEpoch(
+                      int.parse(tempData[index]['time']) * 1000);
+                  t = getDisplayTimestamp(time);
+                } catch (e) {}
+                //return Text(
+                //  s,
+                //  style: TextStyle(color: Colors.white),
+                //);
+                return Card(
+                    color: !darkMode ? Colors.black12 : Colors.white10,
+                    margin: const EdgeInsets.all(4.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            //child: Center(child: Text('${index + 1} $s')),
+                            child: Center(child: Text('$s')),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(t),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ));
+              })),
+    ]);
   }
 
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _addController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   Widget getListScreen() {
     return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
@@ -584,24 +928,55 @@ class _MyHomePageState extends State<MyHomePage> {
                     state(() {});
                     Navigator.pop(context);
                   }),
-              TextField(
-                  style:
-                      TextStyle(color: darkMode ? Colors.white : Colors.black),
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: darkMode ? Colors.white60 : Colors.black54),
-                    ),
-                    hintStyle: TextStyle(
-                        color: darkMode ? Colors.white60 : Colors.black54),
-                    hintText: 'Name',
-                    filled: true,
-                    fillColor: !darkMode ? Colors.white : dialogColor,
+              TextButton(
+                  child: const Text(
+                    'Move Up',
+                    style: TextStyle(color: Colors.green),
                   ),
-                  controller: _controller..text = displayList[index].trueData,
-                  onChanged: (text) {
-                    displayList[index].trueData = text;
+                  onPressed: () async {
+                    var d = displayList.removeAt(index);
+                    displayList.insert(0, d);
+                    await addAuditData(d.getDisplayData());
+                    setState(() {});
+                    state(() {});
+                    writeFile();
+                    Navigator.pop(context);
                   }),
+              Row(children: [
+                Expanded(
+                    child: TextField(
+                        style: TextStyle(
+                            color: darkMode ? Colors.white : Colors.black),
+                        decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color:
+                                    darkMode ? Colors.white60 : Colors.black54),
+                          ),
+                          hintStyle: TextStyle(
+                              color:
+                                  darkMode ? Colors.white60 : Colors.black54),
+                          hintText: 'Name',
+                          filled: true,
+                          fillColor: !darkMode ? Colors.white : dialogColor,
+                        ),
+                        controller: _controller
+                          ..text = displayList[index].trueData,
+                        onChanged: (text) {
+                          displayList[index].trueData = text;
+                        })),
+                IconButton(
+                  icon: Icon(
+                    Icons.copy,
+                    color: darkMode ? Colors.white70 : Colors.black87,
+                  ),
+                  tooltip: 'Copy',
+                  onPressed: () async {
+                    await Clipboard.setData(
+                        ClipboardData(text: _controller.text));
+                  },
+                )
+              ]),
               TextButton(
                   child: const Text(
                     'Done',
@@ -669,17 +1044,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(color: Colors.blue),
                   ),
                   onPressed: () {
-                    defaultFile = listList[index].trueData;
-                    prefs.setString("defaultFile", defaultFile);
-                    writeFile();
-                    loadFile(listList[index].trueData);
-                    setState(() {});
-                    state(() {});
+                    reloadFile(index);
                     Navigator.pop(context);
                   }),
             ],
           );
         }));
+  }
+
+  void reloadFile(int index) async {
+    defaultFile = listList[index].trueData;
+    await prefs.setString("defaultFile", defaultFile);
+    await writeFile();
+    await loadFile(listList[index].trueData);
+    setState(() {});
   }
 
   Dialog getConfirmDialog(String title, dynamic callback) {
@@ -712,7 +1090,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Color getSelectedCardColor(bool selected) {
-    var themeColor = !darkMode ? Colors.white70 : Colors.black87;
+    var themeColor = !darkMode ? Colors.black12 : Colors.white10;
     return selected ? const Color.fromARGB(63, 255, 234, 0) : themeColor;
   }
 
