@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:cross_file/cross_file.dart';
 
 import 'package:encrypt/encrypt.dart' as ec;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -147,14 +147,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void init() async {
     prefs = await SharedPreferences.getInstance();
     await getSettings();
-    var statusA = await Permission.storage.status;
-    var statusB = await Permission.manageExternalStorage.status;
-    if (!statusA.isGranted || !statusB.isGranted) {
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.manageExternalStorage,
-        Permission.storage,
-      ].request();
-    }
+    //var statusA = await Permission.storage.status;
+    //var statusB = await Permission.manageExternalStorage.status;
+    //if (!statusA.isGranted || !statusB.isGranted) {
+    //  Map<Permission, PermissionStatus> statuses = await [
+    //    Permission.manageExternalStorage,
+    //    Permission.storage,
+    //  ].request();
+    //}
     loadDirectory();
     await loadFile(defaultFile);
     _notifier.value = darkMode ? ThemeMode.dark : ThemeMode.light;
@@ -185,6 +185,14 @@ class _MyHomePageState extends State<MyHomePage> {
         Platform.isAndroid ? androidDir : prefs.getString('defaultDir') ?? '';
     defaultFile = prefs.getString('defaultFile') ?? '';
     getAuditData();
+  }
+
+  String useCheckboxesKey() {
+    return '${defaultFile}_useCheckboxes';
+  }
+
+  String checkedItemKey(String itemName) {
+    return '${defaultFile}_${itemName}_useCheckboxes';
   }
 
   List<String> auditData = [];
@@ -235,6 +243,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return DateTime.now().millisecondsSinceEpoch;
   }
 
+  void onSearchChanged(String text) {
+    setState(() {});
+  }
+
+  // 0 all, 1 unchecked, 2 checked
+  num cbViewMode = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -281,46 +296,100 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
+              useCheckboxes
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  cbViewMode = 0;
+                                  setState(() {});
+                                },
+                                child: const Text('View All')),
+                            TextButton(
+                                onPressed: () {
+                                  cbViewMode = 1;
+                                  setState(() {});
+                                },
+                                child: const Text('View Unchecked')),
+                            TextButton(
+                                onPressed: () {
+                                  cbViewMode = 2;
+                                  setState(() {});
+                                },
+                                child: const Text('View Checked'))
+                          ]))
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.shuffle,
+                              color: darkMode ? Colors.white70 : Colors.black87,
+                            ),
+                            tooltip: 'Shuffle',
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      getConfirmDialog('Shuffle', () {
+                                        shuffle();
+                                        Navigator.pop(context);
+                                        setState(() {});
+                                      }));
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.sort_by_alpha,
+                              color: darkMode ? Colors.white70 : Colors.black87,
+                            ),
+                            tooltip: 'Sort',
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      getConfirmDialog('Sort', () {
+                                        sort();
+                                        Navigator.pop(context);
+                                        setState(() {});
+                                      }));
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.shuffle,
-                        color: darkMode ? Colors.white70 : Colors.black87,
-                      ),
-                      tooltip: 'Shuffle',
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                getConfirmDialog('Shuffle', () {
-                                  shuffle();
-                                  Navigator.pop(context);
-                                  setState(() {});
-                                }));
-                      },
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                child: TextField(
+                  style:
+                      TextStyle(color: darkMode ? Colors.white : Colors.black),
+                  controller: _searchDisplayController,
+                  onChanged: onSearchChanged,
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    hintStyle: TextStyle(
+                        color: darkMode ? Colors.white : Colors.black),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: darkMode ? Colors.white : Colors.black,
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.sort_by_alpha,
-                        color: darkMode ? Colors.white70 : Colors.black87,
-                      ),
-                      tooltip: 'Sort',
+                    suffixIcon: IconButton(
                       onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                getConfirmDialog('Sort', () {
-                                  sort();
-                                  Navigator.pop(context);
-                                  setState(() {});
-                                }));
+                        _searchDisplayController.text = "";
+                        onSearchChanged("");
                       },
+                      icon: Icon(Icons.clear,
+                          color: darkMode ? Colors.white : Colors.black),
                     ),
-                  ],
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
             ],
@@ -350,62 +419,123 @@ class _MyHomePageState extends State<MyHomePage> {
                                       getAdvancedDialog(
                                           displayList[index], index));
                             },
-                            child: Card(
-                                color:
-                                    !darkMode ? Colors.black12 : Colors.white10,
-                                margin: const EdgeInsets.all(4.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      flex: 8,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: Text(displayList[index]
-                                              .getDisplayData()),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: IconButton(
-                                          icon: Icon(
-                                            Icons.move_down,
-                                            color: darkMode
-                                                ? Colors.white70
-                                                : Colors.black87,
+                            child: showCard(displayList[index])
+                                ? Card(
+                                    color: !darkMode
+                                        ? Colors.black12
+                                        : Colors.white10,
+                                    margin: const EdgeInsets.all(4.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          flex: 8,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Center(
+                                              child: Text(displayList[index]
+                                                  .getDisplayData()),
+                                            ),
                                           ),
-                                          tooltip: 'Move to Bottom',
-                                          onPressed: () async {
-                                            var d = displayList.removeAt(index);
-                                            displayList.add(d);
-                                            await addAuditData(
-                                                d.getDisplayData());
-                                            setState(() {});
-                                            writeFile();
-                                          },
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                )));
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: useCheckboxes
+                                                ? StatefulBuilder(builder:
+                                                    (BuildContext context,
+                                                        void Function(
+                                                                void Function())
+                                                            setState) {
+                                                    return Checkbox(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      2.0),
+                                                        ),
+                                                        side:
+                                                            MaterialStateBorderSide
+                                                                .resolveWith(
+                                                          (states) =>
+                                                              const BorderSide(
+                                                                  width: 2.0,
+                                                                  color: Colors
+                                                                      .white70),
+                                                        ),
+                                                        value: prefs.getBool(
+                                                                checkedItemKey(
+                                                                    displayList[
+                                                                            index]
+                                                                        .trueData)) ??
+                                                            false,
+                                                        onChanged: (condition) {
+                                                          prefs.setBool(
+                                                              checkedItemKey(
+                                                                  displayList[
+                                                                          index]
+                                                                      .trueData),
+                                                              condition ??
+                                                                  false);
+                                                          setState(() {});
+                                                        });
+                                                  })
+                                                : IconButton(
+                                                    icon: Icon(
+                                                      Icons.move_down,
+                                                      color: darkMode
+                                                          ? Colors.white70
+                                                          : Colors.black87,
+                                                    ),
+                                                    tooltip: 'Move to Bottom',
+                                                    onPressed: () async {
+                                                      var d = displayList
+                                                          .removeAt(index);
+                                                      displayList.add(d);
+                                                      await addAuditData(
+                                                          d.getDisplayData());
+                                                      setState(() {});
+                                                      writeFile();
+                                                    },
+                                                  ),
+                                          ),
+                                        ),
+                                      ],
+                                    ))
+                                : Container());
                       })))
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) => getAddDialog());
+          if (_searchDisplayController.text.isEmpty) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => getAddDialog());
+          }
         },
         backgroundColor: Colors.deepPurple,
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  bool showCard(DisplayItem displayItem) {
+    if (!displayItem
+        .getDisplayData()
+        .toLowerCase()
+        .contains(_searchDisplayController.text.toLowerCase().trim())) {
+      return false;
+    }
+
+    if (!useCheckboxes || cbViewMode == 0) return true;
+    bool checked = prefs.getBool(checkedItemKey(displayItem.trueData)) ?? false;
+    if ((cbViewMode == 1 && !checked)) return false;
+    if ((cbViewMode == 2 && checked)) return false;
+    return true;
   }
 
   void shuffle({bool writeChanges = true}) {
@@ -485,8 +615,24 @@ class _MyHomePageState extends State<MyHomePage> {
           state(() {});
         },
       ),
+      const Text('Use Checkboxes?'),
+      Checkbox(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0),
+          ),
+          side: MaterialStateBorderSide.resolveWith(
+            (states) => const BorderSide(width: 2.0, color: Colors.white70),
+          ),
+          value: useCheckboxes,
+          onChanged: (condition) {
+            useCheckboxes = condition ?? false;
+            prefs.setBool(useCheckboxesKey(), useCheckboxes);
+            state(() {});
+          }),
     ]);
   }
+
+  bool useCheckboxes = false;
 
   final TextEditingController _eC = TextEditingController();
   final TextEditingController _dC = TextEditingController();
@@ -707,6 +853,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _searchDisplayController =
+      TextEditingController();
   final TextEditingController _addController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
 
@@ -805,8 +953,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> exportFile() async {
     if (Platform.isAndroid) {
-      File file = File(defaultFile);
-      await Share.shareFiles([file.path], text: 'Export Data');
+      XFile xfile = XFile(defaultFile);
+      await Share.shareXFiles([xfile], text: 'Export Data');
     }
   }
 
@@ -1116,21 +1264,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Future loadFile(String path) async {
     if (path.isEmpty) return;
 
-    displayList.clear();
     try {
-      File file = File(path);
-      var s = file.openRead().map(utf8.decode);
-      var str = '';
-      await s.forEach((element) {
-        str += element;
-      });
-      var fileList = str.split('\n');
-      for (int i = 0; i < fileList.length; i++) {
-        var element = fileList[i];
-        if (element.trim().isEmpty) continue;
-        var displayItem = DisplayItem(element);
-        displayList.add(displayItem);
-      }
+      await loadFileContents(path);
     } catch (err) {
       print(err);
     }
@@ -1147,9 +1282,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
     defaultFile = temp;
     prefs.setString("defaultFile", temp);
+    useCheckboxes = prefs.getBool(useCheckboxesKey()) ?? false;
   }
 
-  Future writeFile({String? path}) {
+  Future loadFileContents(String path) async {
+    displayList.clear();
+    File file = File(path);
+    var s = file.openRead().map(utf8.decode);
+    var str = '';
+    await s.forEach((element) {
+      str += element;
+    });
+    var fileList = str.split('\n');
+    for (int i = 0; i < fileList.length; i++) {
+      var element = fileList[i];
+      if (element.trim().isEmpty) continue;
+      var displayItem = DisplayItem(element);
+      displayList.add(displayItem);
+    }
+  }
+
+  Future writeFile({String? path}) async {
     File file = File(path ?? defaultFile);
     String tempStr = '';
     for (int i = 0; i < displayList.length; i++) {

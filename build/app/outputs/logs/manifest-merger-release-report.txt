@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 application
-INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:11:4-42:19
+INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:4:4-35:19
 MERGED from [:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-19:19
 MERGED from [:share_plus] /Users/adamwilson/Documents/GitHub/random_flutter/build/share_plus/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-19:19
 MERGED from [:url_launcher_android] /Users/adamwilson/Documents/GitHub/random_flutter/build/url_launcher_android/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-14:19
@@ -14,17 +14,17 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/adam
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.7.0] /Users/adamwilson/.gradle/caches/transforms-3/5e083c06c9925c2309f02468fc66e376/transformed/core-1.7.0/AndroidManifest.xml:24:18-86
 	android:label
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:12:9-35
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:5:9-35
 	android:icon
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:14:9-45
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:7:9-45
 	android:name
 		INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:13:9-42
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:6:9-42
 manifest
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-43:12
-INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-43:12
-INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-43:12
-INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-43:12
+ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-36:12
+INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-36:12
+INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-36:12
+INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-36:12
 MERGED from [:shared_preferences_android] /Users/adamwilson/Documents/GitHub/random_flutter/build/shared_preferences_android/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [:permission_handler_android] /Users/adamwilson/Documents/GitHub/random_flutter/build/permission_handler_android/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-9:12
 MERGED from [:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/release/AndroidManifest.xml:2:1-19:12
@@ -50,49 +50,23 @@ MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /Users/adamwilson/.gra
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /Users/adamwilson/.gradle/caches/transforms-3/ab7ce279708bbb9e6bfa95c7580f1bb9/transformed/lifecycle-livedata-core-2.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.1.0] /Users/adamwilson/.gradle/caches/transforms-3/b0ed3bc1190a335fc620be73cef0fa31/transformed/core-runtime-2.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.annotation:annotation-experimental:1.1.0] /Users/adamwilson/.gradle/caches/transforms-3/58e3540d7f5a5bac6af9a8f8fab44363/transformed/jetified-annotation-experimental-1.1.0/AndroidManifest.xml:17:1-24:12
-INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-43:12
-INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-43:12
-INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-43:12
+INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-36:12
+INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-36:12
+INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-36:12
 	package
 		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:2:5-54
 		INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
 	android:versionName
 		INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-43:12
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-36:12
 		INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
 	android:versionCode
 		INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-43:12
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:1-36:12
 		INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:1:11-69
-uses-permission#android.permission.READ_INTERNAL_STORAGE
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:4:5-80
-	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:4:22-77
-uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:5:5-81
-	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:5:22-78
-uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:6:5-80
-MERGED from [:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-80
-MERGED from [:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-80
-	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:6:22-77
-uses-permission#android.permission.ACCESS_MEDIA_LOCATION
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:7:5-80
-	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:7:22-77
-uses-permission#android.permission.MANAGE_EXTERNAL_STORAGE
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:8:5-82
-	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:8:22-79
-uses-permission#android.permission.ACTION_MANAGE_WRITE_SETTINGS
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:9:5-87
-	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:9:22-84
 uses-sdk
 INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
@@ -158,45 +132,49 @@ INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/
 		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
 		INJECTED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml
 activity#com.abw4v.random_app_flutter.random_app.MainActivity
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:15:9-36:20
+ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:8:9-29:20
 	android:requestLegacyExternalStorage
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:22:13-56
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:15:13-56
 	android:launchMode
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:18:13-43
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:11:13-43
 	android:hardwareAccelerated
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:21:13-47
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:14:13-47
 	android:windowSoftInputMode
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:23:13-55
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:16:13-55
 	android:exported
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:17:13-36
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:10:13-36
 	android:configChanges
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:20:13-163
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:13:13-163
 	android:theme
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:19:13-47
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:12:13-47
 	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:16:13-41
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:9:13-41
 meta-data#io.flutter.embedding.android.NormalTheme
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:28:13-31:17
+ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:21:13-24:17
 	android:resource
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:30:15-52
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:23:15-52
 	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:29:15-70
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:22:15-70
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:32:13-35:29
+ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:25:13-28:29
 action#android.intent.action.MAIN
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:33:17-68
+ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:26:17-68
 	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:33:25-66
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:26:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:34:17-76
+ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:27:17-76
 	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:34:27-74
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:27:27-74
 meta-data#flutterEmbedding
-ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:39:9-41:33
+ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:32:9-34:33
 	android:value
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:41:13-30
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:34:13-30
 	android:name
-		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:40:13-44
+		ADDED from /Users/adamwilson/Documents/GitHub/random_flutter/android/app/src/main/AndroidManifest.xml:33:13-44
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from [:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/release/AndroidManifest.xml:9:5-80
+	android:name
+		ADDED from [:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/release/AndroidManifest.xml:9:22-77
 queries
 ADDED from [:file_picker] /Users/adamwilson/Documents/GitHub/random_flutter/build/file_picker/intermediates/merged_manifest/release/AndroidManifest.xml:11:5-17:15
 intent#action:name:android.intent.action.GET_CONTENT+data:mimeType:*/*

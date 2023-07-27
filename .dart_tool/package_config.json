@@ -273,7 +273,7 @@
     },
     {
       "name": "share_plus",
-      "rootUri": "file:///Users/adamwilson/.pub-cache/hosted/pub.dev/share_plus-4.5.3",
+      "rootUri": "file:///Users/adamwilson/.pub-cache/hosted/pub.dev/share_plus-4.5.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -467,10 +467,10 @@
       "name": "random_app",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-05-19T14:36:54.038592Z",
+  "generated": "2023-07-26T20:43:50.544325Z",
   "generator": "pub",
   "generatorVersion": "3.0.1"
 }

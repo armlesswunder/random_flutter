@@ -320,7 +320,7 @@
         <entry key="share_plus">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus-4.5.3/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus-4.5.2/lib" />
             </list>
           </value>
         </entry>
@@ -587,7 +587,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/pointycastle-3.7.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/process-4.2.4/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus-4.5.3/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus-4.5.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus_linux-3.0.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus_macos-3.0.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/share_plus_platform_interface-3.2.1/lib" />

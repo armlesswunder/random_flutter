@@ -1,4 +1,4 @@
-#Fri May 19 09:52:09 CDT 2023
+#Thu Jul 27 08:07:49 CDT 2023
 base.0=/Users/adamwilson/Documents/GitHub/random_flutter/build/app/intermediates/dex/release/minifyReleaseWithR8/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

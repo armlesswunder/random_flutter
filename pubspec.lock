@@ -359,10 +359,10 @@ packages:
     dependency: "direct main"
     description:
       name: share_plus
-      sha256: f582d5741930f3ad1bf0211d358eddc0508cc346e5b4b248bd1e569c995ebb7a
+      sha256: "9ac194fb1b31fcbc7af62a97bcace377ed7eff853317e34c422cd152ee411f29"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.3"
+    version: "4.5.2"
   share_plus_linux:
     dependency: transitive
     description:
@@ -609,5 +609,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.0.0-0 <4.0.0"
+  dart: ">=3.0.0 <4.0.0"
   flutter: ">=3.3.0"
