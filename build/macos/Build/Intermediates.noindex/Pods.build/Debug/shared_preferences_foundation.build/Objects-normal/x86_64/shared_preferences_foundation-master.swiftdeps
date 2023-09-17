@@ -1,0 +1,7 @@
+version: "Apple Swift version 5.6 (swiftlang-5.6.0.323.62 clang-1316.0.20.8)"
+options: "30773877af673ad64ab80f2e2d11ee9a24eeee8f268b0aacf6b33343a52cc033"
+build_start_time: [1691630413, 774484157]
+build_end_time: [1691630420, 716017007]
+inputs:
+  "/Users/adamwilson/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.2.2/darwin/Classes/SharedPreferencesPlugin.swift": [1683820036, 928455829]
+  "/Users/adamwilson/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.2.2/darwin/Classes/messages.g.swift": [1683820036, 926662921]

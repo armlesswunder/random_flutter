@@ -1948,6 +1948,25 @@ com.baseflow.permissionhandler.R$style
 com.baseflow.permissionhandler.R$styleable
 com.baseflow.permissionhandler.R
 com.google.common.util.concurrent.ListenableFuture
+com.kasem.receive_sharing_intent.BuildConfig
+com.kasem.receive_sharing_intent.R$attr
+com.kasem.receive_sharing_intent.R$color
+com.kasem.receive_sharing_intent.R$dimen
+com.kasem.receive_sharing_intent.R$drawable
+com.kasem.receive_sharing_intent.R$id
+com.kasem.receive_sharing_intent.R$integer
+com.kasem.receive_sharing_intent.R$layout
+com.kasem.receive_sharing_intent.R$string
+com.kasem.receive_sharing_intent.R$style
+com.kasem.receive_sharing_intent.R$styleable
+com.kasem.receive_sharing_intent.R
+com.kasem.receive_sharing_intent.ReceiveSharingIntentPlugin$Companion:
+    public final void registerWith(io.flutter.plugin.common.PluginRegistry$Registrar)
+com.kasem.receive_sharing_intent.ReceiveSharingIntentPlugin:
+    public static final synthetic void access$setApplicationContext$p(com.kasem.receive_sharing_intent.ReceiveSharingIntentPlugin,android.content.Context)
+    public static final synthetic void access$setupCallbackChannels(com.kasem.receive_sharing_intent.ReceiveSharingIntentPlugin,io.flutter.plugin.common.BinaryMessenger)
+    public static final void registerWith(io.flutter.plugin.common.PluginRegistry$Registrar)
+com.kasem.receive_sharing_intent.ReceiveSharingIntentPluginKt
 com.mr.flutter.plugin.filepicker.BuildConfig
 com.mr.flutter.plugin.filepicker.FilePickerDelegate:
     private static final java.lang.String TAG
@@ -2135,10 +2154,8 @@ io.flutter.embedding.engine.FlutterEngineConnectionRegistry$DefaultFlutterAssets
     public java.lang.String getAssetFilePathBySubpath(java.lang.String)
     public java.lang.String getAssetFilePathBySubpath(java.lang.String,java.lang.String)
 io.flutter.embedding.engine.FlutterEngineConnectionRegistry$FlutterEngineActivityPluginBinding:
-    public void addOnNewIntentListener(io.flutter.plugin.common.PluginRegistry$NewIntentListener)
     public void addOnSaveStateListener(io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding$OnSaveInstanceStateListener)
     public void addOnUserLeaveHintListener(io.flutter.plugin.common.PluginRegistry$UserLeaveHintListener)
-    public void removeOnNewIntentListener(io.flutter.plugin.common.PluginRegistry$NewIntentListener)
     public void removeOnSaveStateListener(io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding$OnSaveInstanceStateListener)
     public void removeOnUserLeaveHintListener(io.flutter.plugin.common.PluginRegistry$UserLeaveHintListener)
 io.flutter.embedding.engine.FlutterEngineConnectionRegistry$FlutterEngineBroadcastReceiverPluginBinding:
@@ -2338,10 +2355,8 @@ io.flutter.embedding.engine.plugins.PluginRegistry:
     public abstract void remove(java.util.Set)
     public abstract void removeAll()
 io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding:
-    public abstract void addOnNewIntentListener(io.flutter.plugin.common.PluginRegistry$NewIntentListener)
     public abstract void addOnSaveStateListener(io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding$OnSaveInstanceStateListener)
     public abstract void addOnUserLeaveHintListener(io.flutter.plugin.common.PluginRegistry$UserLeaveHintListener)
-    public abstract void removeOnNewIntentListener(io.flutter.plugin.common.PluginRegistry$NewIntentListener)
     public abstract void removeOnSaveStateListener(io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding$OnSaveInstanceStateListener)
     public abstract void removeOnUserLeaveHintListener(io.flutter.plugin.common.PluginRegistry$UserLeaveHintListener)
 io.flutter.embedding.engine.plugins.broadcastreceiver.BroadcastReceiverControlSurface
@@ -5100,7 +5115,6 @@ kotlin.collections.CollectionsKt___CollectionsKt:
     private static final java.lang.Object find(java.lang.Iterable,kotlin.jvm.functions.Function1)
     private static final java.lang.Object findLast(java.lang.Iterable,kotlin.jvm.functions.Function1)
     private static final java.lang.Object findLast(java.util.List,kotlin.jvm.functions.Function1)
-    public static final java.lang.Object first(java.lang.Iterable)
     public static final java.lang.Object first(java.lang.Iterable,kotlin.jvm.functions.Function1)
     private static final java.lang.Object firstNotNullOf(java.lang.Iterable,kotlin.jvm.functions.Function1)
     private static final java.lang.Object firstNotNullOfOrNull(java.lang.Iterable,kotlin.jvm.functions.Function1)
@@ -5258,7 +5272,6 @@ kotlin.collections.CollectionsKt___CollectionsKt:
     public static final int sumOfShort(java.lang.Iterable)
     private static final int sumOfUInt(java.lang.Iterable,kotlin.jvm.functions.Function1)
     private static final long sumOfULong(java.lang.Iterable,kotlin.jvm.functions.Function1)
-    public static final java.util.List take(java.lang.Iterable,int)
     public static final java.util.List takeLast(java.util.List,int)
     public static final java.util.List takeLastWhile(java.util.List,kotlin.jvm.functions.Function1)
     public static final java.util.List takeWhile(java.lang.Iterable,kotlin.jvm.functions.Function1)
@@ -5777,7 +5790,6 @@ kotlin.io.ByteStreamsKt:
     static synthetic java.io.BufferedWriter bufferedWriter$default(java.io.OutputStream,java.nio.charset.Charset,int,java.lang.Object)
     private static final java.io.ByteArrayInputStream byteInputStream(java.lang.String,java.nio.charset.Charset)
     static synthetic java.io.ByteArrayInputStream byteInputStream$default(java.lang.String,java.nio.charset.Charset,int,java.lang.Object)
-    public static synthetic long copyTo$default(java.io.InputStream,java.io.OutputStream,int,int,java.lang.Object)
     private static final java.io.ByteArrayInputStream inputStream(byte[])
     private static final java.io.ByteArrayInputStream inputStream(byte[],int,int)
     public static final kotlin.collections.ByteIterator iterator(java.io.BufferedInputStream)
@@ -6937,14 +6949,42 @@ kotlin.text.MatcherMatchResult$groupValues$1
 kotlin.text.MatcherMatchResult$groups$1$iterator$1
 kotlin.text.MatcherMatchResult$groups$1
 kotlin.text.MatcherMatchResult
-kotlin.text.Regex$Companion
+kotlin.text.Regex$Companion:
+    public static final synthetic int access$ensureUnicodeCase(kotlin.text.Regex$Companion,int)
+    private final int ensureUnicodeCase(int)
+    public final java.lang.String escape(java.lang.String)
+    public final java.lang.String escapeReplacement(java.lang.String)
+    public final kotlin.text.Regex fromLiteral(java.lang.String)
 kotlin.text.Regex$Serialized$Companion
 kotlin.text.Regex$Serialized
 kotlin.text.Regex$findAll$1
 kotlin.text.Regex$findAll$2
 kotlin.text.Regex$special$$inlined$fromInt$1
 kotlin.text.Regex$splitToSequence$1
-kotlin.text.Regex
+kotlin.text.Regex:
+    private java.util.Set _options
+    public void <init>(java.lang.String,java.util.Set)
+    public void <init>(java.lang.String,kotlin.text.RegexOption)
+    public static final synthetic java.util.regex.Pattern access$getNativePattern$p(kotlin.text.Regex)
+    public final boolean containsMatchIn(java.lang.CharSequence)
+    public final kotlin.text.MatchResult find(java.lang.CharSequence,int)
+    public static synthetic kotlin.text.MatchResult find$default(kotlin.text.Regex,java.lang.CharSequence,int,int,java.lang.Object)
+    public final kotlin.sequences.Sequence findAll(java.lang.CharSequence,int)
+    public static synthetic kotlin.sequences.Sequence findAll$default(kotlin.text.Regex,java.lang.CharSequence,int,int,java.lang.Object)
+    public final java.util.Set getOptions()
+    public final java.lang.String getPattern()
+    public final kotlin.text.MatchResult matchAt(java.lang.CharSequence,int)
+    public final kotlin.text.MatchResult matchEntire(java.lang.CharSequence)
+    public final boolean matches(java.lang.CharSequence)
+    public final boolean matchesAt(java.lang.CharSequence,int)
+    public final java.lang.String replace(java.lang.CharSequence,java.lang.String)
+    public final java.lang.String replace(java.lang.CharSequence,kotlin.jvm.functions.Function1)
+    public final java.lang.String replaceFirst(java.lang.CharSequence,java.lang.String)
+    public static synthetic java.util.List split$default(kotlin.text.Regex,java.lang.CharSequence,int,int,java.lang.Object)
+    public final kotlin.sequences.Sequence splitToSequence(java.lang.CharSequence,int)
+    public static synthetic kotlin.sequences.Sequence splitToSequence$default(kotlin.text.Regex,java.lang.CharSequence,int,int,java.lang.Object)
+    public final java.util.regex.Pattern toPattern()
+    private final java.lang.Object writeReplace()
 kotlin.text.RegexKt$fromInt$1$1
 kotlin.text.RegexKt
 kotlin.text.RegexOption
@@ -7099,7 +7139,6 @@ kotlin.text.StringsKt__StringsJVMKt:
     public static final byte[] encodeToByteArray(java.lang.String)
     public static final byte[] encodeToByteArray(java.lang.String,int,int,boolean)
     public static synthetic byte[] encodeToByteArray$default(java.lang.String,int,int,boolean,int,java.lang.Object)
-    public static final boolean equals(java.lang.String,java.lang.String,boolean)
     public static synthetic boolean equals$default(java.lang.String,java.lang.String,boolean,int,java.lang.Object)
     private static final synthetic varargs java.lang.String format(java.lang.String,java.util.Locale,java.lang.Object[])
     private static final varargs java.lang.String format(java.lang.String,java.lang.Object[])

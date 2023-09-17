@@ -1,7 +1,11 @@
+import 'dart:async';
+
+import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:share_plus/share_plus.dart';
@@ -88,8 +92,11 @@ class MyApp extends StatelessWidget {
   }
 }
 
-String getDisplayTimestamp(DateTime now) {
-  return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} - ${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}";
+String getDisplayTimestamp(DateTime time) {
+  var formatter = DateFormat('h:mm a - MM/dd');
+  var stringDate = formatter.format(time);
+  return stringDate;
+  //return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} - ${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}";
 }
 
 class MyHomePage extends StatefulWidget {
@@ -138,10 +145,78 @@ class _MyHomePageState extends State<MyHomePage> {
   String defaultFile = '';
   String androidDir = '';
 
+  bool useNotes = false;
+
+  late StreamSubscription _intentDataStreamSubscription;
+  List<SharedMediaFile> _sharedFiles = [];
+  String _sharedText = '';
+
   @override
   void initState() {
     super.initState();
     init();
+    // For sharing images coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
+        .listen((List<SharedMediaFile> value) async {
+      //_sharedFiles = value;
+      //if (_sharedFiles.isEmpty) return;
+      //await getSettings();
+      //await loadFile(_sharedFiles.first.path);
+      //_sharedFiles.clear();
+      //setState(() {});
+    }, onError: (err) {
+      print("getIntentDataStream error: $err");
+    });
+
+    // For sharing images coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialMedia()
+        .then((List<SharedMediaFile> value) async {
+      _sharedFiles = value;
+      if (_sharedFiles.isEmpty) return;
+      prefs = await SharedPreferences.getInstance();
+      final directory = await getApplicationDocumentsDirectory();
+      androidDir = '${directory.path}/playlists';
+      defaultDir = androidDir;
+      unselectAllLists();
+      await loadFile(_sharedFiles.first.path.replaceAll(' ', '_'));
+      _sharedFiles.clear();
+      setState(() {});
+    });
+
+    // For sharing or opening urls/text coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription =
+        ReceiveSharingIntent.getTextStream().listen((String value) async {
+      //_sharedText = value;
+      //if (_sharedText.isEmpty) return;
+      //await getSettings();
+      //var fileName = '$androidDir/${DateTime.timestamp()}';
+      //importFile(fileName, _sharedText);
+      //_sharedText = "";
+      //setState(() {});
+    }, onError: (err) {
+      print("getLinkStream error: $err");
+    });
+
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    ReceiveSharingIntent.getInitialText().then((String? value) async {
+      _sharedText = value ?? '';
+      if (_sharedText.isEmpty) return;
+      prefs = await SharedPreferences.getInstance();
+      final directory = await getApplicationDocumentsDirectory();
+      androidDir = '${directory.path}/playlists';
+      defaultDir = androidDir;
+      var fileName = '$androidDir/${DateTime.timestamp()}'.replaceAll(' ', '_');
+      unselectAllLists();
+      await importFile(fileName, _sharedText);
+      _sharedText = "";
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _intentDataStreamSubscription.cancel();
+    super.dispose();
   }
 
   void init() async {
@@ -159,6 +234,12 @@ class _MyHomePageState extends State<MyHomePage> {
     await loadFile(defaultFile);
     _notifier.value = darkMode ? ThemeMode.dark : ThemeMode.light;
     findSelectedList();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.black87,
+    ));
     setState(() {});
   }
 
@@ -168,6 +249,12 @@ class _MyHomePageState extends State<MyHomePage> {
         item.selected = true;
         break;
       }
+    }
+  }
+
+  void unselectAllLists() {
+    for (DisplayItem item in listList) {
+      item.selected = false;
     }
   }
 
@@ -184,6 +271,7 @@ class _MyHomePageState extends State<MyHomePage> {
     defaultDir =
         Platform.isAndroid ? androidDir : prefs.getString('defaultDir') ?? '';
     defaultFile = prefs.getString('defaultFile') ?? '';
+    useNotes = prefs.getBool('USES_NOTES') ?? false;
     getAuditData();
   }
 
@@ -279,6 +367,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ));
                       },
                     ),
+                    Text('Item Count: ${displayList.length}'),
                     IconButton(
                       icon: Icon(
                         Icons.settings,
@@ -373,6 +462,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   controller: _searchDisplayController,
                   onChanged: onSearchChanged,
                   decoration: InputDecoration(
+                    filled: true,
+                    fillColor: darkMode ? Colors.white24 : Colors.black26,
                     hintText: 'Search',
                     hintStyle: TextStyle(
                         color: darkMode ? Colors.white : Colors.black),
@@ -388,7 +479,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       icon: Icon(Icons.clear,
                           color: darkMode ? Colors.white : Colors.black),
                     ),
-                    border: InputBorder.none,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(48.0),
+                      borderSide: BorderSide.none,
+                    ),
                   ),
                 ),
               ),
@@ -419,12 +513,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                       getAdvancedDialog(
                                           displayList[index], index));
                             },
+                            onTap: () async {
+                              await Clipboard.setData(ClipboardData(
+                                  text: displayList[index].getDisplayData()));
+                            },
                             child: showCard(displayList[index])
-                                ? Card(
-                                    color: !darkMode
-                                        ? Colors.black12
-                                        : Colors.white10,
-                                    margin: const EdgeInsets.all(4.0),
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                        color: !darkMode
+                                            ? Colors.black12
+                                            : Colors.white10,
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(12))),
+                                    margin: const EdgeInsets.fromLTRB(
+                                        12.0, 4, 12, 4),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -592,43 +694,61 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget getSettingsHeader(BuildContext context, StateSetter state) {
-    return Row(children: [
-      IconButton(
-        icon: Icon(
-          Icons.search,
-          color: darkMode ? Colors.white70 : Colors.black87,
-        ),
-        tooltip: 'Search',
-        onPressed: () {
-          mode = modeSearch;
-          state(() {});
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.menu_book,
-          color: darkMode ? Colors.white70 : Colors.black87,
-        ),
-        tooltip: 'Audit',
-        onPressed: () {
-          mode = modeAudit;
-          state(() {});
-        },
-      ),
-      const Text('Use Checkboxes?'),
-      Checkbox(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2.0),
+    return Column(children: [
+      Row(children: [
+        IconButton(
+          icon: Icon(
+            Icons.search,
+            color: darkMode ? Colors.white70 : Colors.black87,
           ),
-          side: MaterialStateBorderSide.resolveWith(
-            (states) => const BorderSide(width: 2.0, color: Colors.white70),
-          ),
-          value: useCheckboxes,
-          onChanged: (condition) {
-            useCheckboxes = condition ?? false;
-            prefs.setBool(useCheckboxesKey(), useCheckboxes);
+          tooltip: 'Search',
+          onPressed: () {
+            mode = modeSearch;
             state(() {});
-          }),
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.menu_book,
+            color: darkMode ? Colors.white70 : Colors.black87,
+          ),
+          tooltip: 'Audit',
+          onPressed: () {
+            mode = modeAudit;
+            state(() {});
+          },
+        ),
+      ]),
+      Row(children: [
+        const Text('Use Checkboxes?'),
+        Checkbox(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(2.0),
+            ),
+            side: MaterialStateBorderSide.resolveWith(
+              (states) => const BorderSide(width: 2.0, color: Colors.white70),
+            ),
+            value: useCheckboxes,
+            onChanged: (condition) {
+              useCheckboxes = condition ?? false;
+              prefs.setBool(useCheckboxesKey(), useCheckboxes);
+              state(() {});
+            }),
+        const Text('Note Mode?'),
+        Checkbox(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(2.0),
+            ),
+            side: MaterialStateBorderSide.resolveWith(
+              (states) => const BorderSide(width: 2.0, color: Colors.white70),
+            ),
+            value: useNotes,
+            onChanged: (condition) {
+              useNotes = condition ?? false;
+              prefs.setBool('USES_NOTES', useNotes);
+              state(() {});
+            })
+      ]),
     ]);
   }
 
@@ -758,9 +878,12 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView.builder(
               itemCount: searchList.length,
               itemBuilder: (BuildContext context, int index) {
-                return Card(
-                    color: !darkMode ? Colors.black12 : Colors.white10,
-                    margin: const EdgeInsets.all(4.0),
+                return Container(
+                    decoration: BoxDecoration(
+                        color: !darkMode ? Colors.black12 : Colors.white10,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(12))),
+                    margin: const EdgeInsets.fromLTRB(12.0, 4, 12, 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -823,9 +946,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 //  s,
                 //  style: TextStyle(color: Colors.white),
                 //);
-                return Card(
-                    color: !darkMode ? Colors.black12 : Colors.white10,
-                    margin: const EdgeInsets.all(4.0),
+                return Container(
+                    decoration: BoxDecoration(
+                        color: !darkMode ? Colors.black12 : Colors.white10,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(12))),
+                    margin: const EdgeInsets.fromLTRB(12.0, 4, 12, 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -915,9 +1041,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         setState(() {});
                         state(() {});
                       },
-                      child: Card(
-                          margin: const EdgeInsets.all(4.0),
-                          color: getSelectedCardColor(listList[index].selected),
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: getSelectedCardColor(
+                                  listList[index].selected),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(12))),
+                          margin: const EdgeInsets.fromLTRB(12.0, 4, 12, 4),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -954,7 +1084,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> exportFile() async {
     if (Platform.isAndroid) {
       XFile xfile = XFile(defaultFile);
-      await Share.shareXFiles([xfile], text: 'Export Data');
+      if (useNotes) {
+        DisplayItem displayItem = DisplayItem(defaultFile);
+        String subject = displayItem.getDisplayData();
+        String data = await xfile.readAsString();
+        await Share.shareXFiles([xfile], subject: subject, text: data);
+      } else {
+        await Share.shareXFiles([xfile], text: 'Export Data');
+      }
     }
   }
 
@@ -1021,6 +1158,8 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextField(
+                obscureText: false,
+                maxLines: null,
                 style: TextStyle(color: darkMode ? Colors.white : Colors.black),
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
@@ -1054,6 +1193,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Dialog getAdvancedDialog(DisplayItem displayItem, int index) {
+    String oldText = displayList[index].trueData;
     return Dialog(
         backgroundColor: darkMode ? dialogColor : Colors.white,
         elevation: 10,
@@ -1093,6 +1233,8 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(children: [
                 Expanded(
                     child: TextField(
+                        obscureText: false,
+                        maxLines: null,
                         style: TextStyle(
                             color: darkMode ? Colors.white : Colors.black),
                         decoration: InputDecoration(
@@ -1131,6 +1273,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(color: Colors.blue),
                   ),
                   onPressed: () {
+                    var condition =
+                        prefs.getBool(checkedItemKey(oldText)) ?? false;
+                    prefs.setBool(
+                        checkedItemKey(displayList[index].trueData), condition);
                     writeFile();
                     setState(() {});
                     state(() {});
@@ -1352,6 +1498,21 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       // User canceled the picker
     }
+  }
+
+  Future importFile(String path, String data) async {
+    if (path.isEmpty || data.isEmpty) return;
+    File newFile = File(path);
+    newFile.writeAsStringSync(data);
+
+    defaultFile = path;
+    await prefs.setString("defaultFile", path);
+
+    //defaultFile = path;
+    //prefs.setString("defaultFile", path);
+    loadDirectory();
+    findSelectedList();
+    useCheckboxes = prefs.getBool(useCheckboxesKey()) ?? false;
   }
 
   void createFile(String path, BuildContext context, StateSetter state) async {

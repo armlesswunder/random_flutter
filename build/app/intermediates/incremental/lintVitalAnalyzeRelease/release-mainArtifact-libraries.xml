@@ -95,6 +95,19 @@
       externalAnnotations="annotations.zip"
       proguardRules="proguard.txt"/>
   <library
+      name="/Users/adamwilson/Documents/GitHub/random_flutter/android@@:receive_sharing_intent::release"
+      jars="/Users/adamwilson/Documents/GitHub/random_flutter/build/receive_sharing_intent/.transforms/599bee98c7be6122c684753a0fcf92b1/transformed/out/jars/classes.jar"
+      resolved="com.kasem.receive_sharing_intent:receive_sharing_intent:unspecified"
+      folder="/Users/adamwilson/Documents/GitHub/random_flutter/build/receive_sharing_intent/.transforms/599bee98c7be6122c684753a0fcf92b1/transformed/out"
+      manifest="AndroidManifest.xml"
+      resFolder="res"
+      assetsFolder="assets"
+      lintJar="lint.jar"
+      publicResources="public.txt"
+      symbolFile="R.txt"
+      externalAnnotations="annotations.zip"
+      proguardRules="proguard.txt"/>
+  <library
       name="io.flutter:flutter_embedding_release:1.0.0-b4fb11214dd2dda6ce012dd98ea498e9e8b91262@jar"
       jars="/Users/adamwilson/.gradle/caches/modules-2/files-2.1/io.flutter/flutter_embedding_release/1.0.0-b4fb11214dd2dda6ce012dd98ea498e9e8b91262/fca7ab8a6415508af2225862319ca560dec653f/flutter_embedding_release-1.0.0-b4fb11214dd2dda6ce012dd98ea498e9e8b91262.jar"
       resolved="io.flutter:flutter_embedding_release:1.0.0-b4fb11214dd2dda6ce012dd98ea498e9e8b91262"/>
