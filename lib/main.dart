@@ -1,18 +1,19 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
-import 'package:intl/intl.dart';
+import 'package:cross_file/cross_file.dart';
+import 'package:encrypt/encrypt.dart' as ec;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:random_app/utils.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-import 'dart:io';
-import 'dart:convert';
 import 'package:share_plus/share_plus.dart';
-import 'package:cross_file/cross_file.dart';
-
-import 'package:encrypt/encrypt.dart' as ec;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'model/display_item.dart';
 
 final key = ec.Key.fromUtf8('hAWnzuoKakJqgyPbNTVjxzRsDIhUnzKU');
 final iv = ec.IV.fromLength(16);
@@ -92,13 +93,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-String getDisplayTimestamp(DateTime time) {
-  var formatter = DateFormat('h:mm a - MM/dd');
-  var stringDate = formatter.format(time);
-  return stringDate;
-  //return "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} - ${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}";
-}
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -107,39 +101,12 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class DisplayItem {
-  String trueData = '';
-  bool selected = false;
-
-  DisplayItem(this.trueData);
-
-  String getDisplayData() {
-    Directory d = Directory(trueData);
-    String sep = trueData.contains('/') ? '/' : '\\';
-    String tempStr = trueData;
-    try {
-      if (d.existsSync()) {
-        tempStr = trueData.split(sep).last.replaceAll('_', ' ');
-        //return d.path.split('\\').last;
-      } else {
-        tempStr = trueData.split(sep).last.replaceAll('_', ' ');
-      }
-    } catch (e) {
-      tempStr = trueData.replaceAll('_', ' ');
-    }
-
-    if (tempStr.contains('.')) {
-      var i = tempStr.lastIndexOf('.');
-      tempStr = tempStr.substring(0, i);
-    }
-
-    return tempStr;
-  }
-}
-
 class _MyHomePageState extends State<MyHomePage> {
   List<DisplayItem> displayList = [];
   List<DisplayItem> listList = [];
+
+  List<String> auditData = [];
+
   late SharedPreferences prefs;
   String defaultDir = '';
   String defaultFile = '';
@@ -150,6 +117,9 @@ class _MyHomePageState extends State<MyHomePage> {
   late StreamSubscription _intentDataStreamSubscription;
   List<SharedMediaFile> _sharedFiles = [];
   String _sharedText = '';
+
+  // 0 all, 1 unchecked, 2 checked
+  num cbViewMode = 0;
 
   @override
   void initState() {
@@ -283,8 +253,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return '${defaultFile}_${itemName}_useCheckboxes';
   }
 
-  List<String> auditData = [];
-
   void getAuditData() {
     var audit = prefs.getString('auditData') ?? '';
     if (audit.isNotEmpty) {
@@ -292,7 +260,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     auditData
         .removeWhere((element) => element.isEmpty || !element.contains(':'));
-    var x = 0;
   }
 
   Future saveAuditData() async {
@@ -327,16 +294,9 @@ class _MyHomePageState extends State<MyHomePage> {
     auditData.removeAt(latestIndex);
   }
 
-  int getTimestamp() {
-    return DateTime.now().millisecondsSinceEpoch;
-  }
-
   void onSearchChanged(String text) {
     setState(() {});
   }
-
-  // 0 all, 1 unchecked, 2 checked
-  num cbViewMode = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -403,13 +363,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                   cbViewMode = 1;
                                   setState(() {});
                                 },
-                                child: const Text('View Unchecked')),
+                                child: const Text('View Checked')),
                             TextButton(
                                 onPressed: () {
                                   cbViewMode = 2;
                                   setState(() {});
                                 },
-                                child: const Text('View Checked'))
+                                child: const Text('View Unchecked'))
                           ]))
                   : Padding(
                       padding: const EdgeInsets.symmetric(
@@ -504,111 +464,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: ListView.builder(
                       itemCount: displayList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                            onLongPress: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      getAdvancedDialog(
-                                          displayList[index], index));
-                            },
-                            onTap: () async {
-                              await Clipboard.setData(ClipboardData(
-                                  text: displayList[index].getDisplayData()));
-                            },
-                            child: showCard(displayList[index])
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                        color: !darkMode
-                                            ? Colors.black12
-                                            : Colors.white10,
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(12))),
-                                    margin: const EdgeInsets.fromLTRB(
-                                        12.0, 4, 12, 4),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          flex: 8,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Center(
-                                              child: Text(displayList[index]
-                                                  .getDisplayData()),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: useCheckboxes
-                                                ? StatefulBuilder(builder:
-                                                    (BuildContext context,
-                                                        void Function(
-                                                                void Function())
-                                                            setState) {
-                                                    return Checkbox(
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      2.0),
-                                                        ),
-                                                        side:
-                                                            MaterialStateBorderSide
-                                                                .resolveWith(
-                                                          (states) =>
-                                                              const BorderSide(
-                                                                  width: 2.0,
-                                                                  color: Colors
-                                                                      .white70),
-                                                        ),
-                                                        value: prefs.getBool(
-                                                                checkedItemKey(
-                                                                    displayList[
-                                                                            index]
-                                                                        .trueData)) ??
-                                                            false,
-                                                        onChanged: (condition) {
-                                                          prefs.setBool(
-                                                              checkedItemKey(
-                                                                  displayList[
-                                                                          index]
-                                                                      .trueData),
-                                                              condition ??
-                                                                  false);
-                                                          setState(() {});
-                                                        });
-                                                  })
-                                                : IconButton(
-                                                    icon: Icon(
-                                                      Icons.move_down,
-                                                      color: darkMode
-                                                          ? Colors.white70
-                                                          : Colors.black87,
-                                                    ),
-                                                    tooltip: 'Move to Bottom',
-                                                    onPressed: () async {
-                                                      var d = displayList
-                                                          .removeAt(index);
-                                                      displayList.add(d);
-                                                      await addAuditData(
-                                                          d.getDisplayData());
-                                                      setState(() {});
-                                                      writeFile();
-                                                    },
-                                                  ),
-                                          ),
-                                        ),
-                                      ],
-                                    ))
-                                : Container());
-                      })))
+                      itemBuilder: (BuildContext context, int index) =>
+                          getDataDisplay(index))))
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -623,6 +480,197 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  /// Earth (Home planet): Water, Iron, Lead (Secret fish)
+
+  Widget getDataDisplay(int index) {
+    String displayItem = displayList[index].getDisplayData();
+    Widget content;
+    if (displayItem.contains(';')) {
+      content = _buildDetailedListItems(index);
+    } else {
+      content = _buildDefaultListItem(index);
+    }
+    return getDefaultDisplay(index, content);
+  }
+
+  Widget getDefaultDisplay(int index, Widget content) {
+    DisplayItem displayItem = displayList[index];
+    return GestureDetector(
+        onLongPress: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  getAdvancedDialog(displayItem, index));
+        },
+        onTap: () async {
+          await Clipboard.setData(
+              ClipboardData(text: displayItem.getDisplayData()));
+        },
+        child: showCard(displayItem)
+            ? Container(
+                decoration: BoxDecoration(
+                    color: !darkMode ? Colors.black12 : Colors.white10,
+                    borderRadius: const BorderRadius.all(Radius.circular(12))),
+                margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+                child: content)
+            : Container());
+  }
+
+  Widget _buildDetailedListItems(int index) {
+    DisplayItem displayItem = displayList[index];
+    List<Widget> dataArr = [];
+    List<String> attributes = [];
+    attributes.addAll(displayItem.getDisplayData().split(';'));
+    for (int i = 0; i < attributes.length; i++) {
+      var attribute = attributes[i];
+      dataArr.add(_buildDetailedListItem(attribute, i == 0));
+    }
+
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Expanded(
+          flex: 8,
+          child: Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(children: dataArr))),
+      Expanded(
+          flex: 2,
+          child: Container(
+              padding: const EdgeInsets.all(8.0),
+              child: useCheckboxes
+                  ? _buildDataListCheckbox(index)
+                  : _buildMoveToBottomButton(index)))
+    ]);
+  }
+
+  /// Example:
+  /// Earth (Home planet): Water, Iron, Lead (Secret treasure)
+  Widget _buildDetailedListItem(String str, bool isFirst) {
+    List<Widget> dataArr = [];
+    List<String> attributes = [];
+    Widget head;
+    if (str.contains(':')) {
+      attributes.addAll(str.split(':'));
+      head = Container(
+          decoration: BoxDecoration(
+              color: !darkMode ? Colors.black12 : Colors.white10,
+              borderRadius: const BorderRadius.all(Radius.circular(12))),
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+          child: Text(
+            attributes.first,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ));
+      attributes.removeAt(0);
+    } else {
+      if (str.contains(',')) {
+        head = const SizedBox();
+        attributes.add(str);
+      } else {
+        head = Container(
+            decoration: BoxDecoration(
+                color: !darkMode ? Colors.black12 : Colors.white10,
+                borderRadius: const BorderRadius.all(Radius.circular(12))),
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+            child: Text(
+              str,
+              style: isFirst
+                  ? const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
+                  : null,
+            ));
+      }
+    }
+    for (var attribute in attributes) {
+      List<String> data = attribute.split(',');
+      data = data.map((e) => e.trim()).toList();
+      for (var element in data) {
+        Widget dataWidget = Container(
+            decoration: BoxDecoration(
+                color: !darkMode ? Colors.black12 : Colors.white10,
+                borderRadius: const BorderRadius.all(Radius.circular(12))),
+            margin: const EdgeInsets.fromLTRB(0, 8, 12, 0),
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+            child: Text(element));
+        dataArr.add(dataWidget);
+      }
+    }
+
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Expanded(
+          flex: 8,
+          child: Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(children: [
+                Align(alignment: Alignment.centerLeft, child: head),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Wrap(children: dataArr))
+              ]))),
+      Expanded(
+          flex: 2,
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+          ))
+    ]);
+  }
+
+  Widget _buildDefaultListItem(int index) {
+    DisplayItem displayItem = displayList[index];
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+            flex: 8,
+            child: Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(child: Text(displayItem.getDisplayData())))),
+        Expanded(
+          flex: 2,
+          child: Container(
+              padding: const EdgeInsets.all(8.0),
+              child: useCheckboxes
+                  ? _buildDataListCheckbox(index)
+                  : _buildMoveToBottomButton(index)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMoveToBottomButton(int index) {
+    return IconButton(
+      icon: Icon(
+        Icons.move_down,
+        color: darkMode ? Colors.white70 : Colors.black87,
+      ),
+      tooltip: 'Move to Bottom',
+      onPressed: () async {
+        var d = displayList.removeAt(index);
+        displayList.add(d);
+        await addAuditData(d.getDisplayData());
+        setState(() {});
+        writeFile();
+      },
+    );
+  }
+
+  Widget _buildDataListCheckbox(int index) {
+    DisplayItem displayItem = displayList[index];
+    return StatefulBuilder(builder:
+        (BuildContext context, void Function(void Function()) setState) {
+      return Checkbox(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0),
+          ),
+          side: MaterialStateBorderSide.resolveWith(
+            (states) => const BorderSide(width: 2.0, color: Colors.white70),
+          ),
+          value: prefs.getBool(checkedItemKey(displayItem.trueData)) ?? false,
+          onChanged: (condition) {
+            prefs.setBool(
+                checkedItemKey(displayItem.trueData), condition ?? false);
+            setState(() {});
+          });
+    });
   }
 
   bool showCard(DisplayItem displayItem) {

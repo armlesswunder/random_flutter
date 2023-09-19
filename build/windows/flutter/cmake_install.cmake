@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/000ab/StudioProjects/random_app/windows/flutter
+# Install script for directory: C:/Users/000ab/Documents/GitHub/random_flutter/windows/flutter
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "$<TARGET_FILE_DIR:random_app>")
+  set(CMAKE_INSTALL_PREFIX "$<TARGET_FILE_DIR:random_flutter>")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

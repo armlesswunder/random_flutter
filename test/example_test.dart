@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:random_app/main.dart';
+import 'package:random_app/utils.dart';
+import 'package:test/test.dart';
 
 void main() {
-  test('Counter value should be incremented', () {
-    final counter = Counter();
-
-    counter.increment();
-
-    expect(counter.value, 1);
+  test('timestamp test', () {
+    String time =
+        getDisplayTimestamp(DateTime.fromMicrosecondsSinceEpoch(10000000));
+    expect(time, '6:00 PM - 12/31');
   });
 }

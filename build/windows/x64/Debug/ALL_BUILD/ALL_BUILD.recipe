@@ -2,16 +2,22 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\000ab\StudioProjects\random_app\build\windows\x64\Debug\ZERO_CHECK</FullPath>
+      <FullPath>C:\Users\000ab\Documents\GitHub\random_flutter\build\windows\x64\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\000ab\StudioProjects\random_app\build\windows\flutter\x64\Debug\flutter_assemble</FullPath>
+      <FullPath>C:\Users\000ab\Documents\GitHub\random_flutter\build\windows\flutter\x64\Debug\flutter_assemble</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\000ab\StudioProjects\random_app\build\windows\runner\Debug\random_app.exe</FullPath>
+      <FullPath>C:\Users\000ab\Documents\GitHub\random_flutter\build\windows\plugins\permission_handler_windows\Debug\permission_handler_windows_plugin.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\000ab\StudioProjects\random_app\build\windows\x64\Debug\ALL_BUILD</FullPath>
+      <FullPath>C:\Users\000ab\Documents\GitHub\random_flutter\build\windows\plugins\url_launcher_windows\Debug\url_launcher_windows_plugin.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\000ab\Documents\GitHub\random_flutter\build\windows\runner\Debug\random_flutter.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\000ab\Documents\GitHub\random_flutter\build\windows\x64\Debug\ALL_BUILD</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
