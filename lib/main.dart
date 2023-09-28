@@ -1,71 +1,24 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
-import 'package:cross_file/cross_file.dart';
-import 'package:encrypt/encrypt.dart' as ec;
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:random_app/utils.dart';
+import 'package:random_app/view/theme.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'model/audit.dart';
+import 'model/data.dart';
 import 'model/display_item.dart';
-
-final key = ec.Key.fromUtf8('hAWnzuoKakJqgyPbNTVjxzRsDIhUnzKU');
-final iv = ec.IV.fromLength(16);
-final encrypter = ec.Encrypter(ec.AES(key));
-
-bool darkMode = true;
-
-Color dialogColor = const Color.fromARGB(255, 63, 63, 63);
-
-ThemeData lightTheme = ThemeData(
-    primarySwatch: Colors.green,
-    scaffoldBackgroundColor: Colors.white,
-    dialogBackgroundColor: Colors.white,
-    canvasColor: Colors.white,
-    hintColor: Colors.white70,
-    textTheme: const TextTheme(
-      bodyText1: TextStyle(),
-      bodyText2: TextStyle(),
-      button: TextStyle(),
-    ).apply(
-      bodyColor: Colors.black87,
-      displayColor: Colors.black87,
-    ),
-    inputDecorationTheme: const InputDecorationTheme(
-      filled: true,
-      fillColor: Colors.white10,
-      iconColor: Colors.black87,
-      hintStyle: TextStyle(color: Colors.black87),
-      labelStyle: TextStyle(color: Colors.black87),
-    ));
-
-ThemeData darkTheme = ThemeData(
-    primarySwatch: Colors.deepPurple,
-    scaffoldBackgroundColor: Colors.black87,
-    dialogBackgroundColor: Colors.grey,
-    canvasColor: Colors.black,
-    hintColor: Colors.black87,
-    textTheme: const TextTheme(
-      bodyText1: TextStyle(),
-      bodyText2: TextStyle(),
-      button: TextStyle(),
-    ).apply(
-      bodyColor: Colors.white70,
-      displayColor: Colors.white70,
-    ),
-    inputDecorationTheme: const InputDecorationTheme(
-      filled: true,
-      fillColor: Colors.grey,
-      iconColor: Colors.white70,
-      hintStyle: TextStyle(color: Colors.white70),
-      labelStyle: TextStyle(color: Colors.white70),
-    ));
+import 'model/ec.dart';
+import 'model/ecs.dart';
+import 'model/file.dart';
+import 'model/prefs.dart';
+import 'widget/dialogs/dialog_add.dart';
+import 'widget/list_navigation_buttons.dart';
+import 'widget/page/list.dart';
+import 'widget/searchbar_main.dart';
 
 void main() {
   runApp(const MyApp());
@@ -102,90 +55,127 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<DisplayItem> displayList = [];
-  List<DisplayItem> listList = [];
+  bool auditCurrent = true;
+  int mode = 2;
+  int modeSearch = 1;
+  int modeAudit = 2;
+  int modeEncrypt = 3;
 
-  List<String> auditData = [];
+  /// Custom Key Definitions (WIP):
+  /// main screen: alt a = searchbar toggle focus, ctrl > < = move back or forward in list, alt r: shows shuffle dialog, alt s: shows sort dialog
+  /// all dialogs : enter completes, delete removes, esc exits (already handled)
+  /// list item: ctrl up move up the list, down..., ctrl del removes, space toggles checked
+  /// list screen: ctrl . moves up a directory, ctrl > < = move back or forward in list
+  /// Double click list item: open item or directory if exists
 
-  late SharedPreferences prefs;
-  String defaultDir = '';
-  String defaultFile = '';
-  String androidDir = '';
+  num lastHotkeyPress = 0;
 
-  bool useNotes = false;
-
-  late StreamSubscription _intentDataStreamSubscription;
-  List<SharedMediaFile> _sharedFiles = [];
-  String _sharedText = '';
-
-  // 0 all, 1 unchecked, 2 checked
-  num cbViewMode = 0;
+  void _onKey(RawKeyEvent event) {
+    bool keyEventHandled = false;
+    num currentTime = DateTime.now().millisecondsSinceEpoch;
+    num timeDifference = currentTime - lastHotkeyPress;
+    if (timeDifference < 200) return;
+    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.keyA) {
+      addBtnPressed();
+      keyEventHandled = true;
+    }
+    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.digit2) {
+      settingsPressed();
+      keyEventHandled = true;
+    }
+    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.digit1) {
+      listsPressed();
+      keyEventHandled = true;
+    }
+    if (event.isShiftPressed && event.logicalKey == LogicalKeyboardKey.keyC) {
+      searchClearPressed();
+      keyEventHandled = true;
+    }
+    if (event.isAltPressed &&
+        event.logicalKey == LogicalKeyboardKey.arrowRight) {
+      nextSelectedList();
+      keyEventHandled = true;
+    }
+    if (event.isAltPressed &&
+        event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+      prevSelectedList();
+      keyEventHandled = true;
+    }
+    if (keyEventHandled) {
+      lastHotkeyPress = currentTime;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     init();
-    // For sharing images coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
-        .listen((List<SharedMediaFile> value) async {
-      //_sharedFiles = value;
-      //if (_sharedFiles.isEmpty) return;
-      //await getSettings();
-      //await loadFile(_sharedFiles.first.path);
-      //_sharedFiles.clear();
-      //setState(() {});
-    }, onError: (err) {
-      print("getIntentDataStream error: $err");
-    });
 
-    // For sharing images coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialMedia()
-        .then((List<SharedMediaFile> value) async {
-      _sharedFiles = value;
-      if (_sharedFiles.isEmpty) return;
-      prefs = await SharedPreferences.getInstance();
-      final directory = await getApplicationDocumentsDirectory();
-      androidDir = '${directory.path}/playlists';
-      defaultDir = androidDir;
-      unselectAllLists();
-      await loadFile(_sharedFiles.first.path.replaceAll(' ', '_'));
-      _sharedFiles.clear();
-      setState(() {});
-    });
+    if (isMobile()) {
+      // For sharing images coming from outside the app while the app is in the memory
+      intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
+          .listen((List<SharedMediaFile> value) async {
+        //sharedFiles = value;
+        //if (sharedFiles.isEmpty) return;
+        //await getSettings();
+        //await loadFile(sharedFiles.first.path);
+        //sharedFiles.clear();
+        //setState(() {});
+      }, onError: (err) {
+        print("getIntentDataStream error: $err");
+      });
 
-    // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) async {
-      //_sharedText = value;
-      //if (_sharedText.isEmpty) return;
-      //await getSettings();
-      //var fileName = '$androidDir/${DateTime.timestamp()}';
-      //importFile(fileName, _sharedText);
-      //_sharedText = "";
-      //setState(() {});
-    }, onError: (err) {
-      print("getLinkStream error: $err");
-    });
+      // For sharing images coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialMedia()
+          .then((List<SharedMediaFile> value) async {
+        sharedFiles = value;
+        if (sharedFiles.isEmpty) return;
+        prefs = await SharedPreferences.getInstance();
+        final directory = await getApplicationDocumentsDirectory();
+        androidDir = '${directory.path}/playlists';
+        defaultDir = androidDir;
+        unselectAllLists();
+        await loadFile(sharedFiles.first.path.replaceAll(' ', '_'));
+        sharedFiles.clear();
+        setState(() {});
+      });
 
-    // For sharing or opening urls/text coming from outside the app while the app is closed
-    ReceiveSharingIntent.getInitialText().then((String? value) async {
-      _sharedText = value ?? '';
-      if (_sharedText.isEmpty) return;
-      prefs = await SharedPreferences.getInstance();
-      final directory = await getApplicationDocumentsDirectory();
-      androidDir = '${directory.path}/playlists';
-      defaultDir = androidDir;
-      var fileName = '$androidDir/${DateTime.timestamp()}'.replaceAll(' ', '_');
-      unselectAllLists();
-      await importFile(fileName, _sharedText);
-      _sharedText = "";
-      setState(() {});
-    });
+      // For sharing or opening urls/text coming from outside the app while the app is in the memory
+      intentDataStreamSubscription =
+          ReceiveSharingIntent.getTextStream().listen((String value) async {
+        //sharedText = value;
+        //if (sharedText.isEmpty) return;
+        //await getSettings();
+        //var fileName = '$androidDir/${DateTime.timestamp()}';
+        //importFile(fileName, sharedText);
+        //sharedText = "";
+        //setState(() {});
+      }, onError: (err) {
+        print("getLinkStream error: $err");
+      });
+
+      // For sharing or opening urls/text coming from outside the app while the app is closed
+      ReceiveSharingIntent.getInitialText().then((String? value) async {
+        sharedText = value ?? '';
+        if (sharedText.isEmpty) return;
+        prefs = await SharedPreferences.getInstance();
+        final directory = await getApplicationDocumentsDirectory();
+        androidDir = '${directory.path}/playlists';
+        defaultDir = androidDir;
+        var fileName =
+            '$androidDir/${DateTime.timestamp()}'.replaceAll(' ', '_');
+        unselectAllLists();
+        await importFile(fileName, sharedText);
+        sharedText = "";
+        setState(() {});
+      });
+    }
   }
 
   @override
   void dispose() {
-    _intentDataStreamSubscription.cancel();
+    _focusNode.dispose();
+    intentDataStreamSubscription.cancel();
     super.dispose();
   }
 
@@ -213,278 +203,180 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
-  void findSelectedList() {
-    for (DisplayItem item in listList) {
-      if (item.trueData == defaultFile) {
-        item.selected = true;
-        break;
-      }
-    }
-  }
-
-  void unselectAllLists() {
-    for (DisplayItem item in listList) {
-      item.selected = false;
-    }
-  }
-
-  Future getSettings() async {
-    if (Platform.isAndroid) {
-      final directory = await getApplicationDocumentsDirectory();
-      androidDir = '${directory.path}/playlists';
-      var d = Directory(androidDir);
-      var c = await d.exists();
-      if (!c) {
-        await d.create();
-      }
-    }
-    defaultDir =
-        Platform.isAndroid ? androidDir : prefs.getString('defaultDir') ?? '';
-    defaultFile = prefs.getString('defaultFile') ?? '';
-    useNotes = prefs.getBool('USES_NOTES') ?? false;
-    getAuditData();
-  }
-
-  String useCheckboxesKey() {
-    return '${defaultFile}_useCheckboxes';
-  }
-
-  String checkedItemKey(String itemName) {
-    return '${defaultFile}_${itemName}_useCheckboxes';
-  }
-
-  void getAuditData() {
-    var audit = prefs.getString('auditData') ?? '';
-    if (audit.isNotEmpty) {
-      auditData = audit.split(';');
-    }
-    auditData
-        .removeWhere((element) => element.isEmpty || !element.contains(':'));
-  }
-
-  Future saveAuditData() async {
-    String auditStr = '';
-    for (String str in auditData) {
-      auditStr += '$str;';
-    }
-    await prefs.setString('auditData', auditStr);
-  }
-
-  Future addAuditData(String toAdd) async {
-    while (auditData.length >= 25) {
-      auditData.removeAt(0);
-    }
-    auditData.add('$toAdd:${getTimestamp()}');
-    await saveAuditData();
-  }
-
-  void removeLastAudit() {
-    int latestTime = 0;
-    int latestIndex = 0;
-    int i = 0;
-    for (String str in auditData) {
-      var arr = str.split(':');
-      var t = int.parse(arr[1]);
-      if (latestTime == 0 || t < latestTime) {
-        latestTime = t;
-        latestIndex = i;
-      }
-      i++;
-    }
-    auditData.removeAt(latestIndex);
-  }
-
-  void onSearchChanged(String text) {
-    setState(() {});
-  }
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 0.0,
-      ),
-      body: Column(
-        children: <Widget>[
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.list,
-                        color: darkMode ? Colors.white70 : Colors.black87,
-                      ),
-                      tooltip: 'Lists',
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute<void>(
-                          builder: (BuildContext context) {
-                            return getListScreen();
-                          },
-                        ));
-                      },
-                    ),
-                    Text('Item Count: ${displayList.length}'),
-                    IconButton(
-                      icon: Icon(
-                        Icons.settings,
-                        color: darkMode ? Colors.white70 : Colors.black87,
-                      ),
-                      tooltip: 'Settings',
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute<void>(
-                          builder: (BuildContext context) {
-                            return getSettingsScreen();
-                          },
-                        ));
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              useCheckboxes
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                                onPressed: () {
-                                  cbViewMode = 0;
-                                  setState(() {});
-                                },
-                                child: const Text('View All')),
-                            TextButton(
-                                onPressed: () {
-                                  cbViewMode = 1;
-                                  setState(() {});
-                                },
-                                child: const Text('View Checked')),
-                            TextButton(
-                                onPressed: () {
-                                  cbViewMode = 2;
-                                  setState(() {});
-                                },
-                                child: const Text('View Unchecked'))
-                          ]))
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.shuffle,
-                              color: darkMode ? Colors.white70 : Colors.black87,
-                            ),
-                            tooltip: 'Shuffle',
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      getConfirmDialog('Shuffle', () {
-                                        shuffle();
-                                        Navigator.pop(context);
-                                        setState(() {});
-                                      }));
-                            },
+    mainState = setState;
+    return RawKeyboardListener(
+        autofocus: true,
+        focusNode: _focusNode,
+        onKey: _onKey,
+        child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 0.0,
+          ),
+          body: Column(
+            children: <Widget>[
+              Column(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.list,
+                            color: darkMode ? Colors.white70 : Colors.black87,
                           ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.sort_by_alpha,
-                              color: darkMode ? Colors.white70 : Colors.black87,
-                            ),
-                            tooltip: 'Sort',
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      getConfirmDialog('Sort', () {
-                                        sort();
-                                        Navigator.pop(context);
-                                        setState(() {});
-                                      }));
-                            },
+                          tooltip: 'Lists',
+                          onPressed: () => listsPressed(),
+                        ),
+                        buildListNavigationButtons(context, true,
+                            showDirectoryUpBtn: false),
+                        IconButton(
+                          icon: Icon(
+                            Icons.settings,
+                            color: darkMode ? Colors.white70 : Colors.black87,
                           ),
-                        ],
-                      ),
-                    ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: TextField(
-                  style:
-                      TextStyle(color: darkMode ? Colors.white : Colors.black),
-                  controller: _searchDisplayController,
-                  onChanged: onSearchChanged,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: darkMode ? Colors.white24 : Colors.black26,
-                    hintText: 'Search',
-                    hintStyle: TextStyle(
-                        color: darkMode ? Colors.white : Colors.black),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: darkMode ? Colors.white : Colors.black,
-                    ),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        _searchDisplayController.text = "";
-                        onSearchChanged("");
-                      },
-                      icon: Icon(Icons.clear,
-                          color: darkMode ? Colors.white : Colors.black),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(48.0),
-                      borderSide: BorderSide.none,
+                          tooltip: 'Settings',
+                          onPressed: () {
+                            settingsPressed();
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                  useCheckboxes
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                    onPressed: () {
+                                      cbViewMode = 0;
+                                      setState(() {});
+                                    },
+                                    child: const Text('View All')),
+                                TextButton(
+                                    onPressed: () {
+                                      cbViewMode = 1;
+                                      setState(() {});
+                                    },
+                                    child: const Text('View Checked')),
+                                TextButton(
+                                    onPressed: () {
+                                      cbViewMode = 2;
+                                      setState(() {});
+                                    },
+                                    child: const Text('View Unchecked'))
+                              ]))
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.shuffle,
+                                  color: darkMode
+                                      ? Colors.white70
+                                      : Colors.black87,
+                                ),
+                                tooltip: 'Shuffle',
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          _buildConfirmDialog('Shuffle', () {
+                                            shuffle();
+                                            Navigator.pop(context);
+                                            setState(() {});
+                                          }));
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.sort_by_alpha,
+                                  color: darkMode
+                                      ? Colors.white70
+                                      : Colors.black87,
+                                ),
+                                tooltip: 'Sort',
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          _buildConfirmDialog('Sort', () {
+                                            sort();
+                                            Navigator.pop(context);
+                                            setState(() {});
+                                          }));
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                  buildMainSearchBar(),
+                ],
               ),
+              Expanded(
+                  key: UniqueKey(),
+                  child: RefreshIndicator(
+                      onRefresh: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                _buildConfirmDialog('Shuffle', () {
+                                  shuffle();
+                                  Navigator.pop(context);
+                                  setState(() {});
+                                }));
+                        return Future(() => null);
+                      },
+                      child: ListView.builder(
+                          itemCount: displayList.length,
+                          itemBuilder: (BuildContext context, int index) =>
+                              _buildDataDisplay(index))))
             ],
           ),
-          Expanded(
-              key: UniqueKey(),
-              child: RefreshIndicator(
-                  onRefresh: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) =>
-                            getConfirmDialog('Shuffle', () {
-                              shuffle();
-                              Navigator.pop(context);
-                              setState(() {});
-                            }));
-                    return Future(() => null);
-                  },
-                  child: ListView.builder(
-                      itemCount: displayList.length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          getDataDisplay(index))))
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_searchDisplayController.text.isEmpty) {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) => getAddDialog());
-          }
-        },
-        backgroundColor: Colors.deepPurple,
-        child: const Icon(Icons.add),
-      ),
-    );
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => addBtnPressed(),
+            backgroundColor: Colors.deepPurple,
+            child: const Icon(Icons.add),
+          ),
+        ));
+  }
+
+  void listsPressed() {
+    Navigator.push(context, MaterialPageRoute<void>(
+      builder: (BuildContext context) {
+        return const ListPage();
+      },
+    ));
+  }
+
+  void settingsPressed() {
+    Navigator.push(context, MaterialPageRoute<void>(
+      builder: (BuildContext context) {
+        return _buildSettingsScreen();
+      },
+    ));
+  }
+
+  void addBtnPressed() {
+    showDialog(
+        context: context, builder: (BuildContext context) => const AddDialog());
   }
 
   /// Earth (Home planet): Water, Iron, Lead (Secret fish)
 
-  Widget getDataDisplay(int index) {
+  Widget _buildDataDisplay(int index) {
     String displayItem = displayList[index].getDisplayData();
     Widget content;
     if (displayItem.contains(';')) {
@@ -492,17 +384,17 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       content = _buildDefaultListItem(index);
     }
-    return getDefaultDisplay(index, content);
+    return _buildDefaultDisplay(index, content);
   }
 
-  Widget getDefaultDisplay(int index, Widget content) {
+  Widget _buildDefaultDisplay(int index, Widget content) {
     DisplayItem displayItem = displayList[index];
     return GestureDetector(
         onLongPress: () {
           showDialog(
               context: context,
               builder: (BuildContext context) =>
-                  getAdvancedDialog(displayItem, index));
+                  _buildAdvancedDialog(displayItem, index));
         },
         onTap: () async {
           await Clipboard.setData(
@@ -558,40 +450,46 @@ class _MyHomePageState extends State<MyHomePage> {
               borderRadius: const BorderRadius.all(Radius.circular(12))),
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
           child: Text(
-            attributes.first,
+            attributes.first.trim(),
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ));
       attributes.removeAt(0);
     } else {
       if (str.contains(',')) {
         head = const SizedBox();
-        attributes.add(str);
+        attributes.add(str.trim());
       } else {
-        head = Container(
-            decoration: BoxDecoration(
-                color: !darkMode ? Colors.black12 : Colors.white10,
-                borderRadius: const BorderRadius.all(Radius.circular(12))),
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-            child: Text(
-              str,
-              style: isFirst
-                  ? const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
-                  : null,
-            ));
+        if (str.trim().isNotEmpty) {
+          head = Container(
+              decoration: BoxDecoration(
+                  color: !darkMode ? Colors.black12 : Colors.white10,
+                  borderRadius: const BorderRadius.all(Radius.circular(12))),
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+              child: Text(
+                str.trim(),
+                style: isFirst
+                    ? const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
+                    : null,
+              ));
+        } else {
+          head = Container();
+        }
       }
     }
     for (var attribute in attributes) {
       List<String> data = attribute.split(',');
       data = data.map((e) => e.trim()).toList();
       for (var element in data) {
-        Widget dataWidget = Container(
-            decoration: BoxDecoration(
-                color: !darkMode ? Colors.black12 : Colors.white10,
-                borderRadius: const BorderRadius.all(Radius.circular(12))),
-            margin: const EdgeInsets.fromLTRB(0, 8, 12, 0),
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-            child: Text(element));
-        dataArr.add(dataWidget);
+        if (element.trim().isNotEmpty) {
+          Widget dataWidget = Container(
+              decoration: BoxDecoration(
+                  color: !darkMode ? Colors.black12 : Colors.white10,
+                  borderRadius: const BorderRadius.all(Radius.circular(12))),
+              margin: const EdgeInsets.fromLTRB(0, 8, 12, 0),
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+              child: Text(element));
+          dataArr.add(dataWidget);
+        }
       }
     }
 
@@ -677,7 +575,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!displayItem
         .getDisplayData()
         .toLowerCase()
-        .contains(_searchDisplayController.text.toLowerCase().trim())) {
+        .contains(searchDisplayController.text.toLowerCase().trim())) {
       return false;
     }
 
@@ -688,36 +586,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return true;
   }
 
-  void shuffle({bool writeChanges = true}) {
-    displayList.shuffle();
-    setState(() {});
-    if (writeChanges) {
-      writeFile();
-    }
-  }
-
-  void sort({bool writeChanges = true}) {
-    displayList.sort((a, b) {
-      return a
-          .getDisplayData()
-          .toLowerCase()
-          .compareTo(b.getDisplayData().toLowerCase());
-    });
-    setState(() {});
-    if (writeChanges) {
-      writeFile();
-    }
-  }
-
-  bool auditCurrent = true;
-  int mode = 2;
-  int modeSearch = 1;
-  int modeAudit = 2;
-  int modeEncrypt = 3;
-
-  List<DisplayItem> searchList = [];
-
-  Widget getSettingsScreen() {
+  Widget _buildSettingsScreen() {
     return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
       return Scaffold(
           appBar: AppBar(
@@ -729,19 +598,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget getSettingsBody(BuildContext context, StateSetter state) {
     if (mode == modeAudit) {
-      return getAuditScreen(context, state);
+      return _buildAuditScreen(context, state);
     }
     if (mode == modeSearch) {
-      return getSearchScreen(context, state);
+      return _buildSearchScreen(context, state);
     }
     if (mode == modeEncrypt) {
-      return getEncryptScreen(context, state);
+      return _buildEncryptScreen(context, state);
     } else {
-      return getSettingsHeader(context, state);
+      return _buildSettingsHeader(context, state);
     }
   }
 
-  Widget getSettingsHeader(BuildContext context, StateSetter state) {
+  Widget _buildSettingsHeader(BuildContext context, StateSetter state) {
     return Column(children: [
       Row(children: [
         IconButton(
@@ -800,31 +669,18 @@ class _MyHomePageState extends State<MyHomePage> {
     ]);
   }
 
-  bool useCheckboxes = false;
-
-  final TextEditingController _eC = TextEditingController();
-  final TextEditingController _dC = TextEditingController();
-
-  ec.Encrypted encrypt(String input) {
-    return encrypter.encrypt(input, iv: iv);
-  }
-
-  String decrypt(String input) {
-    return encrypter.decrypt16(input, iv: iv);
-  }
-
-  Widget getEncryptScreen(BuildContext context, StateSetter state) {
+  Widget _buildEncryptScreen(BuildContext context, StateSetter state) {
     return Column(children: [
-      getSettingsHeader(context, state),
+      _buildSettingsHeader(context, state),
       Row(children: [
         Expanded(
             child: TextField(
           onChanged: (text) {
             if (text.isNotEmpty) {
               try {
-                _dC.text = decrypt(text);
+                dC.text = decrypt(text);
               } catch (e) {
-                _dC.text = '';
+                dC.text = '';
               }
             }
           },
@@ -840,7 +696,7 @@ class _MyHomePageState extends State<MyHomePage> {
             filled: true,
             fillColor: !darkMode ? Colors.white : dialogColor,
           ),
-          controller: _eC,
+          controller: eC,
         )),
         IconButton(
           icon: Icon(
@@ -849,7 +705,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           tooltip: 'Copy',
           onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: _eC.text));
+            await Clipboard.setData(ClipboardData(text: eC.text));
           },
         ),
       ]),
@@ -858,7 +714,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: TextField(
           onChanged: (text) {
             if (text.isNotEmpty) {
-              _eC.text = encrypt(text).base16;
+              eC.text = encrypt(text).base16;
             }
           },
           style: TextStyle(color: darkMode ? Colors.white : Colors.black),
@@ -873,7 +729,7 @@ class _MyHomePageState extends State<MyHomePage> {
             filled: true,
             fillColor: !darkMode ? Colors.white : dialogColor,
           ),
-          controller: _dC,
+          controller: dC,
         )),
         IconButton(
           icon: Icon(
@@ -882,19 +738,19 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           tooltip: 'Copy',
           onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: _dC.text));
+            await Clipboard.setData(ClipboardData(text: dC.text));
           },
         ),
       ])
     ]);
   }
 
-  Widget getSearchScreen(BuildContext context, StateSetter state) {
+  Widget _buildSearchScreen(BuildContext context, StateSetter state) {
     return Column(children: [
-      getSettingsHeader(context, state),
+      _buildSettingsHeader(context, state),
       TextField(
         onChanged: (text) {
-          if (text == 'Hayhat12\$') {
+          if (text == ecp) {
             mode = modeEncrypt;
             state(() {});
           } else {
@@ -920,7 +776,7 @@ class _MyHomePageState extends State<MyHomePage> {
           filled: true,
           fillColor: !darkMode ? Colors.white : dialogColor,
         ),
-        controller: _searchController,
+        controller: searchController,
       ),
       Expanded(
           child: ListView.builder(
@@ -950,7 +806,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ]);
   }
 
-  Widget getAuditScreen(BuildContext context, StateSetter state) {
+  Widget _buildAuditScreen(BuildContext context, StateSetter state) {
     List<Map<String, dynamic>> tempData = [];
     List<String> tempArr = [];
     for (var d in displayList) {
@@ -967,8 +823,8 @@ class _MyHomePageState extends State<MyHomePage> {
       return b['time'].compareTo(a['time']);
     });
     return Column(children: [
-      getSettingsHeader(context, state),
-      Text('---Audit---'),
+      _buildSettingsHeader(context, state),
+      const Text('---Audit---'),
       Row(children: [
         const Text('Current List only? '),
         Checkbox(
@@ -1026,221 +882,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ]);
   }
 
-  final TextEditingController _controller = TextEditingController();
-  final TextEditingController _searchDisplayController =
-      TextEditingController();
-  final TextEditingController _addController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
-
-  Widget getListScreen() {
-    return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Lists'),
-        ),
-        body: Column(
-          children: [
-            Row(children: [
-              TextButton(
-                  child: Text(
-                    'Import List',
-                    style: TextStyle(
-                      color: darkMode ? Colors.white70 : Colors.deepPurple,
-                    ),
-                  ),
-                  onPressed: () {
-                    openFile(context, state);
-                    state(() {});
-                  }),
-              TextButton(
-                  child: Text('Export List',
-                      style: TextStyle(
-                        color: darkMode ? Colors.white70 : Colors.deepPurple,
-                      )),
-                  onPressed: () {
-                    exportFile();
-                    state(() {});
-                  }),
-              TextButton(
-                  child: Text('Choose Default List',
-                      style: TextStyle(
-                        color: darkMode ? Colors.white70 : Colors.deepPurple,
-                      )),
-                  onPressed: () {
-                    chooseDefaultDir(context);
-                    state(() {});
-                  })
-            ]),
-            Expanded(
-              key: UniqueKey(),
-              child: ListView.builder(
-                  itemCount: listList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onLongPress: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                getAdvancedListDialog(index, state));
-                      },
-                      onTap: () async {
-                        await load(listList[index].trueData);
-                        setListSelected(index);
-                        setState(() {});
-                        state(() {});
-                      },
-                      child: Container(
-                          decoration: BoxDecoration(
-                              color: getSelectedCardColor(
-                                  listList[index].selected),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(12))),
-                          margin: const EdgeInsets.fromLTRB(12.0, 4, 12, 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child:
-                                        Text(listList[index].getDisplayData()),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                    );
-                  }),
-            )
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) => getAddListDialog(state));
-          },
-          backgroundColor: Colors.deepPurple,
-          child: const Icon(Icons.add),
-        ),
-      );
-    });
-  }
-
-  Future<void> exportFile() async {
-    if (Platform.isAndroid) {
-      XFile xfile = XFile(defaultFile);
-      if (useNotes) {
-        DisplayItem displayItem = DisplayItem(defaultFile);
-        String subject = displayItem.getDisplayData();
-        String data = await xfile.readAsString();
-        await Share.shareXFiles([xfile], subject: subject, text: data);
-      } else {
-        await Share.shareXFiles([xfile], text: 'Export Data');
-      }
-    }
-  }
-
-  void setListSelected(int index) {
-    listList[index].selected = !listList[index].selected;
-    for (int i = 0; i < listList.length; i++) {
-      if (i != index) {
-        listList[i].selected = false;
-      }
-    }
-  }
-
-  Dialog getAddListDialog(StateSetter outerState) {
-    return Dialog(
-        backgroundColor: darkMode ? dialogColor : Colors.white,
-        elevation: 10,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        child: StatefulBuilder(builder: (BuildContext context, state) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                style: TextStyle(color: darkMode ? Colors.white : Colors.black),
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: darkMode ? Colors.white60 : Colors.black54),
-                  ),
-                  hintStyle: TextStyle(
-                      color: darkMode ? Colors.white60 : Colors.black54),
-                  hintText: 'Name',
-                  filled: true,
-                  fillColor: !darkMode ? Colors.white : dialogColor,
-                ),
-                controller: _addController,
-              ),
-              TextButton(
-                  child: const Text(
-                    'Add',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                  onPressed: () {
-                    displayList.add(DisplayItem(_addController.text));
-                    createFile(_addController.text, context, outerState);
-                    _addController.text = '';
-                    Navigator.pop(context);
-                  }),
-            ],
-          );
-        }));
-  }
-
-  Dialog getAddDialog() {
-    return Dialog(
-        backgroundColor: darkMode ? dialogColor : Colors.white,
-        elevation: 10,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        child: StatefulBuilder(builder: (BuildContext context, state) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                obscureText: false,
-                maxLines: null,
-                style: TextStyle(color: darkMode ? Colors.white : Colors.black),
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: darkMode ? Colors.white60 : Colors.black54),
-                  ),
-                  hintStyle: TextStyle(
-                      color: darkMode ? Colors.white60 : Colors.black54),
-                  hintText: 'Name',
-                  filled: true,
-                  fillColor: !darkMode ? Colors.white : dialogColor,
-                ),
-                controller: _addController,
-              ),
-              TextButton(
-                  child: const Text(
-                    'Add',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                  onPressed: () {
-                    displayList.add(DisplayItem(_addController.text));
-                    writeFile();
-                    _addController.text = '';
-                    setState(() {});
-                    state(() {});
-                    Navigator.pop(context);
-                  }),
-            ],
-          );
-        }));
-  }
-
-  Dialog getAdvancedDialog(DisplayItem displayItem, int index) {
+  Dialog _buildAdvancedDialog(DisplayItem displayItem, int index) {
     String oldText = displayList[index].trueData;
     return Dialog(
         backgroundColor: darkMode ? dialogColor : Colors.white,
@@ -1298,7 +940,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           filled: true,
                           fillColor: !darkMode ? Colors.white : dialogColor,
                         ),
-                        controller: _controller
+                        controller: controller
                           ..text = displayList[index].trueData,
                         onChanged: (text) {
                           displayList[index].trueData = text;
@@ -1311,7 +953,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   tooltip: 'Copy',
                   onPressed: () async {
                     await Clipboard.setData(
-                        ClipboardData(text: _controller.text));
+                        ClipboardData(text: controller.text));
                   },
                 )
               ]),
@@ -1335,74 +977,7 @@ class _MyHomePageState extends State<MyHomePage> {
         }));
   }
 
-  Dialog getAdvancedListDialog(int index, StateSetter outerState) {
-    return Dialog(
-        backgroundColor: darkMode ? dialogColor : Colors.white,
-        elevation: 10,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        child: StatefulBuilder(builder: (BuildContext context, state) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                  child: const Text(
-                    'Remove',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onPressed: () {
-                    if (listList[index].selected) {
-                      clearDefaultFile();
-                    }
-                    deleteFile(listList[index].trueData);
-                    listList.remove(listList[index]);
-                    setState(() {});
-                    state(() {});
-                    outerState(() {});
-                    Navigator.pop(context);
-                  }),
-              TextField(
-                  style:
-                      TextStyle(color: darkMode ? Colors.white : Colors.black),
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: darkMode ? Colors.white60 : Colors.black54),
-                    ),
-                    hintStyle: TextStyle(
-                        color: darkMode ? Colors.white60 : Colors.black54),
-                    hintText: 'Name',
-                    filled: true,
-                    fillColor: !darkMode ? Colors.white : dialogColor,
-                  ),
-                  controller: _controller..text = listList[index].trueData,
-                  onChanged: (text) {
-                    listList[index].trueData = text;
-                  }),
-              TextButton(
-                  child: const Text(
-                    'Done',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                  onPressed: () {
-                    reloadFile(index);
-                    Navigator.pop(context);
-                  }),
-            ],
-          );
-        }));
-  }
-
-  void reloadFile(int index) async {
-    defaultFile = listList[index].trueData;
-    await prefs.setString("defaultFile", defaultFile);
-    await writeFile();
-    await loadFile(listList[index].trueData);
-    setState(() {});
-  }
-
-  Dialog getConfirmDialog(String title, dynamic callback) {
+  Dialog _buildConfirmDialog(String title, dynamic callback) {
     return Dialog(
         backgroundColor: darkMode ? dialogColor : Colors.white,
         elevation: 10,
@@ -1429,157 +1004,5 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           );
         }));
-  }
-
-  Color getSelectedCardColor(bool selected) {
-    var themeColor = !darkMode ? Colors.black12 : Colors.white10;
-    return selected ? const Color.fromARGB(63, 255, 234, 0) : themeColor;
-  }
-
-  void clearDefaultFile() {
-    defaultFile = '';
-    prefs.setString('defaultFile', '');
-  }
-
-  void deleteFile(String path) {
-    File file = File(path);
-    file.deleteSync();
-  }
-
-  Future load(String path) async {
-    Directory d = Directory(path);
-    if (d.existsSync()) {
-      loadDirectory(directory: path);
-    } else {
-      await loadFile(path);
-    }
-  }
-
-  Future loadFile(String path) async {
-    if (path.isEmpty) return;
-
-    try {
-      await loadFileContents(path);
-    } catch (err) {
-      print(err);
-    }
-    String temp = path;
-    if (Platform.isAndroid) {
-      var arr = path.split('/');
-      var s = arr[arr.length - 1];
-      var st = '$androidDir/$s';
-      st = st.replaceAll(' ', '_');
-      File file = File(st);
-      await writeFile(path: file.path);
-      temp = file.path;
-    }
-
-    defaultFile = temp;
-    prefs.setString("defaultFile", temp);
-    useCheckboxes = prefs.getBool(useCheckboxesKey()) ?? false;
-  }
-
-  Future loadFileContents(String path) async {
-    displayList.clear();
-    File file = File(path);
-    var s = file.openRead().map(utf8.decode);
-    var str = '';
-    await s.forEach((element) {
-      str += element;
-    });
-    var fileList = str.split('\n');
-    for (int i = 0; i < fileList.length; i++) {
-      var element = fileList[i];
-      if (element.trim().isEmpty) continue;
-      var displayItem = DisplayItem(element);
-      displayList.add(displayItem);
-    }
-  }
-
-  Future writeFile({String? path}) async {
-    File file = File(path ?? defaultFile);
-    String tempStr = '';
-    for (int i = 0; i < displayList.length; i++) {
-      var element = displayList[i];
-      tempStr += '${element.trueData}\n';
-    }
-    return file.writeAsString(tempStr);
-  }
-
-  void loadDirectory({String directory = ''}) {
-    listList.clear();
-    if (directory.isNotEmpty) {
-      Directory d = Directory(directory);
-      var fileList = d.listSync();
-      for (int i = 0; i < fileList.length; i++) {
-        var element = fileList[i];
-        var displayItem = DisplayItem(element.path);
-        listList.add(displayItem);
-      }
-    } else if (defaultDir.isNotEmpty) {
-      Directory d = Directory(defaultDir);
-      var fileList = d.listSync();
-      for (int i = 0; i < fileList.length; i++) {
-        var element = fileList[i];
-        var displayItem = DisplayItem(element.path);
-        listList.add(displayItem);
-      }
-    }
-    listList.sort((a, b) {
-      return a
-          .getDisplayData()
-          .toLowerCase()
-          .compareTo(b.getDisplayData().toLowerCase());
-    });
-  }
-
-  void openFile(BuildContext context, StateSetter state) async {
-    final documentsDir = await getApplicationDocumentsDirectory();
-    FilePickerResult? result = await FilePicker.platform
-        .pickFiles(initialDirectory: documentsDir.path);
-    if (result != null) {
-      String? path = result.files.single.path;
-      await loadFile(path!);
-      loadDirectory();
-      setState(() {});
-      state(() {});
-    } else {
-      // User canceled the picker
-    }
-  }
-
-  Future importFile(String path, String data) async {
-    if (path.isEmpty || data.isEmpty) return;
-    File newFile = File(path);
-    newFile.writeAsStringSync(data);
-
-    defaultFile = path;
-    await prefs.setString("defaultFile", path);
-
-    //defaultFile = path;
-    //prefs.setString("defaultFile", path);
-    loadDirectory();
-    findSelectedList();
-    useCheckboxes = prefs.getBool(useCheckboxesKey()) ?? false;
-  }
-
-  void createFile(String path, BuildContext context, StateSetter state) async {
-    await loadFile('$androidDir/${path.replaceAll(' ', '_')}');
-    loadDirectory();
-    setState(() {});
-    state(() {});
-  }
-
-  void chooseDefaultDir(BuildContext context) async {
-    if (Platform.isAndroid) return;
-    final documentsDir = await getApplicationDocumentsDirectory();
-    String? selectedDirectory = await FilePicker.platform
-        .getDirectoryPath(initialDirectory: documentsDir.path);
-
-    if (selectedDirectory != null) {
-      defaultDir = selectedDirectory;
-      await prefs.setString('defaultDir', defaultDir);
-      loadDirectory();
-    }
   }
 }

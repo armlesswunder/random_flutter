@@ -28,4 +28,9 @@ class DisplayItem {
 
     return tempStr;
   }
+
+  bool isDirectory() {
+    Directory d = Directory(trueData);
+    return d.existsSync();
+  }
 }

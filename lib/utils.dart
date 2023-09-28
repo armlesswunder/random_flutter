@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:intl/intl.dart';
 
 String getDisplayTimestamp(DateTime time) {
@@ -10,3 +12,5 @@ String getDisplayTimestamp(DateTime time) {
 int getTimestamp() {
   return DateTime.now().millisecondsSinceEpoch;
 }
+
+bool isMobile() => Platform.isAndroid || Platform.isIOS;
