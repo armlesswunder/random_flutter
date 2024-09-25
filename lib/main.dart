@@ -131,30 +131,34 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
 
-    setupDefaultDirs().then((value) {
-      //logger = Logger(output: MyFileOutput());
-      //logger.e('Logger Init; Timestamp=${getFileTimestamp(DateTime.now())}');
+    if (isWeb()) {
+      setupDefaultDirs();
+    } else {
+      setupDefaultDirs().then((value) {
+        //logger = Logger(output: MyFileOutput());
+        //logger.e('Logger Init; Timestamp=${getFileTimestamp(DateTime.now())}');
 
-      sessionTimestamp = getFileTimestamp(DateTime.now());
-      loggingFilepath =
-          '$cacheDir${Platform.pathSeparator}log$sessionTimestamp.txt';
-      loggingFile = File(loggingFilepath);
-      if (!loggingFile.existsSync()) loggingFile.createSync();
-      loggingFile.writeAsString(':: Logging session started ::\n\n',
-          mode: FileMode.writeOnlyAppend);
-      FlutterError.onError = (errorDetails) {
-        if (loggingFile.existsSync()) {
-          var out =
-              ':: E ::${getFileTimestamp(DateTime.now())} ${errorDetails.exception.toString()} \n:: Stacktrace: ${errorDetails.stack.toString()} \n';
-          loggingFile.writeAsString(out, mode: FileMode.writeOnlyAppend);
-        }
+        sessionTimestamp = getFileTimestamp(DateTime.now());
+        loggingFilepath =
+            '$cacheDir${Platform.pathSeparator}log$sessionTimestamp.txt';
+        loggingFile = File(loggingFilepath);
+        if (!loggingFile.existsSync()) loggingFile.createSync();
+        loggingFile.writeAsString(':: Logging session started ::\n\n',
+            mode: FileMode.writeOnlyAppend);
+        FlutterError.onError = (errorDetails) {
+          if (loggingFile.existsSync()) {
+            var out =
+                ':: E ::${getFileTimestamp(DateTime.now())} ${errorDetails.exception.toString()} \n:: Stacktrace: ${errorDetails.stack.toString()} \n';
+            loggingFile.writeAsString(out, mode: FileMode.writeOnlyAppend);
+          }
 
-        //logger.e('Timestamp=${getFileTimestamp(DateTime.now())}',
-        //    error: errorDetails.toStringShort(), stackTrace: errorDetails.stack);
-      };
+          //logger.e('Timestamp=${getFileTimestamp(DateTime.now())}',
+          //    error: errorDetails.toStringShort(), stackTrace: errorDetails.stack);
+        };
 
-      init();
-    });
+        init();
+      });
+    }
     _optionsFocusNode = FocusNode();
     initGlobalData();
     WidgetsBinding.instance.addObserver(this);

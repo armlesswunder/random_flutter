@@ -196,11 +196,13 @@ class DisplayItem {
   }
 
   bool isDirectory() {
+    if (isWeb()) return false;
     Directory d = Directory(trueData);
     return d.existsSync();
   }
 
   bool isSystemFile() {
+    if (isWeb()) return false;
     List<String> systemFiles = [getColorsFile().path];
     return systemFiles.contains(trueData);
   }

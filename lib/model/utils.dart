@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:io' show Directory, File, HttpClient, HttpClientRequest, Platform;
 
-//import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:json_text_field/json_text_field.dart';
 import 'package:path_provider/path_provider.dart';
@@ -323,38 +321,23 @@ Future<void> setupDefaultDirs() async {
   }
   if (isWeb()) {
     try {
+      listList = [];
       prefs = await SharedPreferences.getInstance();
-      if (prefs.getString('test') == null) {
-        var str = await rootBundle.loadString('presets/test.txt');
-        prefs.setString('test', str);
+      var webFiles = ['test.txt', 'test2.txt'];
+      for (String webFile in webFiles) {
+        if (prefs.getString(webFile) == null) {
+          var str = await rootBundle.loadString('presets/$webFile');
+          prefs.setString(webFile, str);
+        }
+        listList.add(DisplayItem(webFile));
       }
-      var s = prefs.getString('test');
-      print(s);
-      var resp = await http.get(
-        Uri.parse(
-            "https://github.com/armlesswunder/random_flutter/releases/download/text_assets/abw_test.txt"),
-        headers: {
-          "Access-Control-Allow-Origin":
-              "*", // Required for CORS support to work
-          "Access-Control-Allow-Credentials":
-              "true", // Required for cookies, authorization headers with HTTPS
-          "Access-Control-Allow-Headers":
-              "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
-          "Access-Control-Allow-Methods": "POST, OPTIONS, GET"
-        },
-      );
-      print(s);
-      //var existingFile = await DefaultCacheManager().getSingleFile(testUrl);
+      defaultFile = prefs.getString('defaultFile') ?? webFiles[0];
+      prefs = await SharedPreferences.getInstance();
+      listIndex = getSelectedListIndexForTabs();
+      historyList.add(listIndex);
     } catch (e) {
       print(e);
-//
-      //var audioByteData = (await rootBundle.load('presets/test.txt'));
-      //Uint8List audioUint8List = audioByteData.buffer.asUint8List(
-      //    audioByteData.offsetInBytes, audioByteData.lengthInBytes);
-      //await DefaultCacheManager().putFile(testUrl, audioUint8List);
     }
-    defaultFile = 'test';
-
     await loadFile(defaultFile);
     mainState!(() {});
   }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:json_text_field/json_text_field.dart';
 import 'package:logger/logger.dart';
 import 'package:random_app/model/audit.dart';
+import 'package:random_app/model/utils.dart';
 import 'package:random_app/widget/components/list_navigation_buttons.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
@@ -237,7 +238,11 @@ void addHistory(int index) {
 Future<void> listChosen(int index, {bool setState = true}) async {
   DisplayItem listItem = listList[index];
   setListSelected(index);
-  await load(listItem.trueData);
+  if (isWeb()) {
+    await loadFile(listItem.trueData);
+  } else {
+    await load(listItem.trueData);
+  }
   if (setState) {
     updateViews();
   }
@@ -248,9 +253,14 @@ Future<void> listChosen(int index, {bool setState = true}) async {
 Future filteredListChosen(int index) async {
   DisplayItem listItem = getFilteredLists()[index];
   setFilteredListSelected(index);
-  await load(listItem.trueData);
-  updateViews();
-  getAuditData();
+  if (isWeb()) {
+    await loadFile(listItem.trueData);
+    updateViews();
+  } else {
+    await load(listItem.trueData);
+    updateViews();
+    getAuditData();
+  }
   //state(() {});
 }
 

@@ -51,6 +51,19 @@ Future loadFile(String path, {bool setDefault = true}) async {
     print(err);
   }
   String temp = path;
+  if (isWeb()) {
+    defaultFile = temp;
+    prefs.setString("defaultFile", temp);
+    loadCheckData();
+    useCheckboxes = prefs.getBool(useCheckboxesKey()) ?? false;
+    cbViewMode = prefs.getInt(checkboxFilterKey()) ?? 0;
+    useFavs = prefs.getBool(useFavKey()) ?? false;
+    saveScrollPosition = prefs.getBool(saveScrollPositionKey()) ?? false;
+    hideActions = prefs.getBool(hideActionsKey()) ?? false;
+    searchDisplayController.text = prefs.getString(cacheSearchStrKey()) ?? "";
+    cachePos = prefs.getDouble(cachePosKey());
+    return;
+  }
 
   if (isAndroid()) {
     var arr = path.split(Platform.pathSeparator);
@@ -107,6 +120,9 @@ Future<Directory> getBaseDir() async {
 }
 
 String getCheckedFilePath({String? filePath}) {
+  if (isWeb()) {
+    return 'checked_items_key_${filePath ?? defaultFile}_cb';
+  }
   var arr = (filePath ?? defaultFile).split(Platform.pathSeparator);
   var checkFileName = arr[arr.length - 1];
   Directory dd = Directory(dataDir);
@@ -116,13 +132,23 @@ String getCheckedFilePath({String? filePath}) {
 void saveCheckData({String? filePath}) {
   var checkFilePath = getCheckedFilePath(filePath: filePath);
   String str = checkedItems.reduce((value, element) => '$value\n$element');
-  File(checkFilePath).writeAsStringSync(str);
+  if (isWeb()) {
+    prefs.setString(checkFilePath, str);
+  } else {
+    File(checkFilePath).writeAsStringSync(str);
+  }
 }
 
 void loadCheckData() {
   checkedItems = [];
   var checkFilePath = getCheckedFilePath();
-  checkedItems.addAll(File(checkFilePath).readAsStringSync().split('\n'));
+  List<String>? data = [];
+  if (isWeb()) {
+    data = prefs.getString(checkFilePath)?.split('\n');
+  } else {
+    data = File(checkFilePath).readAsStringSync().split('\n');
+  }
+  checkedItems.addAll(data ?? []);
 }
 
 String getFavFilePath({String? filePath}) {
@@ -159,7 +185,7 @@ Future loadFileContents(String path) async {
     //lines.forEach((element) {
     //  str += '$element\n';
     //});
-    str = prefs.getString('test') ?? '';
+    str = prefs.getString(path) ?? '';
   }
 
   if (path.contains('.json')) {
@@ -190,9 +216,7 @@ Future writeFile({String? path}) async {
       var element = displayList[i];
       tempStr += '${element.trueData}\n';
     }
-    return prefs.setString('test', tempStr);
-    //return DefaultCacheManager()
-    //    .putFile(testUrl, Uint8List.fromList(tempStr.codeUnits));
+    return prefs.setString(defaultFile, tempStr);
   } else {
     File file = File(path ?? defaultFile);
     String tempStr = '';
