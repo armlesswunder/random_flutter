@@ -1,0 +1,475 @@
+0: The Fool
+Auto
+
+Ultimate Persona Fusion: Loki
+Ultimate Persona Evolution:
+
+0: Jester (Adachi)
+The Social Link for Adachi. This requires you to visit Junes and talk to Adachi, and hang out with him. The first time you can do this is May 13th.
+
+All days you can meet up with Adachi at Junes (Gas Station at night):
+May: 13th, 20th, 23rd, 25th, 27th, 30th.
+June: 5th, 10th, 11th, 15th (Night), 26th, 28th
+July: 2nd, 4th, 5th, 12th, 14th, 24th, 25th
+August: 23rd, 25th
+September: 1st, 19th, 20th, 21st, 23rd, 24th, 27th, 30th.
+October: 6th, 12th, 21st, 24th, 26th.
+November: 1st.
+
+Rank 1: Choices don't matter.
+Rank 2: "That does sound annoying."
+Rank 3: "Why don't you come over for real?", "I'm a good cook.".
+Rank 4: "You're right."
+Rank 5: "That's true."
+Rank 6 - 10: Story Progression. (True or Ending).
+Make sure to when prompted to.
+
+Ultimate Persona Fusion:
+
+.adachi
+I: The Magician (Yosuke)
+Where: Classroom on weekdays,
+Junes on Sunday
+
+Rank 1-2: "It must be tough."
+Rank 2-3: "Hmm, you're looking hairier."
+Rank 3-4: "You're incredible.", "That's the spirit!"
+Rank 4-5: "Of course.", "I will soon."
+Rank 5-6: "No problem", "You're right"
+Rank 6-7: Choices don't matter. (Pick "I feel bad for Saki-senpai" and "You were super upset" for extra choices at rank 7-8).
+Rank 7-8: Choices don't matter.
+Rank 8-9: "Cheer up.", "You're right"
+Rank 9-10: Choices don't matter.
+
+Ultimate Persona Fusion: Mada
+Persona Evolution: Susano-o
+
+.yosuke
+Ultimate Persona Evolution: Takehaya Susano-o
+II: Priestess (Yukiko)
+The social link for Yukiko. Can be found on the 1st Floor Classrooms on weekdays, and the shopping district south on holidays and sundays. Becomes available May 17th.
+
+Schedule: Monday, Tuesday, Wednesday, Thursday, Sunday(Rain). Can't be found on any other day when raining.
+
+Rank 0-1: Choices don't matter
+Rank 1-2: "Going to apply for one?" "Sounds good."
+Rank 2-3: "Making dinner at the Inn?" "Good Luck" "Count me in! (Rank 4 Courage) or I don't mind"
+Rank 3-4: "Lets eat!(Rank3 Courage)or Hold on,my stomach" "There's always next time" "It was fun"
+Rank 4-5: "What's all this for?"
+Rank 5-6: "Gotten any better yet?" "Keep practicing" "They care about you"
+Rank 6-7: "It's okay"
+Rank 7-8: "You were cool"
+Rank 8-9: "For you..." (Select "I really like you." to start a romance).
+Rank 9-10 Lovers: Choices don't matter
+Rank 9-10 Friends: Choices don't matter
+
+Ultimate Persona Fusion: Scathach
+Persona Evolution: Amaterasu
+Ultimate Persona Evolution: Haredo-no-Okami
+
+.yuki
+III: Empress (Margaret)
+The social link for Margaret. All about fusing certain persona with certain skills. Can be found in the Velvet Room. Starting from May 19th, with Rank 3 Knowledge you can start the social link. Turning in requests to her and ranking up does not take up a time slot.
+
+Request 1: Ippon-datara with Sukujaka. (Level 17)
+(Temperance) Sylph [Sukukaja] + (Justice) Archangel
+(Temperance) Sylph (Sukukaja) + (Devil) Lilim
+(Temperance) Sylph (Sukukaja) + (Sun) Cu Sith
+
+Request 2: Matador with Mahama (Level 24)
+(Justice) Power [Mahama] + (Emperor) Oberon + (Hierophant) Anzu
+(Justice) Power [Mahama] + (Moon) Andras + (Hierophant) Omoikane
+
+Request 3: Gdon with Rampage (Level 31)
+(Hermit) Ippon-datara [LV21:Rampage] + (Death) Matador [Lv27: Rampage]
+(Chariot) Ares [LV28:Rampage] + (Hierophant) Shiisa
+(Fool) Legion [Lv23: Rampage] + (Chariot) Ares
+
+Request 4: Neko-Shogun with Bufula (Level 32 and July 20th for Cross Fusion)
+First Fusion: (Emperor) King Frost + (Magician) Hua Po
+= (Strength) Kusi Mitana [Bufula]
+Then: (Chariot)Ara Mitama + (Strength) Kusi Mitama [Bufula] + (Priestess) Saki Mitama + (Temperance) Nigi Mitama
+
+Request 5: Black Frost with Auto-Sukujaka (Level 38 and July 20th)
+First Fusion: (Hierophant) Anzu [LV20:Auto-Sukukaja] + (Temperance) Sylph
+(Hierophant) Anzu [LV20:Auto-Sukukaja] + (Temperance) Apsaras
+= (Magician) Jack Frost [Auto-Sukukaja]
+Then: (Magician) Pyro Jack + (Magician) Jack Frost + (Emperor) King Frost + (Magician) Pixie + (Death) Ghoul with one having Auto-Sukukaja
+
+Request 6: Yatagarusu with Megido (Level 40)
+(Death) Samael [Lv39: Megido] + (Hermit) Mothman
+
+Request 7: Yatsufusa with Mediarama (Level 49 and July 20th)
+(Emperor) Thoth [Lv47: Mediarama] + (Hanged-man) Orthrus + (Hanged-man) Makami + (Sun) Narasimha + (Hermit) Mothman
+
+Request 8: Ganesha with Tetrakarn (Level 50)
+(Fool) Decarabia [Tetrakarn] + (Tower) Cu Chulain
+
+Request 9: Trumpeter with Mind Charge (Level 67 and July 20th)
+(Death) Matador + (Death) White Rider + (Hierophant) Daisoujou + (Emperor) Pabilsag
++ (Hanged-man) Taown + (Tower) Taotie [LV38:Mind Charge]
+
+Ultimate Persona Fusion: Isis
+
+IV: Emperor (Kanji)
+Practice Building 1F, MTWHF; Shopping District North, Holidays and Sundays.
+
+Rank 0-1: Choices don't matter
+Rank 1-2: "You just need to change"
+Rank 2-3: Choices don't matter
+Rank 3-4: "Plenty" "I'll go with you" "You're giving him a new one?"
+Rank 4-5: "It was pretty amazing"
+Rank 5-6: Choices don't matter
+Rank 6-7: "I want to learn too"
+Rank 7-8: "You got a warrant?" "Tell him Kanji."
+Rank 8-9: "How was it?" "Good for you"
+Rank 10: Choices don't matter
+
+Ultimate Persona Fusion: Odin
+Persona Evolution: Rokuten Maou
+Ultimate Persona Evolution: Takeji Zaiten
+
+.kanji
+V: Hierophant (Dojima)
+The social link for Dojima. He is only available at night, and can be found in your house. He has no set schedule, but gets more off days if you have cleared the current dungeon. When available, you cannot hang out with Nanako.
+Rank 1-2 Requires Level 2 Expression
+Rank 3-4 Requires Level 3 Expression
+Rank 4-5 Requires Level 4 Expression
+
+Rank 1-2: "Working" "Tell me about yourself" "That's stretching it.
+Rank 2-3: "Fit or not, you're family"
+Rank 3-4: "With cream" "You don't have to do that"
+Rank 4-5: "Can I help?" "But Nanako?"
+Rank 5-6: "Then let's go outside"
+Rank 6-7: "This is more important, huh?"
+Rank 7-8: "Want some coffee?" "Because you're a coward (Requires Level 5 Courage) otherwise, Because of Nanako."
+Rank 8-9: "It was fun." "Was it hard?"
+Rank 10: "Thank you" "Leave it to me"
+
+Ultimate Persona Fusion: Kohryu
+.dojima
+VI: Lovers (Rise)
+The social link for Rise. Can be found in the Classroom Building 1F on weekdays, and Shopping District South on Holidays and Sundays. after July 23rd.
+
+Schedule: Friday, Saturday, Sunday. Can't be found on rainy days.
+
+Rank 1-2: "Just order takeout"
+Rank 2-3: "You come here often?"
+Rank 3-4: "Grab her hand and run", "Go along with her", "I don't mind"
+Rank 4-5: "All the time" "I don't know"
+Rank 5-6: "She'll understand (Requires Level 5 understanding) otherwise Having second thoughts?" "If you're serious..."
+Rank 6-7: "That part doesn't matter" "Laugh it off (Requires Level 5 Courage) otherwise move closer to her"
+Rank 7-8: Choices don't matter (Select "Hold her" to start a romance).
+Rank 8-9: "Risette is Rise, too"
+Rank 10 Lovers: Choices don't matter.
+Rank 10 Friends: Choices don't matter
+
+Ultimate Persona Fusion: Ishtar
+Persona Evolution: Kanzeon
+Ultimate Persona Evolution: Kouzeon
+
+VII: Chariot (Chie)
+The social link for Chie. Can be found on the School Roof on weekdays and Shopping District South on Holidays and Sundays. Available starting April 18th.
+
+Schedule: Monday, Tuesday, Thursday, Saturday. Can't be found on rainy days.
+
+Rank 1-2: "Right" "I'm cool with it"
+Rank 2-3: "Its cute (Requires Level 3 Courage) otherwise Its very feminine"
+Rank 3-4: "Quit bragging on her (Requires Level 3 Courage) otherwise None of your business" "Hold Chie's hand (Requires Courage) otherwise Badmouth about Takeshi"
+Rank 4-5: "You look so happy" "I worry more for you"
+Rank 5-6: "Exactly" "Of course"
+Rank 6-7: "Hold Chie back (Requires Level 4 Courage)" "It's not trouble"
+Rank 7-8: "That's the first step"
+Rank 8-9: "You protected that kid" ("Will you be my girlfriend" will start a romance)
+Rank 10 Lovers: "It was messier" "That sounds good"
+Rank 10 Friends: Choices don't matter
+
+Ultimate Persona Fusion: Futsunushi
+Persona Evolution: Suzuka Gozen
+Ultimate Persona Evolution: Haraedo-no-Okami
+
+VIII: Justice (Nanako)
+This is the social link of Nanako. Her schedule depends on whether or not you have completed the current dungeon. When Dojima is around, you cannot interact with her social link. Starts May 3rd.
+Point requirements for each rank are high due to vegetables giving points with Dojima and Nanako.
+Rank 3-4 requires Level 3 Expression
+Rank 5-6 requires Level 5 Expression
+
+Rank 1-2: "Go ahead and ask" "That's right or Nope" "I have you (Only if you selected Nope)"
+Rank 2-3: "Let's go buy some together" "It's not Nanako's fault (Requires Level 3 Expression)"
+Rank 3-4: "Is there anything else" "They go to heaven" "I don't know" "He's protecting you"
+Rank 4-5: "A person you love a lot" "Did he say that?" "Listen to her talk (Requires Level 3 understanding) otherwise Talk with her"
+Rank 5-6: "Swear to it" "I'll ask him with you."
+Rank 6-7: "Let's go look for her" "Let's go home"
+Rank 7-8: "I'll help you look for it." "He's lonely too"
+Rank 8-9: "He loves you too" "I feel sorry for you too" "Play with her"
+Rank 10: "Sure thing" "Let's do it"
+
+Ultimate Persona Fusion: Srosha
+
+.nanako
+IX: Hermit (Fox)
+This is the social link for the Fox of the shrine. He gives you Ema Requests, which you can turn in to rank up his social link. He can heal your SP in the TV world, with the cost going down per every level in the social link. It starts at 60 yen per SP at rank 1 but goes down 5 yen every rank, until its 15 yen per SP at Rank 10. The fox can be found at the Shopping District Shrine.
+
+Rank 1: Clear Quest 7
+Rank 2: Clear Quest 8
+Rank 3: Clear Quest 9
+Rank 4: Clear Quest 10
+Rank 5: Clear Quest 11
+Rank 6: Clear Quest 12
+Rank 7: Clear Quest 13
+Rank 8: Clear Quest 14
+Rank 9: Clear Quest 15
+
+Ultimate Persona Fusion: Ongyo-ki
+
+X: Fortune (Naoto)
+The social link for Naoto. Can be found on the Classroom Building 1F on weekdays and Samegawa Floodplain on Sundays and Holidays. To start, on October 21st talk to Naoto then go to the Shopping District North, find the man in black near Aiya. Talk to him and pick the first choice, which requires max knowledge. Go back to school and talk to Naoto, which requires maxed courage to start.
+
+Schedule: Monday, Tuesday, Wednesday, Saturday, Sunday. Can't be found on rainy days.
+
+Rank 1-2: "That's no fun" "Remember that card...?"
+Rank 2-3: "A challenge for a duel?"
+Rank 3-4: "That "Card" again?" "Let's catch him together"
+Rank 4-5: "Burn it" "A mailbox" "Good, you got it back" "Let's do it"
+Rank 5-6: "Because I looked reliable" "The numbers are important" "Your gender doesn't matter" (Select "I'm glad your a girl" to start a romance)
+Rank 6-7: "Subtract '40' and '4'?" "Don't be afraid"
+Rank 7-8: "I feel kinda sad" "Protect Naoto" "Because we're friends" (Select "Because I love you" to start a romance).
+Rank 8-9: "Somewhere high" "Throwing things away?"
+Rank 10 Lovers: Choices don't matter (Select "I like it higher" to make Naoto dress as a girl for the christmas event).
+Rank 10 Friends: Choices don't matter.
+
+Ultimate Persona Fusion: Norn
+Persona Evolution: Yamato Takeru
+Ultimate Persona Evolution: Yamato Sumeragi
+
+.naoto
+XI: Strength - Hunger (Athletes - Adachi)
+
+Schedule: Monday, Tuesday, Wednesday, Saturday, Sunday. Can't be found on rainy days.
+
+Kou:
+Rank 1-2: "Junes" "I'm jealous" "Sure"
+Rank 2-3: "Just tell me how" "I can see that" "Leave it to me"
+Rank 3-4: "It's hard to imagine" "That's good for you"
+Rank 4-5: "You've got some nerve" "Let's go do something fun"
+Rank 5-6: "You're right" "What about yourself...?"
+Rank 6-7: Choices don't matter
+Rank 7-8: "Let's catch up to him" "You alright?"
+Rank 8-9: "Don't jump to conclusions" "It was written recently?"
+Rank 10: Choices don't matter
+Daisuke:
+Rank 1-2: "Got it" "Thanks for the help"
+Rank 2-3: Choices don't matter
+Rank 3-4: "Right on"
+Rank 4-5: "I'm just getting warmed up"
+Rank 5-6: "Anything for you guys (Requires Level 4 Understanding) otherwise No problem"
+Rank 6-7: "Sounds good" "Could be." "We've got a problem" "Count me in"
+Rank 7-8: "Stop them" "That's his charm"
+Rank 8-9: "Could be"
+Rank 10: Choices don't matter.
+
+Ultimate Persona Fusion: Zaou-Gongen
+
+.kou.daisuke
+XII: Hanged Man (Naoki)
+He can be found on the
+
+Schedule: Monday, Tuesday, Wednesday, Thursday. Can't be found on rainy days.
+
+Rank 1-2: "Tired of the food?" "I don't know"
+Rank 2-3: "Tell an American joke" "I'll go tell them off"
+Rank 3-4: "Talk back to the lady or Flatter the lady (Requiring Level 4 Courage or Expression). "It's not your fault"
+Rank 4-5: "That's a good idea"
+Rank 5-6: "You're not the only one"
+Rank 6-7: "I don't mind" "Take action"
+Rank 7-8: "We can't just ignore you"
+Rank 8-9: "People are just different" "Just let it all out Naoki (Requires Level 5 Understanding) otherwise She can hear you"
+Rank 10: "I didn't do anything"
+
+Ultimate Persona Fusion: Attis
+.naoki
+XIII: Death (Hisano)
+The social link for Hisano.
+
+Schedule: Only Available on Holidays and Sundays when not raining.
+Rank 6-7: Talk to Daidara at the Weapon Shop to get Husband's Letter.
+
+Rank 1-2: "Stop staring at me"
+Rank 2-3: "Of what?" "I'm jealous" "That's not true"
+Rank 3-4: "Don't be depressed"
+Rank 4-5: "It's actually interesting" "Talk about school."
+Rank 5-6: "I get it" "Letters? How inconvenient"
+Rank 6-7: Choices don't matter
+Rank 7-8: "Hang in there"
+Rank 8-9: "That's selfish" "I guess so."
+Rank 10: "What about your husband?"
+
+Ultimate Persona: Mahakala
+
+.death.hisano
+XIV: Temperance (Eri)
+The social link for Eri.  You can keep advancing the social link by going to the Bus Stop at Shopping District South.
+
+Schedule: Monday, Friday, Saturday. Can't be started when raining.
+
+Rank 1-2: "I hate kids"
+Rank 2-3: "I don't know"
+Rank 3-4: "You're right.." "Just let it go"
+Rank 4-5: Choices don't matter
+Rank 5-6: "Featherman R"
+Rank 6-7: "You're both afraid" "That's not true"
+Rank 7-8: Choices don't matter
+Rank 8-9: "I'm fine" "Yeah he is" "Its never too late"
+Rank 10: "I'll be lonely here"
+
+Ultimate Persona Fusion: Vishnu
+
+.eri.daycare
+XV: Devil (Sayoko)
+The social link for Sayoko.
+
+Schedule: Wednesday, Thursday, Friday. Can't be started on rainy days. Must be night time.
+
+Rank 1-2: "What do you mean?"
+Rank 2-3: "For the money" "I do" "Stop it!"
+Rank 3-4: "...Okay"
+Rank 4-5: "It's like a soap opera" "Comfort her (Requires Level 5 Understanding) otherwise Cheer her up"
+Rank 5-6: Choices don't matter
+Rank 6-7: "Hang in there"
+Rank 7-8: Choices don't matter
+Rank 8-9: Choices don't matter
+Rank 10: Choices don't matter
+
+Ultimate Persona Fusion: Beelzebub
+
+XVI: Tower (Shu)
+The social link for Shu. To start this social link, apply for the Tutor job (Requires Level 5 Understanding), then go to the bus stop at night.
+
+Schedule: Tuesday, Thursday, Saturday. Can't be started on rainy days.
+
+Rank 0-1: "PE"
+Rank 1-2: "Sure I do" "I'll stay and help you (Requires Level 5 Diligence)"
+Rank 2-3: "It's boring" "Well, it is the countryside"
+Rank 3-4: "That's just how it is" "You're not the only one"
+Rank 4-5: "No there isn't." "Put some effort into it" "I don't mind"
+Rank 5-6: "That's not it"
+Rank 6-7: "What I like in a girl is...."
+Rank 7-8: "This guy" "Cheer him up"
+~The game will force you home next time you go~
+Rank 8-9: Choices don't matter
+Rank 10: "No, it's all you"
+
+Ultimate Persona Fusion: Shiva
+
+.shu.tutor
+XVII: Star (Teddie)
+The social llnk for Teddie. This is an automatic social link that starts on June 24th.
+
+Rank 1: Event on June 24th
+Rank 2: Clear Marukuyu Striptease
+Rank 3: Event on July 26th
+Rank 4: Clear Void Quest
+Rank 5: Event on September 8th
+Rank 6: Event on October 7th
+Rank 7: Event on October 11th
+Rank 8: Event on October 30th
+Rank 9: Clear Heaven
+Rank 10: Event on December 5th (Normal or True Ending).
+
+Ultimate Persona Fusion: Helel
+Persona Evolution: Kamui
+Ultimate Persona Evolution: Kamui-Moshiri
+
+XVIII: Moon (Ai)
+The social link for Ai. To begin, rank up the Strength social link to Rank 4, and you will see an event with Ai. You can find her in the School Lobby after that, talk to her and she will ask you to skip class with her. To do this you need Level 3 Courage and accept her request, this will begin the social link.
+Be careful with this social link, because many choices will lead to her bond reversing.
+
+Schedule: Wednesday, Thursday, Friday, Sunday(Rain). Can't be found on other days while raining.
+
+Rank 1-2: "We'll have to come back" "Buy it yourself"
+Rank 2-3: "Let's just chill" (Don't select "That was downright cruel...")
+Rank 3-4: "Stop them" "Hey, let's go"
+Rank 4-5: "I didn't do much" "Have a little confidence" (Don't select "Not gonna happen!")
+Rank 5-6: Select "I'll be your boyfriend" and "I don't really care" to begin a temporary romance. Also select "Should think about it" to go down a lovers route.
+~Temporary Romance Route~
+Rank 6-7: "I don't mind" "You have a crush on me"
+Rank 7-8: "Happens all the time"
+Rank 8-9: "Thank you"
+Rank 10: Select "Accept it" to begin a Romance.
+~Lovers Route~
+Rank 6-7: "Sexy Clothes" "Yep" "Of course you are"
+Rank 7-8: "Of course" "Naturally..."
+Rank 8-9: "That's not true" "Sure" (Selecting "We need time apart" will break her social link permanently).
+Rank 10: Choices don't matter
+
+Ultimate Persona Fusion: Asura
+.ai
+XIX: Sun (Yumi or Ayane)
+The social link of Yumi or Ayane. Starting April 25th you can either join the Drama Club (Yumi) or Music Club (Ayane). The Drama Club is on Practice Building 1F and the Music Club is Learning Building 2F. They are both at the Shopping District North on Sundays and Holidays.
+
+Schedule: Monday, Tuesday, Friday. Can advance while raining.
+
+Yumi:
+Rank 1-2: "What tempts me is not.." "I'll give it my all!"
+Rank 2-3: Choices don't matter.
+Rank 3-4: "No." "Is something wrong?" "I can't forget"
+Rank 4-5: "Just passing by" "Take care of yourself, too" "Yes I do"
+Rank 5-6: "How is your mother?"
+Rank 6-7: "He's a kind father"
+Rank 7-8: "Gently encourage her"
+Rank 8-9: "Think about it slowly"
+Rank 10: Choices don't matter (Select "Hug her" to start a romance)
+Ayane:
+Rank 0-1: "Help out"
+Rank 1-2: "You do have talent" (Requires Understanding) otherwise Effort is what matters" "Help out"
+Rank 2-3: "Forget about it today." "That's a great attitude"
+Rank 3-4: "Why don't you give up? (Requires Level 3 Courage)" "Want me to help out (Requires understanding) or Alright, follow me (Requires Courage)." "No, you're not (Requires Level 3 Understanding) otherwise Just hang in there"
+Rank 4-5: "Its okay to mess up (Requires Level 3 Understanding) otherwise Don't worry, you can do it"
+Rank 5-6: Choices don't matter.
+Rank 6-7: "Hold Her"
+Rank 7-8: Choices don't matter ("Reveal your feelings for her" starts a romance).
+~Friends Route~
+Rank 8-9: Choices don't matter
+Rank 10: Choices don't matter
+~Lovers Route~
+Rank 8-9: "Wanna come to my house? (Requires Courage) otherwise Wanna go grab some food?"
+Rank 10:Choices don't matter.
+.yumi.ayane
+XX: Judgement
+This is an automatic Social Link, all about the bond with your friends.
+
+Rank 1: December 3rd
+Rank 2: December 4th
+Rank 3: December 4th
+Rank 4: December 5th
+Rank 5: December 5th
+Rank 6: December 6th
+Rank 7: December 7th
+Rank 8: December 7th
+Rank 9: Clear the Town.
+Rank 10: Clear the Town.
+
+Ultimate Persona Fusion: Lucifer
+
+XX: Aeon (Marie)
+The social link with Marie. Enter the Velvet Room and hang out with her, starting April 18th.
+Rank 5 can only be started July 24th and after.
+
+Schedule:
+Wednesday, Saturday, Sunday, and on Holidays. Can't be hung out with on rainy days.
+
+Rank 0-1: Choices don't matter.
+Rank 1-2: Choices don't matter.
+Rank 2-3: "Play around", "Let's hurry"
+Rank 3-4: "It's fun"
+Rank 4-5: Choices don't matter
+Rank 5-6: "Its made of bamboo"
+Rank 6-7: Choices don't matter
+Rank 7-8: Choices don't matter
+Rank 8-9: "I'll help". (Choose "Because I love you" and "Hug her" to start a romance).
+Rank 10 Lovers: Choices don't matter
+Rank 10 Friends: "It was fun"
+
+Ultimate Persona Fusion: Kaguya
+
+.marie.aeon

@@ -1,0 +1,5 @@
+As defined in decodeString method:
+
+<nl> = Newline
+<period> = period .
+<comma> = comma ,

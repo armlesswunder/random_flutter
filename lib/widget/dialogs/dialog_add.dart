@@ -28,6 +28,12 @@ class AddDialogState extends State<AddDialog> {
   }
 
   @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return RawKeyboardListener(
         autofocus: true,

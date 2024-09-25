@@ -36,7 +36,13 @@ dependencies:
   shared_preferences: any
   receive_sharing_intent: ^1.4.5
   intl: ^0.18.0
+  archive: ^3.1.6
+  audioplayers: ^5.2.1
+  fast_cached_network_image: ^1.2.7
   permission_handler: ^10.0.0
+  json_text_field: ^1.1.0
+  flutter_cache_manager: any
+  logger: ^2.4.0
   flutter:
     sdk: flutter
 
@@ -71,7 +77,6 @@ flutter_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -81,6 +86,10 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/sfx/
+    - assets/presets/
+    - assets/guide.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

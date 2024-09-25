@@ -1,24 +1,29 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
 
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:random_app/utils.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:random_app/model/utils.dart';
+import 'package:random_app/view/color_spec.dart';
 import 'package:random_app/view/theme.dart';
+import 'package:random_app/widget/components/favorite_button.dart';
+import 'package:random_app/widget/components/image_builder.dart';
+import 'package:random_app/widget/components/list_navigation_buttons.dart';
+import 'package:random_app/widget/page/settings/page.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'model/audit.dart';
 import 'model/data.dart';
 import 'model/display_item.dart';
-import 'model/ec.dart';
-import 'model/ecs.dart';
 import 'model/file.dart';
 import 'model/prefs.dart';
+import 'widget/components/searchbar_main.dart';
 import 'widget/dialogs/dialog_add.dart';
-import 'widget/list_navigation_buttons.dart';
 import 'widget/page/list.dart';
-import 'widget/searchbar_main.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,11 +41,23 @@ class MyApp extends StatelessWidget {
         valueListenable: _notifier,
         builder: (_, mode, __) {
           return MaterialApp(
-            title: 'List Master',
+            scrollBehavior: isMobile()
+                ? ScrollConfiguration.of(context).copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.touch,
+                    },
+                  )
+                : ScrollConfiguration.of(context).copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.mouse,
+                      PointerDeviceKind.trackpad,
+                    },
+                  ),
+            title: 'List Wizard',
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: mode,
-            home: const MyHomePage(title: 'List Master'),
+            home: const MyHomePage(title: 'List Wizard'),
           );
         });
   }
@@ -54,13 +71,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  bool auditCurrent = true;
-  int mode = 2;
-  int modeSearch = 1;
-  int modeAudit = 2;
-  int modeEncrypt = 3;
-
+class _MyHomePageState extends State<MyHomePage>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   /// Custom Key Definitions (WIP):
   /// main screen: alt a = searchbar toggle focus, ctrl > < = move back or forward in list, alt r: shows shuffle dialog, alt s: shows sort dialog
   /// all dialogs : enter completes, delete removes, esc exits (already handled)
@@ -69,6 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Double click list item: open item or directory if exists
 
   num lastHotkeyPress = 0;
+  bool useHandles = false;
+  Timer? cachePosTimer;
+
+  late FocusNode _optionsFocusNode;
+  List<String> checkedOptions = [' - ', 'View Checked', 'View Unchecked'];
 
   void _onKey(RawKeyEvent event) {
     bool keyEventHandled = false;
@@ -101,6 +118,10 @@ class _MyHomePageState extends State<MyHomePage> {
       prevSelectedList();
       keyEventHandled = true;
     }
+    if (event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyF) {
+      searchFocus.requestFocus();
+      keyEventHandled = true;
+    }
     if (keyEventHandled) {
       lastHotkeyPress = currentTime;
     }
@@ -109,248 +130,369 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    init();
 
-    if (isMobile()) {
-      // For sharing images coming from outside the app while the app is in the memory
-      intentDataStreamSubscription = ReceiveSharingIntent.getMediaStream()
-          .listen((List<SharedMediaFile> value) async {
-        //sharedFiles = value;
-        //if (sharedFiles.isEmpty) return;
-        //await getSettings();
-        //await loadFile(sharedFiles.first.path);
-        //sharedFiles.clear();
-        //setState(() {});
-      }, onError: (err) {
-        print("getIntentDataStream error: $err");
-      });
+    setupDefaultDirs().then((value) {
+      //logger = Logger(output: MyFileOutput());
+      //logger.e('Logger Init; Timestamp=${getFileTimestamp(DateTime.now())}');
 
-      // For sharing images coming from outside the app while the app is closed
-      ReceiveSharingIntent.getInitialMedia()
-          .then((List<SharedMediaFile> value) async {
-        sharedFiles = value;
-        if (sharedFiles.isEmpty) return;
-        prefs = await SharedPreferences.getInstance();
-        final directory = await getApplicationDocumentsDirectory();
-        androidDir = '${directory.path}/playlists';
-        defaultDir = androidDir;
-        unselectAllLists();
-        await loadFile(sharedFiles.first.path.replaceAll(' ', '_'));
-        sharedFiles.clear();
-        setState(() {});
-      });
+      sessionTimestamp = getFileTimestamp(DateTime.now());
+      loggingFilepath =
+          '$cacheDir${Platform.pathSeparator}log$sessionTimestamp.txt';
+      loggingFile = File(loggingFilepath);
+      if (!loggingFile.existsSync()) loggingFile.createSync();
+      loggingFile.writeAsString(':: Logging session started ::\n\n',
+          mode: FileMode.writeOnlyAppend);
+      FlutterError.onError = (errorDetails) {
+        if (loggingFile.existsSync()) {
+          var out =
+              ':: E ::${getFileTimestamp(DateTime.now())} ${errorDetails.exception.toString()} \n:: Stacktrace: ${errorDetails.stack.toString()} \n';
+          loggingFile.writeAsString(out, mode: FileMode.writeOnlyAppend);
+        }
 
-      // For sharing or opening urls/text coming from outside the app while the app is in the memory
-      intentDataStreamSubscription =
-          ReceiveSharingIntent.getTextStream().listen((String value) async {
-        //sharedText = value;
-        //if (sharedText.isEmpty) return;
-        //await getSettings();
-        //var fileName = '$androidDir/${DateTime.timestamp()}';
-        //importFile(fileName, sharedText);
-        //sharedText = "";
-        //setState(() {});
-      }, onError: (err) {
-        print("getLinkStream error: $err");
-      });
+        //logger.e('Timestamp=${getFileTimestamp(DateTime.now())}',
+        //    error: errorDetails.toStringShort(), stackTrace: errorDetails.stack);
+      };
 
-      // For sharing or opening urls/text coming from outside the app while the app is closed
-      ReceiveSharingIntent.getInitialText().then((String? value) async {
-        sharedText = value ?? '';
-        if (sharedText.isEmpty) return;
-        prefs = await SharedPreferences.getInstance();
-        final directory = await getApplicationDocumentsDirectory();
-        androidDir = '${directory.path}/playlists';
-        defaultDir = androidDir;
-        var fileName =
-            '$androidDir/${DateTime.timestamp()}'.replaceAll(' ', '_');
-        unselectAllLists();
-        await importFile(fileName, sharedText);
-        sharedText = "";
-        setState(() {});
-      });
-    }
+      init();
+    });
+    _optionsFocusNode = FocusNode();
+    initGlobalData();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    _focusNode.dispose();
-    intentDataStreamSubscription.cancel();
+    disposeGlobalData();
+    _optionsFocusNode.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
+  bool paused = false;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      // went to Background
+      paused = true;
+    }
+    if (state == AppLifecycleState.resumed) {
+      // came back to Foreground
+      Future.delayed(const Duration(milliseconds: 100), () {
+        setState(() {});
+      });
+      paused = false;
+    }
+  }
+
   void init() async {
+    List<Future> futures = [];
     prefs = await SharedPreferences.getInstance();
     await getSettings();
-    //var statusA = await Permission.storage.status;
-    //var statusB = await Permission.manageExternalStorage.status;
-    //if (!statusA.isGranted || !statusB.isGranted) {
-    //  Map<Permission, PermissionStatus> statuses = await [
-    //    Permission.manageExternalStorage,
-    //    Permission.storage,
-    //  ].request();
-    //}
+    createSystemFiles();
+    initColorSpecs();
+    loadAssets();
+    var statusA = await Permission.storage.status;
+    var statusB = await Permission.manageExternalStorage.status;
+    if (!statusA.isGranted || !statusB.isGranted) {
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.manageExternalStorage,
+        Permission.storage,
+      ].request();
+    }
     loadDirectory();
     await loadFile(defaultFile);
     _notifier.value = darkMode ? ThemeMode.dark : ThemeMode.light;
-    findSelectedList();
+    //findSelectedList();
+    listIndex = getSelectedListIndexForTabs();
+    historyList.add(listIndex);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.light,
       systemNavigationBarIconBrightness: Brightness.light,
       systemNavigationBarColor: Colors.black87,
     ));
-    setState(() {});
+    if (isMobile()) {
+      // For sharing images coming from outside the app while the app is closed
+      futures.add(ReceiveSharingIntent.getInitialMedia()
+          .then((List<SharedMediaFile> value) async {
+        sharedFiles = value;
+        if (sharedFiles.isEmpty) return;
+        prefs = await SharedPreferences.getInstance();
+        final directory = await getBaseDir();
+        androidDir = '${directory.path}/playlists';
+        defaultDir = androidDir;
+        unselectAllLists();
+        await loadFile(sharedFiles.first.path.replaceAll(' ', '_'));
+        sharedFiles.clear();
+        //setState(() {});
+      }));
+
+      // For sharing or opening urls/text coming from outside the app while the app is closed
+      futures.add(
+          ReceiveSharingIntent.getInitialText().then((String? value) async {
+        sharedText = value ?? '';
+        if (sharedText.isEmpty) return;
+        prefs = await SharedPreferences.getInstance();
+        final directory = await getBaseDir();
+        androidDir = '${directory.path}/playlists';
+        defaultDir = androidDir;
+        var fileName = '$androidDir/${DateTime.now().toIso8601String()}'
+            .replaceAll(' ', '_');
+        unselectAllLists();
+        await importFile(fileName, sharedText);
+        sharedText = "";
+        //setState(() {});
+      }));
+    }
+    futures.add(FastCachedImageConfig.init(
+        subDir: cacheDir, clearCacheAfter: const Duration(days: 365 * 99)));
+    await Future.wait(futures).then((value) => setState(() {})).catchError((e) {
+      print(e);
+    });
   }
 
-  final FocusNode _focusNode = FocusNode();
+  Widget buildTabs() {
+    int index = getSelectedListIndexForTabs();
+    if (index != -1) {
+      tabController = TabController(
+          initialIndex: index, length: getFilteredLists().length, vsync: this);
+      tabController!.addListener(() {
+        listIndex = tabController!.index;
+        // list changed logic
+        filteredListChosen(listIndex);
+        addHistory(listIndex);
+        //setState(() {});
+      });
+    }
+    return tabController == null
+        ? buildListNavigationButtons(context, true)
+        : TabBar(
+            tabAlignment: TabAlignment.start,
+            padding: EdgeInsets.zero,
+            indicatorPadding: EdgeInsets.zero,
+            labelPadding: EdgeInsets.zero,
+            labelColor: Colors.white70,
+            isScrollable: true,
+            controller: tabController,
+            tabs: buildListPicker());
+  }
+
+  List<Widget> buildListPicker() {
+    List<Widget> temp = [];
+    for (int i = 0; i < getFilteredLists().length; i++) {
+      DisplayItem item = getFilteredLists()[i];
+      temp.add(buildContainer(Text(item.getDisplayData()),
+          color: i == listIndex ? Colors.white24 : Colors.white10));
+    }
+    return temp;
+  }
 
   @override
   Widget build(BuildContext context) {
     mainState = setState;
-    return RawKeyboardListener(
-        autofocus: true,
-        focusNode: _focusNode,
-        onKey: _onKey,
-        child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 0.0,
-          ),
-          body: Column(
-            children: <Widget>[
-              Column(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.list,
-                            color: darkMode ? Colors.white70 : Colors.black87,
-                          ),
-                          tooltip: 'Lists',
-                          onPressed: () => listsPressed(),
-                        ),
-                        buildListNavigationButtons(context, true,
-                            showDirectoryUpBtn: false),
-                        IconButton(
-                          icon: Icon(
-                            Icons.settings,
-                            color: darkMode ? Colors.white70 : Colors.black87,
-                          ),
-                          tooltip: 'Settings',
-                          onPressed: () {
-                            settingsPressed();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  useCheckboxes
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                    onPressed: () {
-                                      cbViewMode = 0;
-                                      setState(() {});
-                                    },
-                                    child: const Text('View All')),
-                                TextButton(
-                                    onPressed: () {
-                                      cbViewMode = 1;
-                                      setState(() {});
-                                    },
-                                    child: const Text('View Checked')),
-                                TextButton(
-                                    onPressed: () {
-                                      cbViewMode = 2;
-                                      setState(() {});
-                                    },
-                                    child: const Text('View Unchecked'))
-                              ]))
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.shuffle,
-                                  color: darkMode
-                                      ? Colors.white70
-                                      : Colors.black87,
-                                ),
-                                tooltip: 'Shuffle',
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          _buildConfirmDialog('Shuffle', () {
-                                            shuffle();
-                                            Navigator.pop(context);
-                                            setState(() {});
-                                          }));
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.sort_by_alpha,
-                                  color: darkMode
-                                      ? Colors.white70
-                                      : Colors.black87,
-                                ),
-                                tooltip: 'Sort',
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          _buildConfirmDialog('Sort', () {
-                                            sort();
-                                            Navigator.pop(context);
-                                            setState(() {});
-                                          }));
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                  buildMainSearchBar(),
-                ],
+    if ((screenWidth == 0 && isMobile()) || !isMobile()) {
+      screenWidth = MediaQuery.of(context).size.width;
+      screenHeight = MediaQuery.of(context).size.height;
+    }
+
+    if (scrollDataController.hasClients) {
+      if (cachePos != null && saveScrollPosition) {
+        scrollDataController = ScrollController(initialScrollOffset: cachePos!);
+        cachePos = null;
+      } else {
+        if (resetScroll) {
+          scrollDataController = ScrollController(initialScrollOffset: 0);
+          resetScroll = false;
+        } else {
+          scrollDataController = ScrollController(
+              initialScrollOffset: scrollDataController.position.pixels);
+        }
+      }
+      scrollDataController.addListener(() {
+        if (cachePosTimer != null && cachePosTimer!.isActive) {
+          cachePosTimer!.cancel();
+        }
+        cachePosTimer = Timer(const Duration(milliseconds: 300), () {
+          prefs.setDouble(cachePosKey(), scrollDataController.position.pixels);
+          cachePosTimer?.cancel();
+          cachePosTimer = null;
+        });
+      });
+    }
+    return _buildForPlatform();
+  }
+
+  Widget _buildForPlatform() {
+    if (isMobile()) {
+      return GestureDetector(
+          onPanUpdate: (details) async {
+            // Swiping in right direction.
+            int sensitivity = 8;
+
+            num currentTime = DateTime.now().millisecondsSinceEpoch;
+            num timeDifference = currentTime - lastHotkeyPress;
+            if (timeDifference < 200) return;
+
+            if (details.delta.dx > sensitivity) {
+              lastHotkeyPress = currentTime;
+              await prevSelectedList();
+            }
+
+            // Swiping in left direction.
+            if (details.delta.dx < -sensitivity) {
+              lastHotkeyPress = currentTime;
+              await nextSelectedList();
+            }
+          },
+          child: _buildMainContent());
+    } else {
+      return RawKeyboardListener(
+          autofocus: true,
+          focusNode: mainFocus,
+          onKey: _onKey,
+          child: _buildMainContent());
+    }
+  }
+
+  Widget _buildMainContent() {
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0.0,
+      ),
+      body: Column(
+        children: <Widget>[
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: Align(
+                            alignment: Alignment.topLeft, child: buildCount())),
+                    _buildOptionsPopup(),
+                    IconButton(
+                        visualDensity: VisualDensity.compact,
+                        padding: EdgeInsets.all(0),
+                        onPressed: () {
+                          settingsPressed();
+                        },
+                        icon: const Icon(Icons.settings)),
+                    IconButton(
+                        visualDensity: VisualDensity.compact,
+                        padding: EdgeInsets.all(0),
+                        onPressed: () {
+                          listsPressed();
+                        },
+                        icon: const Icon(Icons.list)),
+
+                    //buildListNavigationButtons(context, true),
+                  ],
+                ),
               ),
-              Expanded(
-                  key: UniqueKey(),
-                  child: RefreshIndicator(
-                      onRefresh: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                _buildConfirmDialog('Shuffle', () {
-                                  shuffle();
-                                  Navigator.pop(context);
+              useFavs
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  favViewMode = 0;
                                   setState(() {});
-                                }));
-                        return Future(() => null);
-                      },
-                      child: ListView.builder(
-                          itemCount: displayList.length,
-                          itemBuilder: (BuildContext context, int index) =>
-                              _buildDataDisplay(index))))
+                                },
+                                child: const Text('View All')),
+                            TextButton(
+                                onPressed: () {
+                                  favViewMode = 1;
+                                  setState(() {});
+                                },
+                                child: const Text('View Favorites')),
+                            TextButton(
+                                onPressed: () {
+                                  favViewMode = 2;
+                                  setState(() {});
+                                },
+                                child: const Text('View Not Favorites'))
+                          ]))
+                  : Container(),
+              Row(children: [
+                historyList.length < 2 || historyIndex + 1 >= historyList.length
+                    ? Container()
+                    : IconButton(
+                        padding: EdgeInsets.all(0),
+                        visualDensity: VisualDensity.compact,
+                        onPressed: () {
+                          if (historyIndex >= historyList.length) {
+                            historyIndex = 0;
+                          } else {
+                            historyIndex += 1;
+                          }
+                          var selected =
+                              getFilteredLists()[historyList[historyIndex]];
+                          listIndex = historyList[historyIndex];
+                          // list changed logic
+                          filteredListChosen(listIndex);
+                        },
+                        icon: Icon(Icons.arrow_back_ios_new)),
+                Expanded(child: buildMainSearchBar()),
+                historyList.length < 2 || historyIndex == 0
+                    ? Container()
+                    : IconButton(
+                        padding: EdgeInsets.all(0),
+                        visualDensity: VisualDensity.compact,
+                        onPressed: () {
+                          historyIndex -= 1;
+                          var selected =
+                              getFilteredLists()[historyList[historyIndex]];
+                          listIndex = historyList[historyIndex];
+                          // list changed logic
+                          filteredListChosen(listIndex);
+                        },
+                        icon: Icon(Icons.arrow_forward_ios_rounded))
+              ]),
+              buildTabs(),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => addBtnPressed(),
-            backgroundColor: Colors.deepPurple,
-            child: const Icon(Icons.add),
-          ),
-        ));
+          Expanded(
+              key: UniqueKey(),
+              child: RefreshIndicator(
+                  onRefresh: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _buildConfirmDialog('Shuffle', () {
+                              shuffle();
+                              Navigator.pop(context);
+                              setState(() {});
+                            }));
+                    return Future(() => null);
+                  },
+                  child: ReorderableListView.builder(
+                    scrollController: scrollDataController,
+                    buildDefaultDragHandles: false,
+                    itemCount: displayList.length,
+                    itemBuilder: (BuildContext context, int index) =>
+                        _buildDataDisplay(index),
+                    onReorder: (int oldIndex, int newIndex) {
+                      setState(() {
+                        if (newIndex > oldIndex) {
+                          newIndex = newIndex - 1;
+                        }
+                        final element = displayList.removeAt(oldIndex);
+                        displayList.insert(newIndex, element);
+                        addAuditData(
+                            element.getDisplayData(), false, false, oldIndex);
+                        writeFile();
+                      });
+                    },
+                  )))
+        ],
+      ),
+    );
   }
 
   void listsPressed() {
@@ -364,7 +506,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void settingsPressed() {
     Navigator.push(context, MaterialPageRoute<void>(
       builder: (BuildContext context) {
-        return _buildSettingsScreen();
+        return buildSettingsScreen();
       },
     ));
   }
@@ -375,26 +517,172 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// Earth (Home planet): Water, Iron, Lead (Secret fish)
-
   Widget _buildDataDisplay(int index) {
-    String displayItem = displayList[index].getDisplayData();
-    Widget content;
-    if (displayItem.contains(';')) {
-      content = _buildDetailedListItems(index);
+    DisplayItem displayItem = displayList[index];
+
+    if (displayItem.isJson) {
+      return showCard(displayItem)
+          ? displayItem.buildJSONItem(context, index)
+          : Container(
+              key: Key('OrderedList-$index'),
+            );
     } else {
-      content = _buildDefaultListItem(index);
+      Widget content;
+      if (displayItem.getDisplayData().contains(mainSep)) {
+        content = _buildDetailedListItems(index);
+      } else {
+        content = _buildDefaultListItem(index);
+      }
+      return _buildDefaultDisplay(index, content);
     }
-    return _buildDefaultDisplay(index, content);
+  }
+
+  Widget _buildOptionsPopup() {
+    return MenuAnchor(
+      childFocusNode: _optionsFocusNode,
+      menuChildren: <Widget>[
+        MenuItemButton(
+          onPressed: () {
+            useHandles = !useHandles;
+            setState(() {});
+          },
+          child: const Text('Edit'),
+        ),
+        MenuItemButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _buildConfirmDialog('Shuffle', () {
+                      shuffle();
+                      Navigator.pop(context);
+                      setState(() {});
+                    }));
+          },
+          child: const Text('Shuffle'),
+        ),
+        MenuItemButton(
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _buildConfirmDialog('Sort', () {
+                      sort();
+                      Navigator.pop(context);
+                      setState(() {});
+                    }));
+          },
+          child: const Text('Sort'),
+        ),
+        MenuItemButton(
+          onPressed: addBtnPressed,
+          child: const Text('Add'),
+        ),
+        //MenuItemButton(
+        //  onPressed: () {
+        //    settingsPressed();
+        //  },
+        //  child: const Text('Settings'),
+        //),
+        //MenuItemButton(
+        //  onPressed: () {
+        //    listsPressed();
+        //  },
+        //  child: const Text('Lists'),
+        //),
+        if (useCheckboxes)
+          SubmenuButton(menuChildren: <Widget>[
+            MenuItemButton(
+              onPressed: () {
+                cbViewMode = 0;
+                prefs.setInt(checkboxFilterKey(), cbViewMode.toInt());
+                setState(() {});
+              },
+              child: Text(checkedOptions[0]),
+            ),
+            MenuItemButton(
+              onPressed: () {
+                cbViewMode = 1;
+                prefs.setInt(checkboxFilterKey(), cbViewMode.toInt());
+                setState(() {});
+              },
+              child: Text(checkedOptions[1]),
+            ),
+            MenuItemButton(
+              onPressed: () {
+                cbViewMode = 2;
+                prefs.setInt(checkboxFilterKey(), cbViewMode.toInt());
+                setState(() {});
+              },
+              child: Text(checkedOptions[2]),
+            ),
+          ], child: const Text('Checked Filter'))
+      ],
+      builder: (_, MenuController controller, Widget? child) {
+        return IconButton(
+          visualDensity: VisualDensity.compact,
+          focusNode: _optionsFocusNode,
+          onPressed: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+            }
+          },
+          icon: const Icon(Icons.more_vert),
+        );
+      },
+    );
+  }
+
+  Widget _buildCheckedFilter() {
+    if (!useCheckboxes) return Container();
+    return DropdownButton<String>(
+      value: checkedOptions[cbViewMode.toInt()],
+      elevation: 16,
+      onChanged: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          //
+          cbViewMode = checkedOptions.indexOf(value!);
+          prefs.setInt(checkboxFilterKey(), cbViewMode.toInt());
+        });
+      },
+      items: checkedOptions.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
   }
 
   Widget _buildDefaultDisplay(int index, Widget content) {
     DisplayItem displayItem = displayList[index];
     return GestureDetector(
+        key: Key('OrderedList-$index'),
         onLongPress: () {
           showDialog(
               context: context,
               builder: (BuildContext context) =>
-                  _buildAdvancedDialog(displayItem, index));
+                  buildAdvancedDialog(displayItem, index));
+        },
+        onDoubleTap: () {
+          List<String> lists =
+              listList.map((e) => e.getDisplayData().toLowerCase()).toList();
+          if (lists.contains(displayItem.getDisplayData().toLowerCase())) {
+            int chosenItem = listList.indexWhere((element) => element
+                .getDisplayData()
+                .toLowerCase()
+                .contains(displayItem.getDisplayData().toLowerCase()));
+            if (chosenItem != -1 && chosenItem < listList.length) {
+              listChosen(chosenItem);
+              addHistory(getFilteredLists().indexWhere((element) => element
+                  .getDisplayData()
+                  .toLowerCase()
+                  .contains(displayItem.getDisplayData().toLowerCase())));
+            }
+          }
         },
         onTap: () async {
           await Clipboard.setData(
@@ -406,7 +694,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: !darkMode ? Colors.black12 : Colors.white10,
                     borderRadius: const BorderRadius.all(Radius.circular(12))),
                 margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-                child: content)
+                child: Row(
+                  children: [
+                    Expanded(child: content),
+                    !useHandles
+                        ? Container()
+                        : ReorderableDragStartListener(
+                            index: index,
+                            child: const Icon(Icons.drag_handle),
+                          ),
+                    !useHandles ? Container() : const SizedBox(width: 16)
+                  ],
+                ))
             : Container());
   }
 
@@ -414,7 +713,7 @@ class _MyHomePageState extends State<MyHomePage> {
     DisplayItem displayItem = displayList[index];
     List<Widget> dataArr = [];
     List<String> attributes = [];
-    attributes.addAll(displayItem.getDisplayData().split(';'));
+    attributes.addAll(displayItem.trueData.split(mainSep));
     for (int i = 0; i < attributes.length; i++) {
       var attribute = attributes[i];
       dataArr.add(_buildDetailedListItem(attribute, i == 0));
@@ -422,17 +721,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Expanded(
-          flex: 8,
           child: Container(
               padding: const EdgeInsets.all(8.0),
               child: Column(children: dataArr))),
-      Expanded(
-          flex: 2,
-          child: Container(
+      hideActions
+          ? Container()
+          : Container(
               padding: const EdgeInsets.all(8.0),
               child: useCheckboxes
                   ? _buildDataListCheckbox(index)
-                  : _buildMoveToBottomButton(index)))
+                  : _buildMoveToBottomButton(index)),
+      const SizedBox(width: 16)
     ]);
   }
 
@@ -442,16 +741,19 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Widget> dataArr = [];
     List<String> attributes = [];
     Widget head;
-    if (str.contains(':')) {
-      attributes.addAll(str.split(':'));
+    if (str.contains(secSep)) {
+      attributes.addAll(str.split(secSep));
       head = Container(
           decoration: BoxDecoration(
               color: !darkMode ? Colors.black12 : Colors.white10,
               borderRadius: const BorderRadius.all(Radius.circular(12))),
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
           child: Text(
-            attributes.first.trim(),
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            decodeString(attributes.first.trim()),
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: getColorSpec(attributes.first)),
           ));
       attributes.removeAt(0);
     } else {
@@ -460,17 +762,23 @@ class _MyHomePageState extends State<MyHomePage> {
         attributes.add(str.trim());
       } else {
         if (str.trim().isNotEmpty) {
-          head = Container(
-              decoration: BoxDecoration(
-                  color: !darkMode ? Colors.black12 : Colors.white10,
-                  borderRadius: const BorderRadius.all(Radius.circular(12))),
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-              child: Text(
-                str.trim(),
-                style: isFirst
-                    ? const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
-                    : null,
-              ));
+          head = str.contains('img=')
+              ? ImageBuilder(imageStr: str)
+              : Container(
+                  decoration: BoxDecoration(
+                      color: !darkMode ? Colors.black12 : Colors.white10,
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(12))),
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                  child: Text(
+                    decodeString(str.trim()),
+                    style: isFirst
+                        ? TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: getColorSpec(str))
+                        : TextStyle(color: getColorSpec(str)),
+                  ));
         } else {
           head = Container();
         }
@@ -481,13 +789,17 @@ class _MyHomePageState extends State<MyHomePage> {
       data = data.map((e) => e.trim()).toList();
       for (var element in data) {
         if (element.trim().isNotEmpty) {
-          Widget dataWidget = Container(
-              decoration: BoxDecoration(
-                  color: !darkMode ? Colors.black12 : Colors.white10,
-                  borderRadius: const BorderRadius.all(Radius.circular(12))),
-              margin: const EdgeInsets.fromLTRB(0, 8, 12, 0),
-              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-              child: Text(element));
+          Widget dataWidget = element.contains('img=')
+              ? ImageBuilder(imageStr: element)
+              : Container(
+                  decoration: BoxDecoration(
+                      color: !darkMode ? Colors.black12 : Colors.white10,
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(12))),
+                  margin: const EdgeInsets.fromLTRB(0, 8, 12, 0),
+                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                  child: Text(decodeString(element),
+                      style: TextStyle(color: getColorSpec(element))));
           dataArr.add(dataWidget);
         }
       }
@@ -495,7 +807,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Expanded(
-          flex: 8,
           child: Container(
               padding: const EdgeInsets.all(8.0),
               child: Column(children: [
@@ -504,37 +815,38 @@ class _MyHomePageState extends State<MyHomePage> {
                     alignment: Alignment.centerLeft,
                     child: Wrap(children: dataArr))
               ]))),
-      Expanded(
-          flex: 2,
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-          ))
     ]);
   }
 
   Widget _buildDefaultListItem(int index) {
     DisplayItem displayItem = displayList[index];
+
+    Widget fav = useFavs ? FavoriteButton(index: index) : Container();
+
+    Widget btn = useCheckboxes
+        ? _buildDataListCheckbox(index)
+        : _buildMoveToBottomButton(index);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-            flex: 8,
             child: Container(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(child: Text(displayItem.getDisplayData())))),
-        Expanded(
-          flex: 2,
-          child: Container(
-              padding: const EdgeInsets.all(8.0),
-              child: useCheckboxes
-                  ? _buildDataListCheckbox(index)
-                  : _buildMoveToBottomButton(index)),
-        ),
+        hideActions
+            ? Container()
+            : Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(children: [fav, btn])),
+        const SizedBox(
+          width: 16,
+        )
       ],
     );
   }
 
   Widget _buildMoveToBottomButton(int index) {
+    if (hideActions) return Container();
     return IconButton(
       icon: Icon(
         Icons.move_down,
@@ -544,7 +856,9 @@ class _MyHomePageState extends State<MyHomePage> {
       onPressed: () async {
         var d = displayList.removeAt(index);
         displayList.add(d);
-        await addAuditData(d.getDisplayData());
+
+        /// TODO don't await?
+        addAuditData(d.getDisplayData(), false, false, index);
         setState(() {});
         writeFile();
       },
@@ -552,6 +866,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildDataListCheckbox(int index) {
+    if (hideActions) return Container();
     DisplayItem displayItem = displayList[index];
     return StatefulBuilder(builder:
         (BuildContext context, void Function(void Function()) setState) {
@@ -562,10 +877,16 @@ class _MyHomePageState extends State<MyHomePage> {
           side: MaterialStateBorderSide.resolveWith(
             (states) => const BorderSide(width: 2.0, color: Colors.white70),
           ),
-          value: prefs.getBool(checkedItemKey(displayItem.trueData)) ?? false,
-          onChanged: (condition) {
-            prefs.setBool(
-                checkedItemKey(displayItem.trueData), condition ?? false);
+          value: checkedItems.contains(displayItem.trueData),
+          onChanged: (checked) {
+            if (checked!) {
+              checkedItems.add(displayItem.trueData);
+            } else {
+              checkedItems.remove(displayItem.trueData);
+            }
+
+            addAuditData(displayItem.getDisplayData(), true, checked, 0);
+            saveCheckData();
             setState(() {});
           });
     });
@@ -573,408 +894,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool showCard(DisplayItem displayItem) {
     if (!displayItem
-        .getDisplayData()
+        .getSearchStr()
         .toLowerCase()
         .contains(searchDisplayController.text.toLowerCase().trim())) {
       return false;
     }
 
-    if (!useCheckboxes || cbViewMode == 0) return true;
-    bool checked = prefs.getBool(checkedItemKey(displayItem.trueData)) ?? false;
+    bool checked =
+        checkedItems.contains(displayItem.trueData.replaceAll('\n', '<nl>'));
     if ((cbViewMode == 1 && !checked)) return false;
     if ((cbViewMode == 2 && checked)) return false;
+    bool fav = favItems.contains(displayItem.trueData);
+    if ((favViewMode == 1 && !fav)) return false;
+    if ((favViewMode == 2 && fav)) return false;
     return true;
-  }
-
-  Widget _buildSettingsScreen() {
-    return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
-      return Scaffold(
-          appBar: AppBar(
-            title: const Text('Settings'),
-          ),
-          body: getSettingsBody(context, state));
-    });
-  }
-
-  Widget getSettingsBody(BuildContext context, StateSetter state) {
-    if (mode == modeAudit) {
-      return _buildAuditScreen(context, state);
-    }
-    if (mode == modeSearch) {
-      return _buildSearchScreen(context, state);
-    }
-    if (mode == modeEncrypt) {
-      return _buildEncryptScreen(context, state);
-    } else {
-      return _buildSettingsHeader(context, state);
-    }
-  }
-
-  Widget _buildSettingsHeader(BuildContext context, StateSetter state) {
-    return Column(children: [
-      Row(children: [
-        IconButton(
-          icon: Icon(
-            Icons.search,
-            color: darkMode ? Colors.white70 : Colors.black87,
-          ),
-          tooltip: 'Search',
-          onPressed: () {
-            mode = modeSearch;
-            state(() {});
-          },
-        ),
-        IconButton(
-          icon: Icon(
-            Icons.menu_book,
-            color: darkMode ? Colors.white70 : Colors.black87,
-          ),
-          tooltip: 'Audit',
-          onPressed: () {
-            mode = modeAudit;
-            state(() {});
-          },
-        ),
-      ]),
-      Row(children: [
-        const Text('Use Checkboxes?'),
-        Checkbox(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(2.0),
-            ),
-            side: MaterialStateBorderSide.resolveWith(
-              (states) => const BorderSide(width: 2.0, color: Colors.white70),
-            ),
-            value: useCheckboxes,
-            onChanged: (condition) {
-              useCheckboxes = condition ?? false;
-              prefs.setBool(useCheckboxesKey(), useCheckboxes);
-              state(() {});
-            }),
-        const Text('Note Mode?'),
-        Checkbox(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(2.0),
-            ),
-            side: MaterialStateBorderSide.resolveWith(
-              (states) => const BorderSide(width: 2.0, color: Colors.white70),
-            ),
-            value: useNotes,
-            onChanged: (condition) {
-              useNotes = condition ?? false;
-              prefs.setBool('USES_NOTES', useNotes);
-              state(() {});
-            })
-      ]),
-    ]);
-  }
-
-  Widget _buildEncryptScreen(BuildContext context, StateSetter state) {
-    return Column(children: [
-      _buildSettingsHeader(context, state),
-      Row(children: [
-        Expanded(
-            child: TextField(
-          onChanged: (text) {
-            if (text.isNotEmpty) {
-              try {
-                dC.text = decrypt(text);
-              } catch (e) {
-                dC.text = '';
-              }
-            }
-          },
-          style: TextStyle(color: darkMode ? Colors.white : Colors.black),
-          decoration: InputDecoration(
-            enabledBorder: UnderlineInputBorder(
-              borderSide:
-                  BorderSide(color: darkMode ? Colors.white60 : Colors.black54),
-            ),
-            hintStyle:
-                TextStyle(color: darkMode ? Colors.white60 : Colors.black54),
-            hintText: 'Enc',
-            filled: true,
-            fillColor: !darkMode ? Colors.white : dialogColor,
-          ),
-          controller: eC,
-        )),
-        IconButton(
-          icon: Icon(
-            Icons.copy,
-            color: darkMode ? Colors.white70 : Colors.black87,
-          ),
-          tooltip: 'Copy',
-          onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: eC.text));
-          },
-        ),
-      ]),
-      Row(children: [
-        Expanded(
-            child: TextField(
-          onChanged: (text) {
-            if (text.isNotEmpty) {
-              eC.text = encrypt(text).base16;
-            }
-          },
-          style: TextStyle(color: darkMode ? Colors.white : Colors.black),
-          decoration: InputDecoration(
-            enabledBorder: UnderlineInputBorder(
-              borderSide:
-                  BorderSide(color: darkMode ? Colors.white60 : Colors.black54),
-            ),
-            hintStyle:
-                TextStyle(color: darkMode ? Colors.white60 : Colors.black54),
-            hintText: 'Dec',
-            filled: true,
-            fillColor: !darkMode ? Colors.white : dialogColor,
-          ),
-          controller: dC,
-        )),
-        IconButton(
-          icon: Icon(
-            Icons.copy,
-            color: darkMode ? Colors.white70 : Colors.black87,
-          ),
-          tooltip: 'Copy',
-          onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: dC.text));
-          },
-        ),
-      ])
-    ]);
-  }
-
-  Widget _buildSearchScreen(BuildContext context, StateSetter state) {
-    return Column(children: [
-      _buildSettingsHeader(context, state),
-      TextField(
-        onChanged: (text) {
-          if (text == ecp) {
-            mode = modeEncrypt;
-            state(() {});
-          } else {
-            searchList = displayList
-                .where((element) => element
-                    .getDisplayData()
-                    .toLowerCase()
-                    .contains(text.toLowerCase()))
-                .toList();
-
-            state(() {});
-          }
-        },
-        style: TextStyle(color: darkMode ? Colors.white : Colors.black),
-        decoration: InputDecoration(
-          enabledBorder: UnderlineInputBorder(
-            borderSide:
-                BorderSide(color: darkMode ? Colors.white60 : Colors.black54),
-          ),
-          hintStyle:
-              TextStyle(color: darkMode ? Colors.white60 : Colors.black54),
-          hintText: 'Search',
-          filled: true,
-          fillColor: !darkMode ? Colors.white : dialogColor,
-        ),
-        controller: searchController,
-      ),
-      Expanded(
-          child: ListView.builder(
-              itemCount: searchList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                    decoration: BoxDecoration(
-                        color: !darkMode ? Colors.black12 : Colors.white10,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12))),
-                    margin: const EdgeInsets.fromLTRB(12.0, 4, 12, 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                                child:
-                                    Text(searchList[index].getDisplayData())),
-                          ),
-                        ),
-                      ],
-                    ));
-              })),
-    ]);
-  }
-
-  Widget _buildAuditScreen(BuildContext context, StateSetter state) {
-    List<Map<String, dynamic>> tempData = [];
-    List<String> tempArr = [];
-    for (var d in displayList) {
-      tempArr.add(d.getDisplayData());
-    }
-    //getAuditData();
-    for (String str in auditData) {
-      var s = str.split(':');
-      if (!auditCurrent || tempArr.contains(s.first)) {
-        tempData.add({'name': s.first, 'time': s.last});
-      }
-    }
-    tempData.sort((a, b) {
-      return b['time'].compareTo(a['time']);
-    });
-    return Column(children: [
-      _buildSettingsHeader(context, state),
-      const Text('---Audit---'),
-      Row(children: [
-        const Text('Current List only? '),
-        Checkbox(
-            value: auditCurrent,
-            onChanged: (b) {
-              auditCurrent = b ?? true;
-              state(() {});
-            })
-      ]),
-      Expanded(
-          child: ListView.builder(
-              itemCount: tempData.length,
-              itemBuilder: (BuildContext context, int index) {
-                String s = 'Invalid';
-                String t = 'Invalid';
-                try {
-                  s = tempData[index]['name'];
-                  DateTime time = DateTime.fromMicrosecondsSinceEpoch(
-                      int.parse(tempData[index]['time']) * 1000);
-                  t = getDisplayTimestamp(time);
-                } catch (e) {}
-                //return Text(
-                //  s,
-                //  style: TextStyle(color: Colors.white),
-                //);
-                return Container(
-                    decoration: BoxDecoration(
-                        color: !darkMode ? Colors.black12 : Colors.white10,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12))),
-                    margin: const EdgeInsets.fromLTRB(12.0, 4, 12, 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            //child: Center(child: Text('${index + 1} $s')),
-                            child: Center(child: Text('$s')),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 5,
-                          child: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                              child: Text(t),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ));
-              })),
-    ]);
-  }
-
-  Dialog _buildAdvancedDialog(DisplayItem displayItem, int index) {
-    String oldText = displayList[index].trueData;
-    return Dialog(
-        backgroundColor: darkMode ? dialogColor : Colors.white,
-        elevation: 10,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        child: StatefulBuilder(builder: (BuildContext context, state) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                  child: const Text(
-                    'Remove',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onPressed: () {
-                    displayList.remove(displayItem);
-                    writeFile();
-                    setState(() {});
-                    state(() {});
-                    Navigator.pop(context);
-                  }),
-              TextButton(
-                  child: const Text(
-                    'Move Up',
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  onPressed: () async {
-                    var d = displayList.removeAt(index);
-                    displayList.insert(0, d);
-                    await addAuditData(d.getDisplayData());
-                    setState(() {});
-                    state(() {});
-                    writeFile();
-                    Navigator.pop(context);
-                  }),
-              Row(children: [
-                Expanded(
-                    child: TextField(
-                        obscureText: false,
-                        maxLines: null,
-                        style: TextStyle(
-                            color: darkMode ? Colors.white : Colors.black),
-                        decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    darkMode ? Colors.white60 : Colors.black54),
-                          ),
-                          hintStyle: TextStyle(
-                              color:
-                                  darkMode ? Colors.white60 : Colors.black54),
-                          hintText: 'Name',
-                          filled: true,
-                          fillColor: !darkMode ? Colors.white : dialogColor,
-                        ),
-                        controller: controller
-                          ..text = displayList[index].trueData,
-                        onChanged: (text) {
-                          displayList[index].trueData = text;
-                        })),
-                IconButton(
-                  icon: Icon(
-                    Icons.copy,
-                    color: darkMode ? Colors.white70 : Colors.black87,
-                  ),
-                  tooltip: 'Copy',
-                  onPressed: () async {
-                    await Clipboard.setData(
-                        ClipboardData(text: controller.text));
-                  },
-                )
-              ]),
-              TextButton(
-                  child: const Text(
-                    'Done',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                  onPressed: () {
-                    var condition =
-                        prefs.getBool(checkedItemKey(oldText)) ?? false;
-                    prefs.setBool(
-                        checkedItemKey(displayList[index].trueData), condition);
-                    writeFile();
-                    setState(() {});
-                    state(() {});
-                    Navigator.pop(context);
-                  }),
-            ],
-          );
-        }));
   }
 
   Dialog _buildConfirmDialog(String title, dynamic callback) {

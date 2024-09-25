@@ -27,25 +27,38 @@ ThemeData lightTheme = ThemeData(
     ));
 
 ThemeData darkTheme = ThemeData(
+    sliderTheme: const SliderThemeData(
+        valueIndicatorColor: Colors.deepPurple,
+        showValueIndicator: ShowValueIndicator.onlyForContinuous,
+        valueIndicatorTextStyle: TextStyle(color: Colors.white70)),
+    colorScheme: ColorScheme(
+        onPrimary: Colors.white70,
+        brightness: Brightness.dark,
+        primary: Colors.deepPurple,
+        secondary: Colors.deepPurpleAccent,
+        onSecondary: Colors.white70,
+        error: Colors.red,
+        onError: Colors.white70,
+        background: Colors.grey.shade900,
+        onBackground: Colors.white70,
+        surface: Colors.deepPurple.shade700,
+        onSurface: Colors.white70),
     primarySwatch: Colors.deepPurple,
-    scaffoldBackgroundColor: Colors.black87,
-    dialogBackgroundColor: Colors.grey,
+    scaffoldBackgroundColor: Colors.grey.shade900,
+    dialogBackgroundColor: Colors.grey.shade700,
+    dialogTheme: DialogTheme(backgroundColor: Colors.grey.shade700),
     canvasColor: Colors.black,
     hintColor: Colors.black87,
-    textTheme: const TextTheme(
-      bodyText1: TextStyle(),
-      bodyText2: TextStyle(),
-      button: TextStyle(),
-    ).apply(
+    textTheme: const TextTheme().apply(
       bodyColor: Colors.white70,
       displayColor: Colors.white70,
     ),
-    inputDecorationTheme: const InputDecorationTheme(
+    inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.grey,
+      fillColor: Colors.grey.shade700,
       iconColor: Colors.white70,
-      hintStyle: TextStyle(color: Colors.white70),
-      labelStyle: TextStyle(color: Colors.white70),
+      hintStyle: const TextStyle(color: Colors.white70),
+      labelStyle: const TextStyle(color: Colors.white70),
     ));
 
 Color getSelectedCardColor(bool selected) {
