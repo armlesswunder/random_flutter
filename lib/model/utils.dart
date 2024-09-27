@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:json_text_field/json_text_field.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:random_app/model/prefs.dart';
+import 'package:random_app/model/web_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../view/theme.dart';
@@ -322,15 +323,7 @@ Future<void> setupDefaultDirs() async {
   if (isWeb()) {
     try {
       listList = [];
-      prefs = await SharedPreferences.getInstance();
-      var webFiles = ['test.txt', 'test2.txt'];
-      for (String webFile in webFiles) {
-        if (prefs.getString(webFile) == null) {
-          var str = await rootBundle.loadString('presets/$webFile');
-          prefs.setString(webFile, str);
-        }
-        listList.add(DisplayItem(webFile));
-      }
+      await initWebFiles();
       defaultFile = prefs.getString('defaultFile') ?? webFiles[0];
       prefs = await SharedPreferences.getInstance();
       listIndex = getSelectedListIndexForTabs();

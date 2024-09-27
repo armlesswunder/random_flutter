@@ -22,6 +22,7 @@ class _ListPageState extends State<ListPage> {
 
   ScrollController _listController = ScrollController();
   late FocusNode _optionsFocusNode;
+  MenuController? _menuController;
 
   void mSetState() {
     if (listState != null) {
@@ -140,7 +141,7 @@ class _ListPageState extends State<ListPage> {
               child: const Padding(
                   padding: EdgeInsets.all(4),
                   child: Text('Choose Default List'))),
-        if (isAndroid())
+        if (isAndroid() || isWeb())
           MenuItemButton(
               onPressed: () {
                 openFile(context, setState);
@@ -156,7 +157,7 @@ class _ListPageState extends State<ListPage> {
               },
               child: const Padding(
                   padding: EdgeInsets.all(4), child: Text('Export List'))),
-        if (isAndroid())
+        if (isAndroid() || isWeb())
           MenuItemButton(
               onPressed: () {
                 exportAllFiles();
@@ -175,6 +176,7 @@ class _ListPageState extends State<ListPage> {
                 const Padding(padding: EdgeInsets.all(4), child: Text('Add'))),
       ],
       builder: (_, MenuController controller, Widget? child) {
+        _menuController = controller;
         return IconButton(
           focusNode: _optionsFocusNode,
           onPressed: () {
@@ -331,8 +333,16 @@ class _ListPageState extends State<ListPage> {
                       Directory(dirPath).createSync();
                       loadDirectory();
                     } else {
-                      displayList.add(DisplayItem(addController.text));
-                      createFile(addController.text, context, outerState);
+                      var newFileName = addController.text.replaceAll(' ', '_');
+                      displayList.add(DisplayItem(newFileName));
+                      var st =
+                          '$defaultDir${Platform.pathSeparator}$newFileName';
+                      File file = File(st);
+                      if (file.existsSync()) {
+                        file.deleteSync();
+                      }
+                      file.createSync();
+                      defaultFile = st;
                     }
                     addController.text = '';
                     Navigator.pop(context);
@@ -480,7 +490,9 @@ class _ListPageState extends State<ListPage> {
 
   void systemCheckboxChanged() {
     showSystemFiles = !showSystemFiles;
+    prefs.setBool('SHOW_SYSTEM_FILES', showSystemFiles);
     updateViews();
+    _menuController?.close();
     setState(() {});
   }
 
@@ -501,7 +513,9 @@ class _ListPageState extends State<ListPage> {
 
   void showDirCheckboxChanged() {
     showDirectories = !showDirectories;
+    prefs.setBool('SHOW_DIRS', showDirectories);
     updateViews();
+    _menuController?.close();
     setState(() {});
   }
 

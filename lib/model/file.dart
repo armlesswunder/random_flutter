@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:random_app/model/audit.dart';
@@ -51,6 +53,7 @@ Future loadFile(String path, {bool setDefault = true}) async {
     print(err);
   }
   String temp = path;
+  defaultFile = temp;
   if (isWeb()) {
     defaultFile = temp;
     prefs.setString("defaultFile", temp);
@@ -65,28 +68,32 @@ Future loadFile(String path, {bool setDefault = true}) async {
     return;
   }
 
-  if (isAndroid()) {
+  if (false && isAndroid()) {
     var arr = path.split(Platform.pathSeparator);
     var dir = await getBaseDir();
     androidDir = '${dir.path}${Platform.pathSeparator}playlists';
-    defaultDir = androidDir;
+    //defaultDir = androidDir;
     var s = arr[arr.length - 1];
     s = s.replaceAll(' ', '_');
     var st = '$androidDir${Platform.pathSeparator}$s';
     File file = File(st);
     await writeFile(path: file.path);
     temp = file.path;
+    defaultFile = temp;
   }
 
   if (setDefault) {
     defaultFile = temp;
     Directory directory = File(temp).parent;
 
-    if (isAndroid() && directory.path == androidDir) {
-      prefs.setString("defaultFile", temp);
-    } else if (isWindows() && directory.path == prefs.getString('defaultDir')) {
-      prefs.setString("defaultFile", temp);
-    }
+    //if (isAndroid() && directory.path == androidDir) {
+    //  prefs.setString("defaultFile", temp);
+    //} else if (isWindows() && directory.path == prefs.getString('defaultDir')) {
+    //  prefs.setString("defaultFile", temp);
+    //}
+    prefs.setString("defaultFile", temp);
+    prefs.setString("defaultDir", directory.path);
+
     useCheckboxes = prefs.getBool(useCheckboxesKey()) ?? false;
     cbViewMode = prefs.getInt(checkboxFilterKey()) ?? 0;
     useFavs = prefs.getBool(useFavKey()) ?? false;
@@ -211,12 +218,18 @@ Future loadFileContents(String path) async {
 
 Future writeFile({String? path}) async {
   if (isWeb()) {
-    String tempStr = '';
-    for (int i = 0; i < displayList.length; i++) {
-      var element = displayList[i];
-      tempStr += '${element.trueData}\n';
+    if ((path ?? defaultFile).contains('.json')) {
+      var list = displayList.map((e) => e.map).toList();
+      return prefs.setString(
+          defaultFile, JsonUtils.getPrettyPrintJson(jsonEncode(list)));
+    } else {
+      String tempStr = '';
+      for (int i = 0; i < displayList.length; i++) {
+        var element = displayList[i];
+        tempStr += '${element.trueData}\n';
+      }
+      return prefs.setString(defaultFile, tempStr);
     }
-    return prefs.setString(defaultFile, tempStr);
   } else {
     File file = File(path ?? defaultFile);
     String tempStr = '';
@@ -240,7 +253,7 @@ void loadDirectory({String directory = ''}) {
   if (directory.isNotEmpty) {
     defaultDir = directory;
     currentDir = directory;
-    if (isWindows()) {
+    if (true || isWindows()) {
       prefs.setString('defaultDir', defaultDir);
     }
     Directory d = Directory(directory);
@@ -267,7 +280,7 @@ void loadDirectory({String directory = ''}) {
     Directory(dataDir).createSync();
   }
   if (Directory(badDir).existsSync()) {
-    Directory(badDir).deleteSync();
+    Directory(badDir).deleteSync(recursive: true);
   }
 
   if (isAndroid()) {
@@ -355,9 +368,9 @@ Future importFile(String path, String data) async {
   defaultFile = path;
   Directory directory = File(path).parent;
 
-  if (isAndroid() && directory.path == androidDir) {
-    prefs.setString("defaultFile", path);
-  }
+  //if (isAndroid() && directory.path == androidDir) {
+  prefs.setString("defaultFile", path);
+  //}
 
   //defaultFile = path;
   //prefs.setString("defaultFile", path);
@@ -409,14 +422,60 @@ void reloadFile(int index) async {
   defaultFile = listList[index].trueData;
   Directory directory = File(defaultFile).parent;
 
-  if (isAndroid() && directory.path == androidDir) {
-    await prefs.setString("defaultFile", defaultFile);
-  }
+  //if (isAndroid() && directory.path == androidDir) {
+  await prefs.setString("defaultFile", defaultFile);
+  //}
   await loadFile(listList[index].trueData);
   updateViews();
 }
 
 void exportAllFiles() async {
+  if (isWeb()) {
+    var encoder = ZipEncoder();
+    var archive = Archive();
+    for (DisplayItem item in listList) {
+      String listName = item.trueData;
+      String checkedName = getCheckedFilePath(filePath: listName);
+      String checkedStr = prefs.getString(checkedName) ?? '';
+      List<String> listData = (prefs.getString(listName) ?? '').split('\n');
+      String temp = '';
+      if (listName.contains('.json')) {
+        temp = JsonUtils.getPrettyPrintJson(jsonEncode(listData));
+      } else {
+        String tempStr = '';
+        for (int i = 0; i < listData.length; i++) {
+          var element = listData[i];
+          tempStr += '$element\n';
+        }
+        temp = tempStr;
+      }
+      var fileBytes = Uint8List.fromList(temp.codeUnits);
+      ArchiveFile archiveFiles = ArchiveFile.stream(
+        listName,
+        fileBytes.lengthInBytes,
+        InputStream(fileBytes),
+      );
+      archive.addFile(archiveFiles);
+      if (checkedStr.isNotEmpty) {
+        var checkedBytes = Uint8List.fromList(checkedStr.codeUnits);
+        ArchiveFile archiveFiles = ArchiveFile.stream(
+          checkedName,
+          checkedBytes.lengthInBytes,
+          InputStream(checkedBytes),
+        );
+        archive.addFile(archiveFiles);
+      }
+    }
+    var outputStream = OutputStream(
+      byteOrder: LITTLE_ENDIAN,
+    );
+    var bytes = encoder.encode(archive,
+        level: Deflate.BEST_COMPRESSION, output: outputStream);
+    await FileSaver.instance
+        .saveFile(name: 'out.zip', bytes: Uint8List.fromList(bytes ?? []));
+    return;
+  }
+
   String playlistDir = getDefaultDirPath();
   Directory appDir = await getBaseDir();
   String appDirPath = appDir.path;

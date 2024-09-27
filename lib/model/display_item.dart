@@ -203,6 +203,13 @@ class DisplayItem {
 
   bool isSystemFile() {
     if (isWeb()) return false;
+    var display = getDisplayData();
+    if (isDirectory() && display == 'data') {
+      return true;
+    }
+    if (display.endsWith('_cb') || display.endsWith('_fav')) {
+      return true;
+    }
     List<String> systemFiles = [getColorsFile().path];
     return systemFiles.contains(trueData);
   }

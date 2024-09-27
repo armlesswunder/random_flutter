@@ -21,6 +21,8 @@ import 'model/data.dart';
 import 'model/display_item.dart';
 import 'model/file.dart';
 import 'model/prefs.dart';
+import 'model/web_utils_none.dart'
+    if (dart.library.html) 'model/web_utils.dart';
 import 'widget/components/searchbar_main.dart';
 import 'widget/dialogs/dialog_add.dart';
 import 'widget/page/list.dart';
@@ -226,7 +228,7 @@ class _MyHomePageState extends State<MyHomePage>
         prefs = await SharedPreferences.getInstance();
         final directory = await getBaseDir();
         androidDir = '${directory.path}/playlists';
-        defaultDir = androidDir;
+        defaultDir = prefs.getString('defaultDir') ?? androidDir;
         unselectAllLists();
         await loadFile(sharedFiles.first.path.replaceAll(' ', '_'));
         sharedFiles.clear();
@@ -241,8 +243,8 @@ class _MyHomePageState extends State<MyHomePage>
         prefs = await SharedPreferences.getInstance();
         final directory = await getBaseDir();
         androidDir = '${directory.path}/playlists';
-        defaultDir = androidDir;
-        var fileName = '$androidDir/${DateTime.now().toIso8601String()}'
+        defaultDir = prefs.getString('defaultDir') ?? androidDir;
+        var fileName = '$defaultDir/${DateTime.now().toIso8601String()}'
             .replaceAll(' ', '_');
         unselectAllLists();
         await importFile(fileName, sharedText);
@@ -515,7 +517,11 @@ class _MyHomePageState extends State<MyHomePage>
     ));
   }
 
-  void addBtnPressed() {
+  void addBtnPressed() async {
+    if (isWeb()) {
+      webFilePicker();
+      return;
+    }
     showDialog(
         context: context, builder: (BuildContext context) => const AddDialog());
   }

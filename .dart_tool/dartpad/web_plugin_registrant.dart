@@ -8,6 +8,7 @@
 
 import 'package:audioplayers_web/audioplayers_web.dart';
 import 'package:file_picker/_internal/file_picker_web.dart';
+import 'package:file_saver/file_saver_web.dart';
 import 'package:share_plus_web/share_plus_web.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:url_launcher_web/url_launcher_web.dart';
@@ -17,6 +18,7 @@ void registerPlugins([final Registrar? pluginRegistrar]) {
   final Registrar registrar = pluginRegistrar ?? webPluginRegistrar;
   AudioplayersPlugin.registerWith(registrar);
   FilePickerWeb.registerWith(registrar);
+  FileSaverWeb.registerWith(registrar);
   SharePlusPlugin.registerWith(registrar);
   SharedPreferencesPlugin.registerWith(registrar);
   UrlLauncherPlugin.registerWith(registrar);

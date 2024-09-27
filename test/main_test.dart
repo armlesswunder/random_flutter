@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:random_app/model/my_json_utils.dart';
 import 'package:random_app/model/utils.dart';
 import 'package:test/test.dart';
 
@@ -7,8 +11,6 @@ void main() {
         getDisplayTimestamp(DateTime.fromMicrosecondsSinceEpoch(10000000));
     expect(time, '6:00 PM - 12/31');
   });
-
-
 
   test('2 test', () {
     //String time = getFileTimestamp(DateTime.now()
@@ -41,5 +43,18 @@ void main() {
       String s = temp[k];
       print(s);
     }
+  });
+
+  test('toJson conversion test', () {
+    List<Map<String, dynamic>> temp = [];
+    List<String> list = ['foo', 'bar', 'baz'];
+    for (int i = 0; i < list.length; i++) {
+      temp.add({"description": list[i]});
+    }
+    var outFile = File('C:\\Users\\000ab\\Documents\\random_data\\out.txt');
+    if (!outFile.existsSync()) {
+      outFile.createSync();
+    }
+    outFile.writeAsStringSync(JsonUtils.getPrettyPrintJson(jsonEncode(temp)));
   });
 }

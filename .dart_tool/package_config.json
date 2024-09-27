@@ -135,9 +135,9 @@
     },
     {
       "name": "cross_file",
-      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/cross_file-0.3.3+5",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/cross_file-0.3.3+8",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.2"
     },
     {
       "name": "crypto",
@@ -195,7 +195,13 @@
     },
     {
       "name": "file_picker",
-      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/file_picker-5.5.0",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/file_picker-8.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "file_saver",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/file_saver-0.2.12",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -231,9 +237,9 @@
     },
     {
       "name": "flutter_plugin_android_lifecycle",
-      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.16",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.19",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.2"
     },
     {
       "name": "flutter_web_plugins",
@@ -393,9 +399,9 @@
     },
     {
       "name": "path_provider",
-      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider-2.1.1",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider-2.1.4",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.2"
     },
     {
       "name": "path_provider_android",
@@ -405,9 +411,9 @@
     },
     {
       "name": "path_provider_foundation",
-      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_foundation-2.3.1",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_foundation-2.4.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.2"
     },
     {
       "name": "path_provider_linux",
@@ -464,6 +470,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "photo_view",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/photo_view-0.15.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "platform",
       "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/platform-3.1.2",
       "packageUri": "lib/",
@@ -471,9 +483,9 @@
     },
     {
       "name": "plugin_platform_interface",
-      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.6",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "pointycastle",
@@ -795,9 +807,9 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.0.7",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.2.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "xdg_directories",
@@ -824,7 +836,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-09-25T14:09:39.242328Z",
+  "generated": "2024-09-27T15:42:44.483991Z",
   "generator": "pub",
   "generatorVersion": "3.2.6"
 }

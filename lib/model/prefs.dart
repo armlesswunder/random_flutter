@@ -53,9 +53,11 @@ Future getSettings() async {
       }
     } catch (e) {}
   }
-  defaultDir = isAndroid() ? androidDir : prefs.getString('defaultDir') ?? '';
+  defaultDir = prefs.getString('defaultDir') ?? '';
   defaultFile = prefs.getString('defaultFile') ?? '';
   useNotes = prefs.getBool('USES_NOTES') ?? false;
+  showDirectories = prefs.getBool('SHOW_DIRS') ?? false;
+  showSystemFiles = prefs.getBool('SHOW_SYSTEM_FILES') ?? false;
   cacheListsPosition = prefs.getDouble(listScrollCacheKey()) ?? 0;
   getAuditData();
 }
