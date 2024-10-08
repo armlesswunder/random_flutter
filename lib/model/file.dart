@@ -6,12 +6,13 @@ import 'dart:typed_data';
 import 'package:archive/archive_io.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:file_saver/file_saver.dart';
+//import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:random_app/model/audit.dart';
 import 'package:random_app/model/my_json_utils.dart';
 import 'package:random_app/model/prefs.dart';
+import 'package:random_app/model/web_client.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'data.dart';
@@ -54,7 +55,7 @@ Future loadFile(String path, {bool setDefault = true}) async {
   }
   String temp = path;
   defaultFile = temp;
-  if (isWeb()) {
+  if (isWeb() || isWebMode) {
     defaultFile = temp;
     prefs.setString("defaultFile", temp);
     loadCheckData();
@@ -114,7 +115,7 @@ Future loadFile(String path, {bool setDefault = true}) async {
   if (!dd.listSync().map((e) => e.path).contains(favFilePath)) {
     File(favFilePath).createSync();
   }
-  loadCheckData();
+  await loadCheckData();
   loadFavData();
   getAuditData();
   resetScroll = !saveScrollPosition;
@@ -127,7 +128,11 @@ Future<Directory> getBaseDir() async {
 }
 
 String getCheckedFilePath({String? filePath}) {
-  if (isWeb()) {
+  if (isWebMode) {
+    var arr = (filePath ?? defaultFile).split('/');
+    var checkFileName = arr[arr.length - 1];
+    return 'data/${checkFileName}_cb';
+  } else if (isWeb()) {
     return 'checked_items_key_${filePath ?? defaultFile}_cb';
   }
   var arr = (filePath ?? defaultFile).split(Platform.pathSeparator);
@@ -139,18 +144,28 @@ String getCheckedFilePath({String? filePath}) {
 void saveCheckData({String? filePath}) {
   var checkFilePath = getCheckedFilePath(filePath: filePath);
   String str = checkedItems.reduce((value, element) => '$value\n$element');
-  if (isWeb()) {
+  if (isWebMode) {
+    WebClient().put('$webPath/$checkFilePath', str);
+  } else if (isWeb()) {
     prefs.setString(checkFilePath, str);
   } else {
     File(checkFilePath).writeAsStringSync(str);
   }
 }
 
-void loadCheckData() {
+Future loadCheckData() async {
   checkedItems = [];
   var checkFilePath = getCheckedFilePath();
   List<String>? data = [];
-  if (isWeb()) {
+  if (isWebMode) {
+    try {
+      var resp = await WebClient().get('$webPath/$checkFilePath');
+      data = resp.split('\n');
+    } catch (e) {
+      await WebClient().put('$webPath/$checkFilePath', ''); //
+      data = [];
+    }
+  } else if (isWeb()) {
     data = prefs.getString(checkFilePath)?.split('\n');
   } else {
     data = File(checkFilePath).readAsStringSync().split('\n');
@@ -180,7 +195,10 @@ void loadFavData() {
 Future loadFileContents(String path) async {
   displayList.clear();
   var str = '';
-  if (!isWeb()) {
+
+  if (isWebMode) {
+    str = await WebClient().get('$webPath/$path');
+  } else if (!isWeb()) {
     File file = File(path);
     var s = file.openRead().map(utf8.decode);
     await s.forEach((element) {
@@ -217,19 +235,22 @@ Future loadFileContents(String path) async {
 }
 
 Future writeFile({String? path}) async {
-  if (isWeb()) {
+  if (isWeb() || isWebMode) {
+    var str = '';
     if ((path ?? defaultFile).contains('.json')) {
       var list = displayList.map((e) => e.map).toList();
-      return prefs.setString(
-          defaultFile, JsonUtils.getPrettyPrintJson(jsonEncode(list)));
+      str = JsonUtils.getPrettyPrintJson(jsonEncode(list));
     } else {
       String tempStr = '';
       for (int i = 0; i < displayList.length; i++) {
         var element = displayList[i];
         tempStr += '${element.trueData}\n';
       }
-      return prefs.setString(defaultFile, tempStr);
+      str = tempStr;
     }
+    return isWebMode
+        ? WebClient().put('$webPath/$defaultFile', str)
+        : prefs.setString(defaultFile, str);
   } else {
     File file = File(path ?? defaultFile);
     String tempStr = '';
@@ -248,8 +269,13 @@ Future writeFile({String? path}) async {
 
 String currentDir = '';
 
-void loadDirectory({String directory = ''}) {
+Future loadDirectory({String directory = ''}) {
   listList.clear();
+
+  if (isWebMode) {
+    return WebClient().loadFiles(webPath);
+  }
+
   if (directory.isNotEmpty) {
     defaultDir = directory;
     currentDir = directory;
@@ -302,6 +328,7 @@ void loadDirectory({String directory = ''}) {
       return (a.isDirectory() ? 0 : 1) - (b.isDirectory() ? 0 : 1);
     });
   }
+  return Future(() => null);
 }
 
 void moveToParentDirectory(BuildContext context) async {
@@ -471,8 +498,8 @@ void exportAllFiles() async {
     );
     var bytes = encoder.encode(archive,
         level: Deflate.BEST_COMPRESSION, output: outputStream);
-    await FileSaver.instance
-        .saveFile(name: 'out.zip', bytes: Uint8List.fromList(bytes ?? []));
+    //await FileSaver.instance
+    //    .saveFile(name: 'out.zip', bytes: Uint8List.fromList(bytes ?? []));
     return;
   }
 

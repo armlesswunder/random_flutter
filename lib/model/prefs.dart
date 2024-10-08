@@ -58,6 +58,8 @@ Future getSettings() async {
   useNotes = prefs.getBool('USES_NOTES') ?? false;
   showDirectories = prefs.getBool('SHOW_DIRS') ?? false;
   showSystemFiles = prefs.getBool('SHOW_SYSTEM_FILES') ?? false;
+  isWebMode = prefs.getBool('WEB_MODE') ?? false;
+  webPath = prefs.getString('WEB_PATH') ?? '';
   cacheListsPosition = prefs.getDouble(listScrollCacheKey()) ?? 0;
   getAuditData();
 }

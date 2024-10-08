@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:random_app/model/prefs.dart';
+import 'package:random_app/model/web_client.dart';
 import 'package:random_app/widget/components/searchbar_list.dart';
 
 import '../../model/data.dart';
@@ -44,6 +45,8 @@ class _ListPageState extends State<ListPage> {
           ScrollController(initialScrollOffset: cacheListsPosition);
     }
     _optionsFocusNode = FocusNode();
+    urlController = TextEditingController();
+    urlController.text = webPath;
     //hideStuff = isAndroid() ? true : false;
   }
 
@@ -51,6 +54,7 @@ class _ListPageState extends State<ListPage> {
   void dispose() {
     listState = null;
     _optionsFocusNode.dispose();
+    urlController.dispose();
     super.dispose();
   }
 
@@ -88,6 +92,23 @@ class _ListPageState extends State<ListPage> {
               _buildOptionsPopup()
             ],
           ),
+          if (isWebMode)
+            Row(children: [
+              const Text('Server Address: '),
+              Expanded(
+                  child: TextField(
+                controller: urlController,
+                onSubmitted: (value) async {
+                  webPath = value;
+                  prefs.setString('WEB_PATH', value);
+                  await WebClient().loadFiles(value);
+                  updateViews();
+                },
+              )),
+              const SizedBox(
+                width: 16,
+              )
+            ]),
           Expanded(
               key: UniqueKey(),
               child: Scrollbar(
@@ -110,6 +131,14 @@ class _ListPageState extends State<ListPage> {
     return MenuAnchor(
       childFocusNode: _optionsFocusNode,
       menuChildren: <Widget>[
+        MenuItemButton(
+          onPressed: webModeCheckboxChanged,
+          child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [const Text("Web files?"), _buildWebModeCheckbox()],
+              )),
+        ),
         MenuItemButton(
           onPressed: systemCheckboxChanged,
           child: Padding(
@@ -220,6 +249,11 @@ class _ListPageState extends State<ListPage> {
             },
             onTap: () async {
               await listChosen(index, setState: false);
+              if (isWebMode) {
+                prefs.setString('WEB_PATH', webPath);
+                await WebClient().loadFiles(webPath);
+                updateViews();
+              }
               historyIndex = 0;
               historyList = [getSelectedListIndexForTabs()];
               if (mainState != null) {
@@ -491,6 +525,34 @@ class _ListPageState extends State<ListPage> {
   void systemCheckboxChanged() {
     showSystemFiles = !showSystemFiles;
     prefs.setBool('SHOW_SYSTEM_FILES', showSystemFiles);
+    updateViews();
+    _menuController?.close();
+    setState(() {});
+  }
+
+  Widget _buildWebModeCheckbox() {
+    return StatefulBuilder(builder:
+        (BuildContext context, void Function(void Function()) setState) {
+      return Checkbox(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0),
+          ),
+          side: MaterialStateBorderSide.resolveWith(
+            (states) => const BorderSide(width: 2.0, color: Colors.white70),
+          ),
+          value: isWebMode,
+          onChanged: (condition) => webModeCheckboxChanged());
+    });
+  }
+
+  void webModeCheckboxChanged() async {
+    isWebMode = !isWebMode;
+    prefs.setBool('WEB_MODE', isWebMode);
+    if (isWebMode) {
+      await WebClient().loadFiles(webPath);
+    } else {
+      loadDirectory();
+    }
     updateViews();
     _menuController?.close();
     setState(() {});

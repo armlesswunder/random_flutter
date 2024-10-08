@@ -322,14 +322,17 @@ Future<void> setupDefaultDirs() async {
   }
   if (isWeb()) {
     try {
+      prefs = await SharedPreferences.getInstance();
       listList = [];
       await initWebFiles();
       defaultFile = prefs.getString('defaultFile') ?? webFiles[0];
-      prefs = await SharedPreferences.getInstance();
       listIndex = getSelectedListIndexForTabs();
       historyList.add(listIndex);
     } catch (e) {
       print(e);
+    }
+    if (isWebMode) {
+      await loadDirectory();
     }
     await loadFile(defaultFile);
     mainState!(() {});

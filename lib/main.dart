@@ -207,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage>
         Permission.storage,
       ].request();
     }
-    loadDirectory();
+    await loadDirectory();
     await loadFile(defaultFile);
     _notifier.value = darkMode ? ThemeMode.dark : ThemeMode.light;
     //findSelectedList();

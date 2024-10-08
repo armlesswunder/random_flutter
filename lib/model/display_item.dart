@@ -53,6 +53,7 @@ class DisplayItem {
     String title = map?['title'] ?? "";
     String description = map?['description'] ?? "";
     String info = map?['info'] ?? "";
+    List<dynamic>? infoList = map?['info_list'];
     String image = map?['image'] ?? "";
 
     Widget btn = useCheckboxes
@@ -91,7 +92,7 @@ class DisplayItem {
                     description,
                   )),
           ])),
-          if (info.isNotEmpty)
+          if (info.isNotEmpty || (infoList != null && infoList.isNotEmpty))
             IconButton(
                 onPressed: () {
                   showConfirmDialog(context, null,
@@ -116,6 +117,8 @@ class DisplayItem {
     if (infoList.isEmpty) return [];
     List<Widget> temp = [];
 
+    var div = const Divider(thickness: .5);
+    temp.add(div);
     for (var json in infoList) {
       String image = json['image'] ?? '';
 
@@ -124,22 +127,26 @@ class DisplayItem {
           ImageProperties(json['image_properties'] ?? {});
       String description = json['desc'] ?? json['description'] ?? '';
       temp.add(Row(children: [
-        Expanded(
-            child: ImageBuilder(
-                imageStr: image, imageProperties: imageProperties)),
-        Expanded(child: Text(description)),
+        if (image.isNotEmpty)
+          Expanded(
+              child: ImageBuilder(
+                  imageStr: image, imageProperties: imageProperties)),
+        if (description.isNotEmpty) Expanded(child: Text(description)),
         if (selected != null)
-          StatefulBuilder(builder:
-              (BuildContext context, void Function(void Function()) setState) {
-            return Checkbox(
-                value: json["selected"] ?? false,
-                onChanged: (v) {
-                  json["selected"] = v!;
-                  setState(() {}); //
-                  writeFile();
-                });
-          })
+          Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: StatefulBuilder(builder: (BuildContext context,
+                  void Function(void Function()) setState) {
+                return Checkbox(
+                    value: json["selected"] ?? false,
+                    onChanged: (v) {
+                      json["selected"] = v!;
+                      setState(() {}); //
+                      writeFile();
+                    });
+              }))
       ]));
+      temp.add(div);
     }
 
     return temp;
@@ -196,6 +203,13 @@ class DisplayItem {
   }
 
   bool isDirectory() {
+    if (isWebMode) {
+      if (trueData.contains('.')) {
+        return false;
+      } else {
+        return true;
+      }
+    }
     if (isWeb()) return false;
     Directory d = Directory(trueData);
     return d.existsSync();

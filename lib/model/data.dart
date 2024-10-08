@@ -23,6 +23,7 @@ List<String> auditData = [];
 String defaultDir = '';
 String dataDir = '';
 String defaultFile = '';
+String webPath = '';
 String androidDir = '';
 String androidTempDir = '';
 String assetDir = '';
@@ -39,6 +40,7 @@ late JsonTextFieldController jsonController;
 late TextEditingController searchDisplayController;
 late TextEditingController searchListDisplayController;
 late TextEditingController searchController;
+late TextEditingController urlController;
 List<DisplayItem> searchList = [];
 
 bool useNotes = false;
@@ -59,6 +61,7 @@ bool saveScrollPosition = false;
 bool hideActions = false;
 bool showSystemFiles = false;
 bool showDirectories = false;
+bool isWebMode = false;
 
 double screenWidth = 0;
 double screenHeight = 0;
@@ -238,7 +241,14 @@ void addHistory(int index) {
 Future<void> listChosen(int index, {bool setState = true}) async {
   DisplayItem listItem = listList[index];
   setListSelected(index);
-  if (isWeb()) {
+  if (isWebMode) {
+    if (listItem.isDirectory()) {
+      webPath += '/' + listItem.trueData;
+      urlController.text = webPath;
+    } else {
+      await loadFile(listItem.trueData);
+    }
+  } else if (isWeb()) {
     await loadFile(listItem.trueData);
   } else {
     await load(listItem.trueData);

@@ -8,10 +8,6 @@
     "description": "Availability:\nAll days you can meet up with Adachi at Junes (Gas Station at night):\nMay: 13th, 20th, 23rd, 25th, 27th, 30th.\nJune: 5th, 10th, 11th, 15th (Night), 26th, 28th\nJuly: 2nd, 4th, 5th, 12th, 14th, 24th, 25th\nAugust: 23rd, 25th\nSeptember: 1st, 19th, 20th, 21st, 23rd, 24th, 27th, 30th.\nOctober: 6th, 12th, 21st, 24th, 26th.\nNovember: 1st.",
     "info": "Rank 1: Choices don't matter.\nRank 2: \"That does sound annoying.\"\nRank 3: \"Why don't you come over for real?\", \"I'm a good cook.\".\nRank 4: \"You're right.\"\nRank 5: \"That's true.\"\nRank 6 - 10: Story Progression. (True or Ending).",
     "searchable": "Jester Adachi",
-    "info_list": [
-      {"image": "\\persona4\\yukiko.webp", "description": "Test description A", "image_properties":  {"width": 160.0, "height":  40.0}},
-      {"image": "\\persona4\\margaret.webp", "description": "Test description B"}
-    ],
     "image": "\\persona4\\adachi.webp"
   },
   {
@@ -38,13 +34,98 @@
   {
     "title": "The Emperor: Kanji",
     "description": "Availability:\nPractice Building 1F, MTWHF; Shopping District North, Holidays and Sundays.",
+    "info_list": [
+      {
+        "description": "Where: Practice Building 1F\nWhen: MTWHF\n Where: Shopping District North \nWhen: Holidays and Sundays. "
+      },
+      {
+        "description": "Rank 1-2: \"Working\" \"Tell me about yourself\" \"That's stretching it.",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"Fit or not, you're family\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"With cream\" \"You don't have to do that\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"Can I help?\" \"But Nanako?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"Then let's go outside\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"This is more important, huh?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"Want some coffee?\" \"Because you're a coward (Requires Level 5 Courage) otherwise, Because of Nanako.\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"It was fun.\" \"Was it hard?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: \"Thank you\" \"Leave it to me\"",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona Fusion: Odin\nPersona Evolution: Rokuten Maou\nUltimate Persona Evolution: Takeji Zaiten"
+      }
+    ],
     "info": "Rank 0-1: Choices don't matter\nRank 1-2: \"You just need to change\"\nRank 2-3: Choices don't matter\nRank 3-4: \"Plenty\" \"I'll go with you\" \"You're giving him a new one?\"\nRank 4-5: \"It was pretty amazing\"\nRank 5-6: Choices don't matter\nRank 6-7: \"I want to learn too\"\nRank 7-8: \"You got a warrant?\" \"Tell him Kanji.\"\nRank 8-9: \"How was it?\" \"Good for you\"\nRank 10: Choices don't matter\n\nUltimate Persona Fusion: Odin\nPersona Evolution: Rokuten Maou\nUltimate Persona Evolution: Takeji Zaiten",
+
     "searchable": "Emperor: Kanji",
     "image": "\\persona4\\kanji.webp"
   },
   {
     "title": "The Hierophant: Dojima",
-    "info": "Rank 1-2 Requires Level 2 Expression\nRank 3-4 Requires Level 3 Expression\nRank 4-5 Requires Level 4 Expression\n\nRank 1-2: \"Working\" \"Tell me about yourself\" \"That's stretching it.\nRank 2-3: \"Fit or not, you're family\"\nRank 3-4: \"With cream\" \"You don't have to do that\"\nRank 4-5: \"Can I help?\" \"But Nanako?\"\nRank 5-6: \"Then let's go outside\"\nRank 6-7: \"This is more important, huh?\"\nRank 7-8: \"Want some coffee?\" \"Because you're a coward (Requires Level 5 Courage) otherwise, Because of Nanako.\"\nRank 8-9: \"It was fun.\" \"Was it hard?\"\nRank 10: \"Thank you\" \"Leave it to me\"\n\nUltimate Persona Fusion: Kohryu",
+    "info_list": [
+      {
+        "description": "Rank 1-2: \"Working\" \"Tell me about yourself\" \"That's stretching it.",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"Fit or not, you're family\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"With cream\" \"You don't have to do that\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"Can I help?\" \"But Nanako?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"Then let's go outside\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"This is more important, huh?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"Want some coffee?\" \"Because you're a coward (Requires Level 5 Courage) otherwise, Because of Nanako.\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"It was fun.\" \"Was it hard?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: \"Thank you\" \"Leave it to me\"",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona Fusion: Kohryu"
+      }
+    ],
     "searchable": "The Hierophant: Dojima",
     "image": "\\persona4\\dojima.webp"
   },
@@ -71,43 +152,333 @@
   {
     "title": "The Hermit: Fox",
     "description": "Found at the Shopping District Shrine. Complete the ema request quests to rank up. Reduces cost of healing for each rank up.",
-    "info": "Rank 1: Clear Quest 7\nRank 2: Clear Quest 8\nRank 3: Clear Quest 9\nRank 4: Clear Quest 10\nRank 5: Clear Quest 11\nRank 6: Clear Quest 12\nRank 7: Clear Quest 13\nRank 8: Clear Quest 14\nRank 9: Clear Quest 15\n\nUltimate Persona Fusion: Ongyo-ki",
+    "info_list": [
+      {
+        "description": "Rank 1-2: \"Go ahead and ask\" \"That's right or Nope\" \"I have you (Only if you selected Nope)\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"Let's go buy some together\" \"It's not Nanako's fault (Requires Level 3 Expression)\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"Is there anything else\" \"They go to heaven\" \"I don't know\" \"He's protecting you\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"A person you love a lot\" \"Did he say that?\" \"Listen to her talk (Requires Level 3 understanding) otherwise Talk with her\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"Swear to it\" \"I'll ask him with you.\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"Let's go look for her\" \"Let's go home\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"I'll help you look for it.\" \"He's lonely too\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"He loves you too\" \"I feel sorry for you too\" \"Play with her\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: \"Sure thing\" \"Let's do it\"",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona Fusion: Srosha"
+      }
+    ],
     "searchable": "Hermit (Fox)",
     "image": "\\persona4\\fox.webp"
   },
   {
     "title": "Fortune: Naoto",
     "description": "Availability:\nCan be found on the Classroom Building 1F on weekdays and Samegawa Floodplain on Sundays.",
-    "info": "To start, on October 21st talk to Naoto then go to the Shopping District North, find the man in black near Aiya. Talk to him and pick the first choice, which requires max knowledge. Go back to school and talk to Naoto, which requires maxed courage to start.\nRank 1-2: \"That's no fun\" \"Remember that card...?\"\nRank 2-3: \"A challenge for a duel?\"\nRank 3-4: \"That \"Card\" again?\" \"Let's catch him together\"\nRank 4-5: \"Burn it\" \"A mailbox\" \"Good, you got it back\" \"Let's do it\"\nRank 5-6: \"Because I looked reliable\" \"The numbers are important\" \"Your gender doesn't matter\" (Select \"I'm glad your a girl\" to start a romance)\nRank 6-7: \"Subtract '40' and '4'?\" \"Don't be afraid\"\nRank 7-8: \"I feel kinda sad\" \"Protect Naoto\" \"Because we're friends\" (Select \"Because I love you\" to start a romance).\nRank 8-9: \"Somewhere high\" \"Throwing things away?\"\nRank 10 Lovers: Choices don't matter (Select \"I like it higher\" to make Naoto dress as a girl for the christmas event).\nRank 10 Friends: Choices don't matter.\n\nUltimate Persona Fusion: Norn\nPersona Evolution: Yamato Takeru\nUltimate Persona Evolution: Yamato Sumeragi",
+    "info_list": [
+      {
+        "description": "Rank 1-2: \"That's no fun\" \"Remember that card...?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"A challenge for a duel?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"That \"Card\" again?\" \"Let's catch him together\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"Burn it\" \"A mailbox\" \"Good, you got it back\" \"Let's do it\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"Because I looked reliable\" \"The numbers are important\" \"Your gender doesn't matter\" (Select \"I'm glad your a girl\" to start a romance)",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"Subtract '40' and '4'?\" \"Don't be afraid\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"I feel kinda sad\" \"Protect Naoto\" \"Because we're friends\" (Select \"Because I love you\" to start a romance).",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"Somewhere high\" \"Throwing things away?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10 Lovers: Choices don't matter (Select \"I like it higher\" to make Naoto dress as a girl for the christmas event).",
+        "selected": false
+      },
+      {
+        "description": "Rank 10 Friends: Choices don't matter.",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona Fusion: Norn\nPersona Evolution: Yamato Takeru\nUltimate Persona Evolution: Yamato Sumeragi"
+      }
+    ],
     "searchable": "Fortune: Naoto",
     "image": "\\persona4\\naoto.webp"
   },
   {
     "title": "Strength: Kou or Daisuke",
     "description": "Availability:\nLearning Building 1F (Right side) on weekdays, and Shopping District North for Holidays and Sundays.",
-    "info": "The social link for Kou or Daisuke. Adachi's Hunger social link also occupies this slot, but it does not matter because its an automatic social link.\n\nTo unlock, starting April 19th go to the office and talk to king Moron. This will give you the choice to join clubs. Go to the sports club by the west exit of the learning building. You can choose between the Basketball Club (Kou) or Soccer Club (Daisuke).\n\nKou:\nRank 1-2: \"Junes\" \"I'm jealous\" \"Sure\"\nRank 2-3: \"Just tell me how\" \"I can see that\" \"Leave it to me\"\nRank 3-4: \"It's hard to imagine\" \"That's good for you\"\nRank 4-5: \"You've got some nerve\" \"Let's go do something fun\"\nRank 5-6: \"You're right\" \"What about yourself...?\"\nRank 6-7: Choices don't matter\nRank 7-8: \"Let's catch up to him\" \"You alright?\"\nRank 8-9: \"Don't jump to conclusions\" \"It was written recently?\"\nRank 10: Choices don't matter\nDaisuke:\nRank 1-2: \"Got it\" \"Thanks for the help\"\nRank 2-3: Choices don't matter\nRank 3-4: \"Right on\"\nRank 4-5: \"I'm just getting warmed up\"\nRank 5-6: \"Anything for you guys (Requires Level 4 Understanding) otherwise No problem\"\nRank 6-7: \"Sounds good\" \"Could be.\" \"We've got a problem\" \"Count me in\"\nRank 7-8: \"Stop them\" \"That's his charm\"\nRank 8-9: \"Could be\"\nRank 10: Choices don't matter.\n\nUltimate Persona Fusion: Zaou-Gongen",
+    "info": "The social link for Kou or Daisuke. Adachi's Hunger social link also occupies this slot, but it does not matter because its an automatic social link.\n\nTo unlock, starting April 19th go to the office and talk to king Moron. This will give you the choice to join clubs. Go to the sports club by the west exit of the learning building. You can choose between the Basketball Club (Kou) or Soccer Club (Daisuke).\n",
+    "info_list": [
+      {
+        "description": "Kou:"
+      },
+      {
+        "description": "Rank 1-2: \"Junes\" \"I'm jealous\" \"Sure\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"Just tell me how\" \"I can see that\" \"Leave it to me\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"It's hard to imagine\" \"That's good for you\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"You've got some nerve\" \"Let's go do something fun\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"You're right\" \"What about yourself...?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"Let's catch up to him\" \"You alright?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"Don't jump to conclusions\" \"It was written recently?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "Daisuke:"
+      },
+      {
+        "description": "Rank 1-2: \"Got it\" \"Thanks for the help\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"Right on\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"I'm just getting warmed up\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"Anything for you guys (Requires Level 4 Understanding) otherwise No problem\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"Sounds good\" \"Could be.\" \"We've got a problem\" \"Count me in\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"Stop them\" \"That's his charm\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"Could be\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: Choices don't matter.",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona Fusion: Zaou-Gongen"
+      }
+    ],
     "searchable": "Strength - Hunger (Athletes - Adachi) kou daisuke",
     "image": "\\persona4\\kou.webp;\\persona4\\daisuke.webp"
   },
   {
     "title": "The Hanged Man: Naoki",
     "description": "Availability:\nClassroom Building 1F during weekdays and Shopping District North on Holidays and Sundays.",
-    "info": "Starting from June 8th, you will get a cutscene involving him and you can find him in the Learning Building 1F. Speak with him for 3 days to unlock his social link.\n\nRank 1-2: \"Tired of the food?\" \"I don't know\"\nRank 2-3: \"Tell an American joke\" \"I'll go tell them off\"\nRank 3-4: \"Talk back to the lady or Flatter the lady (Requiring Level 4 Courage or Expression). \"It's not your fault\"\nRank 4-5: \"That's a good idea\"\nRank 5-6: \"You're not the only one\"\nRank 6-7: \"I don't mind\" \"Take action\"\nRank 7-8: \"We can't just ignore you\"\nRank 8-9: \"People are just different\" \"Just let it all out Naoki (Requires Level 5 Understanding) otherwise She can hear you\"\nRank 10: \"I didn't do anything\"\n\nUltimate Persona Fusion: Attis",
+    "info": "Starting from June 8th, you will get a cutscene involving him and you can find him in the Learning Building 1F. Speak with him for 3 days to unlock his social link.\n",
+    "info_list": [
+      {
+        "description": "Rank 1-2: \"Tired of the food?\" \"I don't know\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"Tell an American joke\" \"I'll go tell them off\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"Talk back to the lady or Flatter the lady (Requiring Level 4 Courage or Expression). \"It's not your fault\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"That's a good idea\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"You're not the only one\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"I don't mind\" \"Take action\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"We can't just ignore you\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"People are just different\" \"Just let it all out Naoki (Requires Level 5 Understanding) otherwise She can hear you\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: \"I didn't do anything\"",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona Fusion: Attis"
+      }
+    ],
     "searchable": "The Hanged Man: Naoki",
     "image": "\\persona4\\naoki.webp"
   },
   {
     "title": "Death: Hisano",
     "description": "Availability:\nFlood Plain on Sundays or Holidays.",
-    "info": "This social link requires Rank 4 of Devil.\n\nRank 6-7: Talk to Daidara at the Weapon Shop to get Husband's Letter.\n\nRank 1-2: \"Stop staring at me\"\nRank 2-3: \"Of what?\" \"I'm jealous\" \"That's not true\"\nRank 3-4: \"Don't be depressed\"\nRank 4-5: \"It's actually interesting\" \"Talk about school.\"\nRank 5-6: \"I get it\" \"Letters? How inconvenient\"\nRank 6-7: Choices don't matter\nRank 7-8: \"Hang in there\"\nRank 8-9: \"That's selfish\" \"I guess so.\"\nRank 10: \"What about your husband?\"\n\nUltimate Persona: Mahakala",
+    "info": "This social link requires Rank 4 of Devil.\n",
+    "info_list": [
+      {
+        "description": "Rank 1-2: \"Stop staring at me\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"Of what?\" \"I'm jealous\" \"That's not true\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"Don't be depressed\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"It's actually interesting\" \"Talk about school.\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"I get it\" \"Letters? How inconvenient\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"Hang in there\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"That's selfish\" \"I guess so.\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: \"What about your husband?\"",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona: Mahakala"
+      }
+    ],
     "searchable": "Death: Hisano",
     "image": "\\persona4\\hisano.webp"
   },
   {
     "title": "Temperance: Eri",
     "description": "Availability:\nBus Stop at Shopping District South, no rain, on Monday, Friday, and Saturday",
-    "info": "Starting from May 2nd, go to the bulletin board and apply for Assistant Daycare Caretaker. Do it twice when available to start the social link.\n\nRank 1-2: \"I hate kids\"\nRank 2-3: \"I don't know\"\nRank 3-4: \"You're right..\" \"Just let it go\"\nRank 4-5: Choices don't matter\nRank 5-6: \"Featherman R\"\nRank 6-7: \"You're both afraid\" \"That's not true\"\nRank 7-8: Choices don't matter\nRank 8-9: \"I'm fine\" \"Yeah he is\" \"Its never too late\"\nRank 10: \"I'll be lonely here\"\n\nUltimate Persona Fusion: Vishnu",
-    "searchable": "Temperance (Eri)",
+    "info": "Starting from May 2nd, go to the bulletin board and apply for Assistant Daycare Caretaker. Do it twice when available to start the social link.\n",
+    "info_list": [
+      {
+        "description": "Rank 1-2: \"I hate kids\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"I don't know\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"You're right..\" \"Just let it go\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"Featherman R\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"You're both afraid\" \"That's not true\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"I'm fine\" \"Yeah he is\" \"Its never too late\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: \"I'll be lonely here\"",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona Fusion: Vishnu"
+      }
+    ],
+    "searchable": "Temperance (Eri) Daycare",
     "image": "\\persona4\\eri.webp"
   },
   {
@@ -116,6 +487,62 @@
     "info": "Starting May 25th apply for the Hospital Janitor job. Go to it twice and the social link will start (Requires Level 3 Diligence).\n\nRank 1-2: \"What do you mean?\"\nRank 2-3: \"For the money\" \"I do\" \"Stop it!\"\nRank 3-4: \"...Okay\"\nRank 4-5: \"It's like a soap opera\" \"Comfort her (Requires Level 5 Understanding) otherwise Cheer her up\"\nRank 5-6: Choices don't matter\nRank 6-7: \"Hang in there\"\nRank 7-8: Choices don't matter\nRank 8-9: Choices don't matter\nRank 10: Choices don't matter\n\nUltimate Persona Fusion: Beelzebub",
     "searchable": "Devil: Sayoko",
     "image": "\\persona4\\sayoko.webp"
+  },
+  {
+    "title": "The Tower: Shu",
+    "description": "Availability:\nTuesday, Thursday, Saturday. Can't be started on rainy days.",
+    "info": "To start this social link, apply for the Tutor job (Requires Level 5 Understanding), then go to the bus stop at night.",
+    "info_list": [
+      {
+        "description": "Rank 0-1: \"PE\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 1-2: \"Sure I do\" \"I'll stay and help you (Requires Level 5 Diligence)\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"It's boring\" \"Well, it is the countryside\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"That's just how it is\" \"You're not the only one\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"No there isn't.\" \"Put some effort into it\" \"I don't mind\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"That's not it\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"What I like in a girl is....\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"This guy\" \"Cheer him up\"",
+        "selected": false
+      },
+      {
+        "description": "~The game will force you home next time you go~",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: \"No, it's all you\"",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona Fusion: Shiva"
+      }
+    ],
+    "searchable": "Tower: Shu - Tutor",
+    "image": "\\persona4\\shu.webp"
   },
   {
     "title": "The Star: Teddie",
@@ -127,14 +554,179 @@
   {
     "title": "The Moon: Ai",
     "description": "Availability:\nWednesday, Thursday, Friday, Sunday(Rain)",
-    "info": "To begin, rank up the Strength social link to Rank 4, and you will see an event with Ai. You can find her in the School Lobby after that, talk to her and she will ask you to skip class with her. To do this you need Level 3 Courage and accept her request, this will begin the social link.\nBe careful with this social link, because many choices will lead to her bond reversing.\n\nRank 1-2: \"We'll have to come back\" \"Buy it yourself\"\nRank 2-3: \"Let's just chill\" (Don't select \"That was downright cruel...\")\nRank 3-4: \"Stop them\" \"Hey, let's go\"\nRank 4-5: \"I didn't do much\" \"Have a little confidence\" (Don't select \"Not gonna happen!\")\nRank 5-6: Select \"I'll be your boyfriend\" and \"I don't really care\" to begin a temporary romance. Also select \"Should think about it\" to go down a lovers route.\n~Temporary Romance Route~\nRank 6-7: \"I don't mind\" \"You have a crush on me\"\nRank 7-8: \"Happens all the time\"\nRank 8-9: \"Thank you\"\nRank 10: Select \"Accept it\" to begin a Romance.\n~Lovers Route~\nRank 6-7: \"Sexy Clothes\" \"Yep\" \"Of course you are\"\nRank 7-8: \"Of course\" \"Naturally...\"\nRank 8-9: \"That's not true\" \"Sure\" (Selecting \"We need time apart\" will break her social link permanently).\nRank 10: Choices don't matter\n\nUltimate Persona Fusion: Asura",
+    "info": "To begin, rank up the Strength social link to Rank 4, and you will see an event with Ai. You can find her in the School Lobby after that, talk to her and she will ask you to skip class with her. To do this you need Level 3 Courage and accept her request, this will begin the social link.\nBe careful with this social link, because many choices will lead to her bond reversing.\n",
+    "info_list": [
+      {
+        "description": "Rank 1-2: \"We'll have to come back\" \"Buy it yourself\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"Let's just chill\" (Don't select \"That was downright cruel...\")",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"Stop them\" \"Hey, let's go\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"I didn't do much\" \"Have a little confidence\" (Don't select \"Not gonna happen!\")",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: Select \"I'll be your boyfriend\" and \"I don't really care\" to begin a temporary romance. Also select \"Should think about it\" to go down a lovers route.",
+        "selected": false
+      },
+      {
+        "description": "~Temporary Romance Route~"
+      },
+      {
+        "description": "Rank 6-7: \"I don't mind\" \"You have a crush on me\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"Happens all the time\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"Thank you\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: Select \"Accept it\" to begin a Romance.",
+        "selected": false
+      },
+      {
+        "description": "~Lovers Route~"
+      },
+      {
+        "description": "Rank 6-7: \"Sexy Clothes\" \"Yep\" \"Of course you are\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"Of course\" \"Naturally...\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"That's not true\" \"Sure\" (Selecting \"We need time apart\" will break her social link permanently).",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "Ultimate Persona Fusion: Asura"
+      }
+    ],
     "searchable": "Moon (Ai)",
     "image": "\\persona4\\ai.webp"
   },
   {
     "title": "The Sun: Yumi or Ayane",
     "description": "Availability:\nBand room or Drama room: Monday, Tuesday, Friday. Can advance while raining.",
-    "info": "Yumi:\nRank 1-2: \"What tempts me is not..\" \"I'll give it my all!\"\nRank 2-3: Choices don't matter.\nRank 3-4: \"No.\" \"Is something wrong?\" \"I can't forget\"\nRank 4-5: \"Just passing by\" \"Take care of yourself, too\" \"Yes I do\"\nRank 5-6: \"How is your mother?\"\nRank 6-7: \"He's a kind father\"\nRank 7-8: \"Gently encourage her\"\nRank 8-9: \"Think about it slowly\"\nRank 10: Choices don't matter (Select \"Hug her\" to start a romance)\nAyane:\nRank 0-1: \"Help out\"\nRank 1-2: \"You do have talent\" (Requires Understanding) otherwise Effort is what matters\" \"Help out\"\nRank 2-3: \"Forget about it today.\" \"That's a great attitude\"\nRank 3-4: \"Why don't you give up? (Requires Level 3 Courage)\" \"Want me to help out (Requires understanding) or Alright, follow me (Requires Courage).\" \"No, you're not (Requires Level 3 Understanding) otherwise Just hang in there\"\nRank 4-5: \"Its okay to mess up (Requires Level 3 Understanding) otherwise Don't worry, you can do it\"\nRank 5-6: Choices don't matter.\nRank 6-7: \"Hold Her\"\nRank 7-8: Choices don't matter (\"Reveal your feelings for her\" starts a romance).\n~Friends Route~\nRank 8-9: Choices don't matter\nRank 10: Choices don't matter\n~Lovers Route~\nRank 8-9: \"Wanna come to my house? (Requires Courage) otherwise Wanna go grab some food?\"\nRank 10:Choices don't matter.",
+    "info_list": [
+      {
+        "description": "Yumi:"
+      },
+      {
+        "description": "Rank 1-2: \"What tempts me is not..\" \"I'll give it my all!\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: Choices don't matter.",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"No.\" \"Is something wrong?\" \"I can't forget\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"Just passing by\" \"Take care of yourself, too\" \"Yes I do\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: \"How is your mother?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"He's a kind father\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: \"Gently encourage her\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"Think about it slowly\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: Choices don't matter (Select \"Hug her\" to start a romance)",
+        "selected": false
+      },
+      {
+        "description": "Ayane:"
+      },
+      {
+        "description": "Rank 0-1: \"Help out\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 1-2: \"You do have talent\" (Requires Understanding) otherwise Effort is what matters\" \"Help out\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 2-3: \"Forget about it today.\" \"That's a great attitude\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 3-4: \"Why don't you give up? (Requires Level 3 Courage)\" \"Want me to help out (Requires understanding) or Alright, follow me (Requires Courage).\" \"No, you're not (Requires Level 3 Understanding) otherwise Just hang in there\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 4-5: \"Its okay to mess up (Requires Level 3 Understanding) otherwise Don't worry, you can do it\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 5-6: Choices don't matter.",
+        "selected": false
+      },
+      {
+        "description": "Rank 6-7: \"Hold Her\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 7-8: Choices don't matter (\"Reveal your feelings for her\" starts a romance).",
+        "selected": false
+      },
+      {
+        "description": "~Friends Route~",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "Rank 10: Choices don't matter",
+        "selected": false
+      },
+      {
+        "description": "~Lovers Route~",
+        "selected": false
+      },
+      {
+        "description": "Rank 8-9: \"Wanna come to my house? (Requires Courage) otherwise Wanna go grab some food?\"",
+        "selected": false
+      },
+      {
+        "description": "Rank 10:Choices don't matter.",
+        "selected": false
+      },
+      {
+        "description": ""
+      }
+    ],
     "searchable": "The Sun: Yumi or Ayane",
     "image": "\\persona4\\ayane.webp;\\persona4\\yumi.webp"
   },
@@ -142,8 +734,7 @@
     "title": "Judgement",
     "description": "Auto",
     "info": "This is an automatic Social Link, all about the bond with your friends.\n\nRank 1: December 3rd\nRank 2: December 4th\nRank 3: December 4th\nRank 4: December 5th\nRank 5: December 5th\nRank 6: December 6th\nRank 7: December 7th\nRank 8: December 7th\nRank 9: Clear the Town.\nRank 10: Clear the Town.\n\nUltimate Persona Fusion: Lucifer",
-    "searchable": "Judgement",
-    "image": "\\persona4\\judgement.webp"
+    "searchable": "Judgement"
   },
   {
     "title": "Aeon: Marie",
