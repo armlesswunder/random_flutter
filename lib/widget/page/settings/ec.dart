@@ -4,11 +4,38 @@ import 'package:flutter/services.dart';
 import '../../../model/data.dart';
 import '../../../model/ec.dart';
 import '../../../view/theme.dart';
-import 'header.dart';
+
+class EncryptPage extends StatefulWidget {
+  const EncryptPage({Key? key}) : super(key: key);
+
+  @override
+  State<EncryptPage> createState() => _EncryptPageState();
+}
+
+class _EncryptPageState extends State<EncryptPage> {
+  late TextEditingController searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(), body: buildEncryptScreen(context, setState));
+  }
+}
 
 Widget buildEncryptScreen(BuildContext context, StateSetter state) {
   return Column(children: [
-    buildSettingsHeader(context, state),
     Row(children: [
       Expanded(
           child: TextField(

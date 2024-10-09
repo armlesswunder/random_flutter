@@ -8,19 +8,49 @@ import '../../../model/prefs.dart';
 import '../../../model/utils.dart';
 import '../../../view/theme.dart';
 import '../edit.dart';
-import 'header.dart';
+
+class FileSettingsPage extends StatefulWidget {
+  const FileSettingsPage({Key? key}) : super(key: key);
+
+  @override
+  State<FileSettingsPage> createState() => _FileSettingsPageState();
+}
+
+class _FileSettingsPageState extends State<FileSettingsPage> {
+  late TextEditingController searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('List Settings')),
+        body: buildFileSettingsScreen(context, setState));
+  }
+}
 
 Widget buildFileSettingsScreen(BuildContext context, StateSetter state) {
   return Column(children: [
-    buildSettingsHeader(context, state),
-    Wrap(children: buildBtns(context, state)),
+    Column(children: buildBtns(context, state)),
   ]);
 }
 
 List<Widget> buildBtns(BuildContext context, StateSetter state) {
   return [
-    Row(mainAxisSize: MainAxisSize.min, children: [
-      const Text('Use Favorites?'),
+    Row(children: [
+      SizedBox(width: 16),
+      const Text('Use Favorites:'),
+      Expanded(child: SizedBox()),
       Checkbox(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2.0),
@@ -34,9 +64,12 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
             prefs.setBool(useFavKey(), useFavs);
             state(() {});
           }),
+      SizedBox(width: 16),
     ]),
-    Row(mainAxisSize: MainAxisSize.min, children: [
-      const Text('Use Checkboxes?'),
+    Row(children: [
+      SizedBox(width: 16),
+      const Text('Use Checkboxes:'),
+      Expanded(child: SizedBox()),
       Checkbox(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2.0),
@@ -50,9 +83,12 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
             prefs.setBool(useCheckboxesKey(), useCheckboxes);
             state(() {});
           }),
+      SizedBox(width: 16),
     ]),
-    Row(mainAxisSize: MainAxisSize.min, children: [
-      const Text('Save Scroll Position?'),
+    Row(children: [
+      SizedBox(width: 16),
+      const Text('Save Scroll Position:'),
+      Expanded(child: SizedBox()),
       Checkbox(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2.0),
@@ -66,9 +102,12 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
             prefs.setBool(saveScrollPositionKey(), saveScrollPosition);
             state(() {});
           }),
+      SizedBox(width: 16),
     ]),
-    Row(mainAxisSize: MainAxisSize.min, children: [
-      const Text('Note Mode?'),
+    Row(children: [
+      SizedBox(width: 16),
+      const Text('Note Mode:'),
+      Expanded(child: SizedBox()),
       Checkbox(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2.0),
@@ -82,9 +121,12 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
             prefs.setBool('USES_NOTES', useNotes);
             state(() {});
           }),
+      SizedBox(width: 16),
     ]),
-    Row(mainAxisSize: MainAxisSize.min, children: [
-      const Text('Hide Actions?:'),
+    Row(children: [
+      SizedBox(width: 16),
+      const Text('Hide Actions:'),
+      Expanded(child: SizedBox()),
       Checkbox(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(2.0),
@@ -98,6 +140,7 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
             prefs.setBool(hideActionsKey(), hideActions);
             state(() {});
           }),
+      SizedBox(width: 16),
     ]),
     IconButton(
       icon: Icon(

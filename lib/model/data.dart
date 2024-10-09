@@ -39,7 +39,6 @@ late TextEditingController controller;
 late JsonTextFieldController jsonController;
 late TextEditingController searchDisplayController;
 late TextEditingController searchListDisplayController;
-late TextEditingController searchController;
 late TextEditingController urlController;
 List<DisplayItem> searchList = [];
 
@@ -105,7 +104,6 @@ void initGlobalData() {
   jsonController = JsonTextFieldController();
   searchDisplayController = TextEditingController();
   searchListDisplayController = TextEditingController();
-  searchController = TextEditingController();
   scrollDataController = ScrollController();
   eC = TextEditingController();
   dC = TextEditingController();
@@ -119,7 +117,6 @@ void disposeGlobalData() {
   controller.dispose();
   jsonController.dispose();
   searchDisplayController.dispose();
-  searchController.dispose();
   scrollDataController.dispose();
   eC.dispose();
   dC.dispose();

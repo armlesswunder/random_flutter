@@ -11,9 +11,9 @@ ThemeData lightTheme = ThemeData(
     canvasColor: Colors.white,
     hintColor: Colors.white70,
     textTheme: const TextTheme(
-      bodyText1: TextStyle(),
-      bodyText2: TextStyle(),
-      button: TextStyle(),
+      bodyLarge: TextStyle(),
+      bodyMedium: TextStyle(),
+      labelLarge: TextStyle(),
     ).apply(
       bodyColor: Colors.black87,
       displayColor: Colors.black87,

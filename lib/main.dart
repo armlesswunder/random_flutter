@@ -512,7 +512,7 @@ class _MyHomePageState extends State<MyHomePage>
   void settingsPressed() {
     Navigator.push(context, MaterialPageRoute<void>(
       builder: (BuildContext context) {
-        return buildSettingsScreen();
+        return const SettingsPage();
       },
     ));
   }

@@ -4,10 +4,8 @@ import 'package:random_app/widget/page/settings/random.dart';
 import 'package:random_app/widget/page/settings/search.dart';
 
 import 'audit.dart';
-import 'ec.dart';
 import 'episodes.dart';
 import 'global_settings.dart';
-import 'header.dart';
 
 int mode = 2;
 int modeSearch = 1;
@@ -18,37 +16,76 @@ int modeRandom = 5;
 int modeFileSettings = 6;
 int modeGlobalSettings = 8;
 
-Widget buildSettingsScreen() {
-  return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-        ),
-        body: getSettingsBody(context, state));
-  });
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-Widget getSettingsBody(BuildContext context, StateSetter state) {
-  if (mode == modeAudit) {
-    return buildAuditScreen(context, state);
+class _SettingsPageState extends State<SettingsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('Settings')),
+        body: Column(
+          children: [
+            buildSettingsTile(
+                Icons.search, 'Search', 'Search for items in the current list.',
+                () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const SearchPage()));
+            }),
+            buildSettingsTile(Icons.menu_book_outlined, 'Audit',
+                'Shows most recent changes to the current list or all lists.',
+                () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AuditPage()));
+            }),
+            buildSettingsTile(Icons.live_tv_outlined, 'Episode Generator',
+                'Quickly create a list of episodes.', () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const EpisodesPage()));
+            }),
+            buildSettingsTile(Icons.shuffle_on_rounded, 'Random Tools',
+                'Random in range and coin toss utility.', () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const RandomPage()));
+            }),
+            buildSettingsTile(Icons.file_copy, 'List Settings',
+                'Settings for the current list.', () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const FileSettingsPage()));
+            }),
+            buildSettingsTile(Icons.settings_applications, 'Global Settings',
+                'Settings that are not list specific.', () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const GlobalSettingsPage()));
+            }),
+          ],
+        ));
   }
-  if (mode == modeSearch) {
-    return buildSearchScreen(context, state);
+
+  Widget buildSettingsTile(
+      IconData iconData, String title, String desc, Function? callback) {
+    return ListTile(
+        leading: Icon(iconData, size: 24, color: Colors.white54),
+        title: Text(title),
+        subtitle: Text(
+          desc,
+          style: const TextStyle(fontSize: 12, color: Colors.white54),
+        ),
+        shape: const Border(bottom: BorderSide(color: Colors.white54)),
+        trailing: const Icon(Icons.arrow_forward_ios_rounded,
+            size: 24, color: Colors.white54),
+        onTap: () {
+          callback?.call();
+        });
   }
-  if (mode == modeEncrypt) {
-    return buildEncryptScreen(context, state);
-  }
-  if (mode == modeEpisodes) {
-    return buildEpisodesScreen(context, state);
-  }
-  if (mode == modeRandom) {
-    return buildRandomScreen(context, state);
-  }
-  if (mode == modeFileSettings) {
-    return buildFileSettingsScreen(context, state);
-  }
-  if (mode == modeGlobalSettings) {
-    return buildGlobalSettingsScreen(context, state);
-  }
-  return buildSettingsHeader(context, state);
 }
