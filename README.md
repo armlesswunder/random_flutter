@@ -98,6 +98,8 @@ Remove: Remove a season
 
 Generate episodes: Generates al list of episodes for each season
 
+Go to list screen to see your generated list.
+
 ### Random tools
 Some random utility tools
 

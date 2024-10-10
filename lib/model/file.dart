@@ -403,6 +403,7 @@ Future importFile(String path, String data) async {
   //prefs.setString("defaultFile", path);
   loadDirectory();
   findSelectedList();
+  loadFile(defaultFile);
   useCheckboxes = prefs.getBool(useCheckboxesKey()) ?? false;
   cbViewMode = prefs.getInt(checkboxFilterKey()) ?? 0;
   useFavs = prefs.getBool(useFavKey()) ?? false;

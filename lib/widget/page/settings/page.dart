@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:random_app/widget/page/settings/file_settings.dart';
 import 'package:random_app/widget/page/settings/random.dart';
-import 'package:random_app/widget/page/settings/search.dart';
 
 import 'audit.dart';
 import 'episodes.dart';
@@ -28,14 +27,15 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('Settings')),
-        body: Column(
+        body: SingleChildScrollView(
+            child: Column(
           children: [
-            buildSettingsTile(
-                Icons.search, 'Search', 'Search for items in the current list.',
-                () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SearchPage()));
-            }),
+            //buildSettingsTile(
+            //    Icons.search, 'Search', 'Search for items in the current list.',
+            //    () {
+            //  Navigator.push(context,
+            //      MaterialPageRoute(builder: (context) => const SearchPage()));
+            //}),
             buildSettingsTile(Icons.menu_book_outlined, 'Audit',
                 'Shows most recent changes to the current list or all lists.',
                 () {
@@ -69,7 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       builder: (context) => const GlobalSettingsPage()));
             }),
           ],
-        ));
+        )));
   }
 
   Widget buildSettingsTile(

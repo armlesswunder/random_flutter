@@ -5,9 +5,11 @@ import 'package:random_app/model/display_item.dart';
 
 import '../../../model/audit.dart';
 import '../../../model/data.dart';
+import '../../../model/ecs.dart';
 import '../../../model/file.dart';
 import '../../../model/utils.dart';
 import '../../../view/theme.dart';
+import 'ec.dart';
 
 bool auditCurrent = true;
 
@@ -82,7 +84,15 @@ class _AuditPageState extends State<AuditPage> {
                       TextStyle(color: darkMode ? Colors.white : Colors.black),
                   controller: _controller,
                   onChanged: (v) {
-                    setState(() {});
+                    if (v == ecp) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EncryptPage()));
+                      setState(() {});
+                    } else {
+                      setState(() {});
+                    }
                   },
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(14),
