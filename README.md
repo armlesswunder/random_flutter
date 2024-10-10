@@ -47,7 +47,7 @@ Android: ../Internal storage/Android/data/com.abw4v.random_app_flutter.random_ap
 Download examples [here](https://github.com/armlesswunder/random_flutter/blob/main/assets/presets) if you want to see the app in action
 
 # Guide: Advanced
-This section contains information for technical individuals who wish to make their own lists for the app.
+This section contains information descriptive information of each specific feature of the app and detailed info for technical individuals who wish to make and distribute their own lists for the app.
 
 ## Main screen
 The screen you see when you open the app. I will describe the functionality in detail here, going left to right, top to bottom:
