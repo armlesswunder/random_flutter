@@ -1,7 +1,10 @@
 [
   {
-    "title": "Some title text",
-    "description": "Some subtitle text",
+    "title": "A very simple list item with title only"
+  },
+  {
+    "title": "A more complicated list item's title",
+    "description": "Some description text",
     "info": "a simple bit of info that can popup via info button. more complicated info can be displayed in the info_list property below",
     "info_list": [
       {
