@@ -32,11 +32,15 @@ There are a variety of utils and settings listed here. They are all described at
 I expect every user of the app to read and understand the following core concepts:
 
 **List settings:** A setting which is saved for a particular list only
+
 **Checkboxes:** check items off your list by enabling checkboxes in list settings
+
 **Assets:** images can be stored in the assets folder. These images can be a variety of image file types (.png, .webp, .gif, etc..) When you download a list with image files, I expect users to put the files in the assets folder with respect to the list creators conventions.
 
 Asset Folder location: 
+
 Desktop: C:\Users\\<your_user_name\>\Documents\random_data\assets
+
 Android: ../Internal storage/Android/data/com.abw4v.random_app_flutter.random_app/files/assets
 
 ## Download example lists
