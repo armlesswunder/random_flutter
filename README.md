@@ -123,22 +123,17 @@ The directory is unavailable on web or using web mode, because fundamentally web
 Move up button: Moves you to the parent directory if show directories is enabled. On android, you can't move up from the base directory (playlists)
 Searchbar: You can filter your lists by name. Filtered lists can be useful because the tabs will only show lists that are filtered for your session.
 
-More button: Contains list of options:
--
+More button: 
+
+Contains list of options:
+
 - Web files: Use the webserver file to host lists to the app. I recommend you just ignore this unless you really need to use the app on web (steam overlay maybe?)
-- 
 - Show system files: Shows files and directories used by the app. I recommend you ignore this.
-- 
 - Show directories: ...
-- 
 - Choose default list: On desktop, choose where the app looks for lists. This is a required step on desktop.
-- 
 - Add: Add a list
-- 
 - Export list: For android and web, save the list somewhere
-- 
 - Export all: For android and web, save all lists and data somewhere in a zip file
-- 
 - Import: For android and web, import a list via file or import all app data via zip file
 
 List items: Select a list to load its contents. Long press a list for more options
