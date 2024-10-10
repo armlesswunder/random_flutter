@@ -183,11 +183,11 @@ Complicated list data can be shown if your file is a list of json objects.
 
 The following can be interpreted by the app for a list item:
 
-<nl> = Newline
+\<nl\> = Newline
 
-<period> = period .
+\<period\> = period .
 
-<comma> = comma ,
+\<comma\> = comma ,
 
 List items may have a pleasing layout if certain rules are followed. This feature can be difficult to use, so please be thorough as a list creator
 
