@@ -28,15 +28,22 @@ On mobile, your lists are stored in external storage (For android: ../Internal s
 ## Settings screen (Top right)
 There are a variety of utils and settings listed here. They are all described at a high level in the app.
 
+## Core concepts:
+I expect every user of the app to read and understand the following core concepts:
+
+**List settings:** A setting which is saved for a particular list only
+**Checkboxes:** check items off your list by enabling checkboxes in list settings
+**Assets:** images can be stored in the assets folder. These images can be a variety of image file types (.png, .webp, .gif, etc..) When you download a list with image files, I expect users to put the files in the assets folder with respect to the list creators conventions.
+
+Asset Folder location: 
+Desktop: C:\Users\\<your_user_name\>\Documents\random_data\assets
+Android: ../Internal storage/Android/data/com.abw4v.random_app_flutter.random_app/files/assets
+
 ## Download example lists
 Download examples [here](https://github.com/armlesswunder/random_flutter/blob/main/assets/presets) if you want to see the app in action
 
 # Guide: Advanced
 This section contains information for technical individuals who wish to make their own lists for the app.
-
-## Core concepts:
-**List settings:** A setting which is saved for a particular list only
-**Checkboxes:** check items off your list by enabling checkboxes in list settings
 
 ## Main screen
 The screen you see when you open the app. I will describe the functionality in detail here, going left to right, top to bottom:
@@ -204,6 +211,10 @@ Title| img=\path\to\image\file.png, Magic Amulet, img=\path\to\image\file.png
 An image rendered on the app. Long press to zoom in on the image
 If the image is from a json item, the image may have properties denounced by the image_properties attribute. Image properties mostly control how large the image is
 
+Images can be stored in the filesystem in the assets folder.
+
+Images can also be a url to an image hosted somewhere on the web
+
 Example:
 
 Images in an image list that have properties:
@@ -213,12 +224,26 @@ Images in an image list that have properties:
 {"image": "\\persona4\\margaret.webp", "description": "My size is not constrained", **"image_properties":  {"native_size": true}**}
 ],
 
+## Logging
+If I ask you to provide logs, zip your logs and email them to me. Logs are available in app cache directory
+
+C:\Users\...\Documents\random_data\cache
+
+or
+
+../Internal storage/Android/data/com.abw4v.random_app_flutter.random_app/files/cache
+
+I don't need the cached image stuff, just the files that start with log
+
 ## Web caveats
 Your lists can be deleted at any time by the browser due to caching rules. Use file_server.py with web mode enabled to load files from a directory
-web_server.py has a readme for more info
+
+view the readme for more info
+
+[download webserver files](https://github.com/armlesswunder/random_flutter/releases/tag/webserver).
 
 ## Macos support
-I can't release the macos version bc the zip file messes up the application for some reason and I don't care to fix it
+I can't release the macos version bc the zip file messes up the application for some reason and I don't know how to fix it
 
 ## Ios Support
 I haven't tested on ios. I may need to mess with the code to get it to check the right directories and there could be some package compatibility issues I haven't accounted for. If you want the app on ios please consider contributing the necessary changes. As with all my apps, I will not host to app store in protest to Apple's aggressive pricing.
