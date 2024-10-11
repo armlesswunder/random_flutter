@@ -325,7 +325,8 @@ Future<void> setupDefaultDirs() async {
       prefs = await SharedPreferences.getInstance();
       listList = [];
       await initWebFiles();
-      if (urlRoute.isNotEmpty) {
+      if (urlRoute.isNotEmpty &&
+          listList.any((element) => element.trueData == urlRoute)) {
         defaultFile = urlRoute;
       } else {
         defaultFile = prefs.getString('defaultFile') ?? webFiles[0];

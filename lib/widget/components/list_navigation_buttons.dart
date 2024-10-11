@@ -68,6 +68,7 @@ Widget buildCount() {
     count = sub.length;
     countState = state;
     return Text('Count: ${count}',
+        //return Text(urlRoute,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(color: Colors.white60));

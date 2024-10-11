@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage>
     super.initState();
 
     if (isWeb()) {
-      urlRoute = Uri.base.path.replaceFirst('/', '');
+      urlRoute = Uri.base.queryParameters['path'] ?? '';
       setupDefaultDirs();
     } else {
       setupDefaultDirs().then((value) {

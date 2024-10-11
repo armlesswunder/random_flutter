@@ -7,6 +7,7 @@ A complex, yet user friendly list utility app.
 
 Supported platforms: Windows, Android, Macos, and Web
 <sub>web is supported minimally due to platform constraints).</sub>
+Web app is available [here](https://armlesswunder.github.io/random_app/)
 
 # Contact
 ***Don't contact me with questions until you've read the entire guide please.*** I expect you to do some research for more technical aspects of the app before contacting me.
@@ -43,8 +44,8 @@ Desktop: C:\Users\\<your_user_name\>\Documents\random_data\assets
 
 Android: ../Internal storage/Android/data/com.abw4v.random_app_flutter.random_app/files/assets
 
-## Download example lists
-Download examples [here](https://github.com/armlesswunder/random_flutter/blob/main/assets/presets) if you want to see the app in action
+## Try example lists online
+Try some examples in the web app [here](https://armlesswunder.github.io/random_app/)
 
 # Guide: Advanced
 This section contains information descriptive information of each specific feature of the app and detailed info for technical individuals who wish to make and distribute their own lists for the app.
@@ -190,6 +191,8 @@ Done: Save changes
 Complicated list data can be shown if your file is a list of json objects.
 ***Recommended: Only highly technical individuals should try to make a list of this type.***
 
+[Example List with json in action](https://armlesswunder.github.io/random_app/?path=complex_example.json)
+
 [Example List](https://github.com/armlesswunder/random_flutter/blob/main/assets/presets/example.json).
 
 ## Extended list item formatting
@@ -212,6 +215,9 @@ img=\imgPath\example.png will be rendered as an image
 Example:
 
 Title| img=\path\to\image\file.png, Magic Amulet, img=\path\to\image\file.png
+
+[Example List with complicated formatting in action](https://armlesswunder.github.io/random_app/?path=simple_example.txt)
+
 
 ## Images
 An image rendered on the app. Long press to zoom in on the image
