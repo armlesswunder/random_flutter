@@ -293,7 +293,7 @@ Dialog buildAdvancedDialog(DisplayItem displayItem, int index) {
 }
 
 Future<void> setupDefaultDirs() async {
-  if (isAndroid()) {
+  if (isMobile()) {
     var value = await getExternalStorageDirectory();
     if (!value!.existsSync()) {
       value.createSync();
@@ -307,7 +307,7 @@ Future<void> setupDefaultDirs() async {
       Directory(cacheDir).createSync(recursive: true);
     }
   }
-  if (isWindows()) {
+  if (isDesktop()) {
     var value = await getApplicationDocumentsDirectory();
     assetDir =
         '${value.path}${Platform.pathSeparator}random_data${Platform.pathSeparator}assets';
@@ -325,7 +325,11 @@ Future<void> setupDefaultDirs() async {
       prefs = await SharedPreferences.getInstance();
       listList = [];
       await initWebFiles();
-      defaultFile = prefs.getString('defaultFile') ?? webFiles[0];
+      if (urlRoute.isNotEmpty) {
+        defaultFile = urlRoute;
+      } else {
+        defaultFile = prefs.getString('defaultFile') ?? webFiles[0];
+      }
       listIndex = getSelectedListIndexForTabs();
       historyList.add(listIndex);
     } catch (e) {
@@ -338,13 +342,6 @@ Future<void> setupDefaultDirs() async {
     mainState!(() {});
   }
 }
-
-//
-//String testUrl = 'file://AGL/Users/000ab/Desktop/Playlists/Test.txt';
-String testUrl =
-    'https://github.com/armlesswunder/random_flutter/releases/download/text_assets/abw_test.txt';
-String key = "AIzaSyC6Syi5mgWlJw9Emdc_vWrxFdMilby325k";
-String getFilesUrl = "https://www.googleapis.com/drive/v3/files";
 
 Widget buildContainer(Widget child,
     {double ph = 8,

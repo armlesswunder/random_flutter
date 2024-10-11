@@ -21,8 +21,6 @@ import 'model/data.dart';
 import 'model/display_item.dart';
 import 'model/file.dart';
 import 'model/prefs.dart';
-import 'model/web_utils_none.dart'
-    if (dart.library.html) 'model/web_utils.dart';
 import 'widget/components/searchbar_main.dart';
 import 'widget/dialogs/dialog_add.dart';
 import 'widget/page/list.dart';
@@ -134,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage>
     super.initState();
 
     if (isWeb()) {
+      urlRoute = Uri.base.path.replaceFirst('/', '');
       setupDefaultDirs();
     } else {
       setupDefaultDirs().then((value) {
@@ -381,14 +380,14 @@ class _MyHomePageState extends State<MyHomePage>
                     _buildOptionsPopup(),
                     IconButton(
                         visualDensity: VisualDensity.compact,
-                        padding: EdgeInsets.all(0),
+                        padding: const EdgeInsets.all(0),
                         onPressed: () {
                           settingsPressed();
                         },
                         icon: const Icon(Icons.settings)),
                     IconButton(
                         visualDensity: VisualDensity.compact,
-                        padding: EdgeInsets.all(0),
+                        padding: const EdgeInsets.all(0),
                         onPressed: () {
                           listsPressed();
                         },
@@ -518,10 +517,6 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   void addBtnPressed() async {
-    if (isWeb()) {
-      webFilePicker();
-      return;
-    }
     showDialog(
         context: context, builder: (BuildContext context) => const AddDialog());
   }
@@ -887,12 +882,12 @@ class _MyHomePageState extends State<MyHomePage>
           side: MaterialStateBorderSide.resolveWith(
             (states) => const BorderSide(width: 2.0, color: Colors.white70),
           ),
-          value: checkedItems.contains(displayItem.trueData),
+          value: checkedItems.contains(displayItem.getCheckedItem()),
           onChanged: (checked) {
             if (checked!) {
-              checkedItems.add(displayItem.trueData);
+              checkedItems.add(displayItem.getCheckedItem());
             } else {
-              checkedItems.remove(displayItem.trueData);
+              checkedItems.remove(displayItem.getCheckedItem());
             }
 
             addAuditData(displayItem.getDisplayData(), true, checked, 0);

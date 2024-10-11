@@ -168,7 +168,7 @@ class _EpisodesPageState extends State<EpisodesPage> {
       text += '$str\n';
     }
 
-    if (isAndroid()) {
+    if (isMobile()) {
       var fileName = '$defaultDir/${getShowName()}'.replaceAll(' ', '_');
       unselectAllLists();
       await importFile(fileName, text);

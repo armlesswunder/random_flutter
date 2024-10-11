@@ -11,12 +11,12 @@
         "description": "Im the simplest info list item"
       },
       {
-        "image": "\\test\\sub_item.png",
+        "image": "https://raw.githubusercontent.com/armlesswunder/armlesswunder.github.io/refs/heads/main/acbt_preview.webp",
         "description": "You can select me and I have an image!",
         "selected": false
       }
     ],
     "searchable": "Something you can filter in searchbar",
-    "image": "\\test\\example.png"
+    "image": "https://raw.githubusercontent.com/armlesswunder/armlesswunder.github.io/refs/heads/main/acbt_preview.webp"
   }
 ]

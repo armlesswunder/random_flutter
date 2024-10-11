@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'display_item.dart';
 
-var webFiles = ['test.txt', 'test2.txt'];
+var webFiles = ['simple_example.txt', 'complex_example.json'];
 
 Future<FilePickerResult?> pick() {
   return FilePicker.platform.pickFiles(

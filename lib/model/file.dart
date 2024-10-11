@@ -69,7 +69,7 @@ Future loadFile(String path, {bool setDefault = true}) async {
     return;
   }
 
-  if (false && isAndroid()) {
+  if (false && isMobile()) {
     var arr = path.split(Platform.pathSeparator);
     var dir = await getBaseDir();
     androidDir = '${dir.path}${Platform.pathSeparator}playlists';
@@ -122,7 +122,7 @@ Future loadFile(String path, {bool setDefault = true}) async {
 }
 
 Future<Directory> getBaseDir() async {
-  if (isWindows()) return await getApplicationDocumentsDirectory();
+  if (isDesktop()) return await getApplicationDocumentsDirectory();
   return await getExternalStorageDirectory() ??
       await getApplicationDocumentsDirectory();
 }
@@ -279,7 +279,7 @@ Future loadDirectory({String directory = ''}) {
   if (directory.isNotEmpty) {
     defaultDir = directory;
     currentDir = directory;
-    if (true || isWindows()) {
+    if (true || isDesktop()) {
       prefs.setString('defaultDir', defaultDir);
     }
     Directory d = Directory(directory);
@@ -309,7 +309,7 @@ Future loadDirectory({String directory = ''}) {
     Directory(badDir).deleteSync(recursive: true);
   }
 
-  if (isAndroid()) {
+  if (isMobile()) {
     listList.sort((a, b) {
       return a
           .getDisplayData()
@@ -433,7 +433,7 @@ void chooseDefaultDir(BuildContext context) async {
 }
 
 Future<void> exportFile() async {
-  if (isAndroid()) {
+  if (isMobile()) {
     XFile xfile = XFile(defaultFile);
     if (useNotes) {
       DisplayItem displayItem = DisplayItem(defaultFile);
@@ -510,7 +510,7 @@ void exportAllFiles() async {
   print(playlistDir);
   print(appDirPath);
 
-  if (isAndroid()) {
+  if (isMobile()) {
     var encoder = ZipFileEncoder();
     String zipPath =
         '$appDirPath${Platform.pathSeparator}playlist_backup_${getFileTimestamp(DateTime.now())}.zip';
@@ -544,7 +544,7 @@ File getColorsFile() {
 }
 
 String getDefaultDirPath() {
-  if (isAndroid()) {
+  if (isMobile()) {
     return defaultDir;
   } else {
     if (defaultDirExists()) {

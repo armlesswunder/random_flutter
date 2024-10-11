@@ -26,13 +26,13 @@ String listScrollCacheKey({String? path}) =>
 //    '${defaultFile}_${itemName}_useCheckboxes';
 
 Future getSettings() async {
-  if (isAndroid()) {
+  if (isMobile()) {
     final directory = await getBaseDir();
     androidDir = '${directory.path}/playlists';
     androidTempDir = '${directory.path}/temp';
     var d = Directory(androidDir);
     var t = Directory(androidTempDir);
-    if (isAndroid()) {
+    if (isMobile()) {
       directory.listSync().forEach((element) {
         var f = File(element.path);
         if (f.existsSync() &&

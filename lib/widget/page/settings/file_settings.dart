@@ -47,25 +47,26 @@ Widget buildFileSettingsScreen(BuildContext context, StateSetter state) {
 
 List<Widget> buildBtns(BuildContext context, StateSetter state) {
   return [
-    Row(children: [
-      SizedBox(width: 16),
-      const Text('Use Favorites:'),
-      Expanded(child: SizedBox()),
-      Checkbox(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2.0),
-          ),
-          side: MaterialStateBorderSide.resolveWith(
-            (states) => const BorderSide(width: 2.0, color: Colors.white70),
-          ),
-          value: useFavs,
-          onChanged: (condition) {
-            useFavs = condition ?? false;
-            prefs.setBool(useFavKey(), useFavs);
-            state(() {});
-          }),
-      SizedBox(width: 16),
-    ]),
+    if (!isWeb())
+      Row(children: [
+        SizedBox(width: 16),
+        const Text('Use Favorites:'),
+        Expanded(child: SizedBox()),
+        Checkbox(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(2.0),
+            ),
+            side: MaterialStateBorderSide.resolveWith(
+              (states) => const BorderSide(width: 2.0, color: Colors.white70),
+            ),
+            value: useFavs,
+            onChanged: (condition) {
+              useFavs = condition ?? false;
+              prefs.setBool(useFavKey(), useFavs);
+              state(() {});
+            }),
+        SizedBox(width: 16),
+      ]),
     Row(children: [
       SizedBox(width: 16),
       const Text('Use Checkboxes:'),
@@ -85,44 +86,46 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
           }),
       SizedBox(width: 16),
     ]),
-    Row(children: [
-      SizedBox(width: 16),
-      const Text('Save Scroll Position:'),
-      Expanded(child: SizedBox()),
-      Checkbox(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2.0),
-          ),
-          side: MaterialStateBorderSide.resolveWith(
-            (states) => const BorderSide(width: 2.0, color: Colors.white70),
-          ),
-          value: saveScrollPosition,
-          onChanged: (condition) {
-            saveScrollPosition = condition ?? false;
-            prefs.setBool(saveScrollPositionKey(), saveScrollPosition);
-            state(() {});
-          }),
-      SizedBox(width: 16),
-    ]),
-    Row(children: [
-      SizedBox(width: 16),
-      const Text('Note Mode:'),
-      Expanded(child: SizedBox()),
-      Checkbox(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2.0),
-          ),
-          side: MaterialStateBorderSide.resolveWith(
-            (states) => const BorderSide(width: 2.0, color: Colors.white70),
-          ),
-          value: useNotes,
-          onChanged: (condition) {
-            useNotes = condition ?? false;
-            prefs.setBool('USES_NOTES', useNotes);
-            state(() {});
-          }),
-      SizedBox(width: 16),
-    ]),
+    if (!isWeb())
+      Row(children: [
+        SizedBox(width: 16),
+        const Text('Save Scroll Position:'),
+        Expanded(child: SizedBox()),
+        Checkbox(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(2.0),
+            ),
+            side: MaterialStateBorderSide.resolveWith(
+              (states) => const BorderSide(width: 2.0, color: Colors.white70),
+            ),
+            value: saveScrollPosition,
+            onChanged: (condition) {
+              saveScrollPosition = condition ?? false;
+              prefs.setBool(saveScrollPositionKey(), saveScrollPosition);
+              state(() {});
+            }),
+        SizedBox(width: 16),
+      ]),
+    if (isAndroid())
+      Row(children: [
+        SizedBox(width: 16),
+        const Text('Note Mode:'),
+        Expanded(child: SizedBox()),
+        Checkbox(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(2.0),
+            ),
+            side: MaterialStateBorderSide.resolveWith(
+              (states) => const BorderSide(width: 2.0, color: Colors.white70),
+            ),
+            value: useNotes,
+            onChanged: (condition) {
+              useNotes = condition ?? false;
+              prefs.setBool('USES_NOTES', useNotes);
+              state(() {});
+            }),
+        SizedBox(width: 16),
+      ]),
     Row(children: [
       SizedBox(width: 16),
       const Text('Hide Actions:'),
@@ -142,17 +145,18 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
           }),
       SizedBox(width: 16),
     ]),
-    IconButton(
-      icon: Icon(
-        Icons.edit,
-        color: darkMode ? Colors.white70 : Colors.black87,
+    if (!isWeb())
+      IconButton(
+        icon: Icon(
+          Icons.edit,
+          color: darkMode ? Colors.white70 : Colors.black87,
+        ),
+        tooltip: 'Edit',
+        onPressed: () {
+          editPressed(context);
+        },
       ),
-      tooltip: 'Edit',
-      onPressed: () {
-        editPressed(context);
-      },
-    ),
-    !useCheckboxes
+    !useCheckboxes || isWeb()
         ? Container(width: 1)
         : TextButton(
             onPressed: () {
@@ -170,7 +174,7 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
               });
             },
             child: Text('Select All')),
-    !useCheckboxes
+    !useCheckboxes || isWeb()
         ? Container(width: 1)
         : TextButton(
             onPressed: () {

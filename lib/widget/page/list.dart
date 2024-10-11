@@ -9,6 +9,7 @@ import '../../model/data.dart';
 import '../../model/display_item.dart';
 import '../../model/file.dart';
 import '../../model/utils.dart';
+import '../../model/web_utils.dart';
 import '../../view/theme.dart';
 
 class ListPage extends StatefulWidget {
@@ -131,36 +132,39 @@ class _ListPageState extends State<ListPage> {
     return MenuAnchor(
       childFocusNode: _optionsFocusNode,
       menuChildren: <Widget>[
-        MenuItemButton(
-          onPressed: webModeCheckboxChanged,
-          child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [const Text("Web files?"), _buildWebModeCheckbox()],
-              )),
-        ),
-        MenuItemButton(
-          onPressed: systemCheckboxChanged,
-          child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  const Text("Show System Files?"),
-                  _buildShowSystemFilesCheckbox()
-                ],
-              )),
-        ),
-        MenuItemButton(
-          onPressed: showDirCheckboxChanged,
-          child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  const Text("Show Directories?  "),
-                  _buildShowDirectoryCheckbox(),
-                ],
-              )),
-        ),
+        if (isWeb())
+          MenuItemButton(
+            onPressed: webModeCheckboxChanged,
+            child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [const Text("Web files?"), _buildWebModeCheckbox()],
+                )),
+          ),
+        if (!isWeb())
+          MenuItemButton(
+            onPressed: systemCheckboxChanged,
+            child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    const Text("Show System Files?"),
+                    _buildShowSystemFilesCheckbox()
+                  ],
+                )),
+          ),
+        if (!isWeb())
+          MenuItemButton(
+            onPressed: showDirCheckboxChanged,
+            child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    const Text("Show Directories?  "),
+                    _buildShowDirectoryCheckbox(),
+                  ],
+                )),
+          ),
         if (!isMobile())
           MenuItemButton(
               onPressed: () {
@@ -170,7 +174,7 @@ class _ListPageState extends State<ListPage> {
               child: const Padding(
                   padding: EdgeInsets.all(4),
                   child: Text('Choose Default List'))),
-        if (isAndroid() || isWeb())
+        if (isMobile() || isWeb())
           MenuItemButton(
               onPressed: () {
                 openFile(context, setState);
@@ -178,7 +182,7 @@ class _ListPageState extends State<ListPage> {
               },
               child: const Padding(
                   padding: EdgeInsets.all(4), child: Text('Import List'))),
-        if (isAndroid())
+        if (isMobile())
           MenuItemButton(
               onPressed: () {
                 exportFile();
@@ -186,7 +190,7 @@ class _ListPageState extends State<ListPage> {
               },
               child: const Padding(
                   padding: EdgeInsets.all(4), child: Text('Export List'))),
-        if (isAndroid() || isWeb())
+        if (isMobile() || isWeb())
           MenuItemButton(
               onPressed: () {
                 exportAllFiles();
@@ -196,6 +200,10 @@ class _ListPageState extends State<ListPage> {
                   padding: EdgeInsets.all(4), child: Text('Export All'))),
         MenuItemButton(
             onPressed: () {
+              if (isWeb()) {
+                webFilePicker();
+                return;
+              }
               showDialog(
                   context: context,
                   builder: (BuildContext context) =>
@@ -222,7 +230,7 @@ class _ListPageState extends State<ListPage> {
   }
 
   bool showDirUpBtn() {
-    if (isAndroid()) {
+    if (isMobile()) {
       return showDirectories && !isTopLevelDir();
     } else {
       return showDirectories;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:random_app/widget/page/settings/file_settings.dart';
 import 'package:random_app/widget/page/settings/random.dart';
 
+import '../../../model/utils.dart';
 import 'audit.dart';
 import 'episodes.dart';
 import 'global_settings.dart';
@@ -36,19 +37,21 @@ class _SettingsPageState extends State<SettingsPage> {
             //  Navigator.push(context,
             //      MaterialPageRoute(builder: (context) => const SearchPage()));
             //}),
-            buildSettingsTile(Icons.menu_book_outlined, 'Audit',
-                'Shows most recent changes to the current list or all lists.',
-                () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const AuditPage()));
-            }),
-            buildSettingsTile(Icons.live_tv_outlined, 'Episode Generator',
-                'Quickly create a list of episodes.', () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const EpisodesPage()));
-            }),
+            if (!isWeb())
+              buildSettingsTile(Icons.menu_book_outlined, 'Audit',
+                  'Shows most recent changes to the current list or all lists.',
+                  () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AuditPage()));
+              }),
+            if (!isWeb())
+              buildSettingsTile(Icons.live_tv_outlined, 'Episode Generator',
+                  'Quickly create a list of episodes.', () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EpisodesPage()));
+              }),
             buildSettingsTile(Icons.shuffle_on_rounded, 'Random Tools',
                 'Random in range and coin toss utility.', () {
               Navigator.push(context,

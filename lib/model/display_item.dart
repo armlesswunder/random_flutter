@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -26,6 +27,16 @@ class DisplayItem {
     return getDisplayData();
   }
 
+  String getCheckedItem() {
+    if (defaultFile.endsWith('.json')) {
+      Map<String, dynamic> jData = Map.of(map!);
+      jData.remove('info_list');
+      return jsonEncode(jData);
+    } else {
+      return trueData.replaceAll('\n', '<nl>');
+    }
+  }
+
   String getDisplayData() {
     Directory d = Directory(trueData);
     String sep = trueData.contains('/') ? '/' : '\\';
@@ -46,7 +57,7 @@ class DisplayItem {
       tempStr = tempStr.substring(0, i);
     }
 
-    return decodeString(tempStr);
+    return decodeString(tempStr).trim();
   }
 
   Widget buildJSONItem(BuildContext context, int index) {
@@ -128,9 +139,7 @@ class DisplayItem {
       String description = json['desc'] ?? json['description'] ?? '';
       temp.add(Row(children: [
         if (image.isNotEmpty)
-          Expanded(
-              child: ImageBuilder(
-                  imageStr: image, imageProperties: imageProperties)),
+          ImageBuilder(imageStr: image, imageProperties: imageProperties),
         if (description.isNotEmpty) Expanded(child: Text(description)),
         if (selected != null)
           Padding(
@@ -164,14 +173,13 @@ class DisplayItem {
           side: MaterialStateBorderSide.resolveWith(
             (states) => const BorderSide(width: 2.0, color: Colors.white70),
           ),
-          value: checkedItems
-              .contains(displayItem.trueData.replaceAll('\n', '<nl>')),
+          value: checkedItems.contains(displayItem.getCheckedItem()),
           onChanged: (checked) {
+            var data = displayItem.getCheckedItem();
             if (checked!) {
-              checkedItems.add(displayItem.trueData.replaceAll('\n', '<nl>'));
+              checkedItems.add(data);
             } else {
-              checkedItems
-                  .remove(displayItem.trueData.replaceAll('\n', '<nl>'));
+              checkedItems.remove(data);
             }
 
             addAuditData(displayItem.getDisplayData().replaceAll('\n', '<nl>'),

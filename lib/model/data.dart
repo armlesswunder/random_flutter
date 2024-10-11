@@ -86,6 +86,7 @@ String loggingFilepath = '';
 late File loggingFile;
 
 String sessionTimestamp = 'null';
+String urlRoute = '';
 
 List<String> checkedItems = [];
 List<String> favItems = [];

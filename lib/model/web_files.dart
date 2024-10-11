@@ -1,1 +1,1 @@
-List<String> webFiles = ["sfx/test.txt"];
+List<String> webFiles = ["sfx/simple_example.txt"];
