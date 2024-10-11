@@ -7,7 +7,8 @@ A complex, yet user friendly list utility app.
 
 Supported platforms: Windows, Android, Macos, and Web
 <sub>web is supported minimally due to platform constraints).</sub>
-Web app is available [here](https://armlesswunder.github.io/random_app/)
+
+Web app is available [here](https://armlesswunder.github.io/random_app/) with very limited functionality.
 
 # Contact
 ***Don't contact me with questions until you've read the entire guide please.*** I expect you to do some research for more technical aspects of the app before contacting me.
@@ -193,7 +194,7 @@ Complicated list data can be shown if your file is a list of json objects.
 
 [Example List with json in action](https://armlesswunder.github.io/random_app/?path=complex_example.json)
 
-[Example List](https://github.com/armlesswunder/random_flutter/blob/main/assets/presets/example.json).
+[Example List](https://github.com/armlesswunder/random_flutter/blob/main/assets/presets/complex_example.json).
 
 ## Extended list item formatting
 
