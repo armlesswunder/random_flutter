@@ -19,7 +19,7 @@ Email me at: abw4v.dev@gmail.com
 
 ## How does it work?
 This app accepts a file and displays the info in a neat list. 
-The app can read any file that contains text or a specially formatted json file (see examples {link to json example} for exact formatting support). 
+The app can read any file that contains text or a specially formatted json file (see examples for exact formatting support). 
 Text files are displayed in a list separated by newlines.
 List items can be filtered by text (searchbar) or checkbox state.
 
