@@ -69,6 +69,8 @@ double? cachePos;
 
 int listIndex = 0;
 int historyIndex = 0;
+double scaleFactor = 1.0;
+
 TabController? tabController;
 
 double cacheListsPosition = 0.0;

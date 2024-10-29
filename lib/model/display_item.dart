@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:random_app/model/file.dart';
 import 'package:random_app/model/image_properties.dart';
+import 'package:random_app/model/number_ext.dart';
 import 'package:random_app/model/utils.dart';
 
 import '../view/theme.dart';
@@ -65,6 +66,7 @@ class DisplayItem {
     String description = map?['description'] ?? "";
     String info = map?['info'] ?? "";
     List<dynamic>? infoList = map?['info_list'];
+    List<dynamic> descList = map?['desc_list'] ?? [];
     String image = map?['image'] ?? "";
 
     Widget btn = useCheckboxes
@@ -93,15 +95,14 @@ class DisplayItem {
                 Expanded(
                     child: Text(
                   title,
-                  style: const TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 24.0.ds),
                 ))
             ]),
             if (description.isNotEmpty)
               Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    description,
-                  )),
+                  child: Text(description, style: textSizeStyle)),
+            if (descList.isNotEmpty) Wrap(children: _buildDescList(descList))
           ])),
           if (info.isNotEmpty || (infoList != null && infoList.isNotEmpty))
             IconButton(
@@ -119,9 +120,45 @@ class DisplayItem {
     List<dynamic> infoList = map?['info_list'] ?? [];
     return SingleChildScrollView(
       child: Column(
-        children: [Text(info), ..._buildInfoList(infoList)],
+        children: [
+          Text(info, style: textSizeStyle),
+          ..._buildInfoList(infoList)
+        ],
       ),
     );
+  }
+
+  List<Widget> _buildDescList(List<dynamic> descList) {
+    if (descList.isEmpty) return [];
+    List<Widget> temp = [];
+    for (var json in descList) {
+      String image = json['image'] ?? '';
+
+      //bool? selected = json['selected'];
+      ImageProperties imageProperties = ImageProperties(
+          json['image_properties'] ?? {'width': 36.ds, 'height': 36.ds});
+      String name = json['name'] ?? '';
+      temp.add(Column(children: [
+        if (image.isNotEmpty)
+          ImageBuilder(imageStr: image, imageProperties: imageProperties),
+        if (name.isNotEmpty) Text(' $name ', style: textSizeStyle),
+        //if (selected != null)
+        //  Padding(
+        //      padding: const EdgeInsets.only(left: 16),
+        //      child: StatefulBuilder(builder: (BuildContext context,
+        //          void Function(void Function()) setState) {
+        //        return Checkbox(
+        //            value: json["selected"] ?? false,
+        //            onChanged: (v) {
+        //              json["selected"] = v!;
+        //              setState(() {}); //
+        //              writeFile();
+        //            });
+        //      }))
+      ]));
+    }
+
+    return temp;
   }
 
   List<Widget> _buildInfoList(List<dynamic> infoList) {
@@ -140,7 +177,8 @@ class DisplayItem {
       temp.add(Row(children: [
         if (image.isNotEmpty)
           ImageBuilder(imageStr: image, imageProperties: imageProperties),
-        if (description.isNotEmpty) Expanded(child: Text(description)),
+        if (description.isNotEmpty)
+          Expanded(child: Text(description, style: textSizeStyle)),
         if (selected != null)
           Padding(
               padding: const EdgeInsets.only(left: 16),
@@ -182,8 +220,7 @@ class DisplayItem {
               checkedItems.remove(data);
             }
 
-            addAuditData(displayItem.getDisplayData().replaceAll('\n', '<nl>'),
-                true, checked, 0);
+            addAuditData(displayItem.getCheckedItem(), true, checked, 0);
             saveCheckData();
             setState(() {});
           });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:random_app/model/number_ext.dart';
 
 bool darkMode = true;
 
@@ -64,4 +65,9 @@ ThemeData darkTheme = ThemeData(
 Color getSelectedCardColor(bool selected) {
   var themeColor = !darkMode ? Colors.black12 : Colors.white10;
   return selected ? Colors.white24 : themeColor;
+}
+
+TextStyle get textSizeStyle {
+  var def = const TextStyle().fontSize ?? 16;
+  return TextStyle(fontSize: def.ds);
 }

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:json_text_field/json_text_field.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:random_app/model/number_ext.dart';
 import 'package:random_app/model/prefs.dart';
 import 'package:random_app/model/web_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -278,9 +279,10 @@ Dialog buildAdvancedDialog(DisplayItem displayItem, int index) {
                   style: TextStyle(color: Colors.blue),
                 ),
                 onPressed: () {
-                  if (checkedItems.contains(oldText.replaceAll('\n', '<nl>'))) {
-                    checkedItems.remove(oldText.replaceAll('\n', '<nl>'));
-                    checkedItems.add(displayList[index].trueData);
+                  if (checkedItems
+                      .contains(displayList[index].getCheckedItem())) {
+                    checkedItems.remove(displayList[index].getCheckedItem());
+                    checkedItems.add(displayList[index].getCheckedItem());
                   }
                   writeFile();
                   mainState!(() {});
@@ -354,8 +356,8 @@ Widget buildContainer(Widget child,
       decoration: BoxDecoration(
           color: color,
           borderRadius: const BorderRadius.all(Radius.circular(12))),
-      margin: EdgeInsets.symmetric(horizontal: mh, vertical: mv),
-      padding: EdgeInsets.symmetric(horizontal: ph, vertical: pv),
+      margin: EdgeInsets.symmetric(horizontal: mh.ds, vertical: mv.ds),
+      padding: EdgeInsets.symmetric(horizontal: ph.ds, vertical: pv.ds),
       child: child);
 }
 

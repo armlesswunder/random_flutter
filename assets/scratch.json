@@ -1,19 +1,139 @@
-[
+[{"desc_list": [
   {
-    "title": "Some title text",
-    "description": "Some subtitle text",
-    "info": "a simple bit of info that can popup via info button. more complicated info can be displayed in the info_list property below",
-    "info_list": [
-      {
-        "description": "Im the simplest info list item"
-      },
-      {
-        "image": "\\test\\sub_item.png",
-        "description": "You can select me and I have an image!",
-        "selected": false
-      }
-    ],
-    "searchable": "Something you can filter in searchbar",
-    "image": "\\test\\example.png"
+    "name": "Arrows x5",
+    "image": "\\palia\\items\\arrows.webp"
+  },
+  {
+    "name": "Hassain",
+    "image": "\\palia\\villagers\\hassain.webp"
+  },
+  {
+    "name": "Kenyatta",
+    "image": "\\palia\\villagers\\kenyatta.webp"
+  },
+  {
+    "name": "Naio",
+    "image": "\\palia\\villagers\\naio.webp"
+  },
+  {
+    "name": "Sifuu",
+    "image": "\\palia\\villagers\\sifuu.webp"
+  },
+  {
+    "name": "Subira",
+    "image": "\\palia\\villagers\\subira.webp"
   }
-]
+]},{"desc_list": [
+  {
+    "name": "Bugs x2",
+    "image": "\\palia\\items\\bugs.webp"
+  },
+  {
+    "name": "Auni",
+    "image": "\\palia\\villagers\\auni.webp"
+  },
+  {
+    "name": "Elouisa",
+    "image": "\\palia\\villagers\\elouisa.webp"
+  }
+]},{"desc_list": [
+  {
+    "name": "Carrot Seed x2",
+    "image": "\\palia\\items\\carrot_seed.webp"
+  },
+  {
+    "name": "Badruu",
+    "image": "\\palia\\villagers\\badruu.webp"
+  },
+  {
+    "name": "Hekla",
+    "image": "\\palia\\villagers\\hekla.webp"
+  },
+  {
+    "name": "Copper Bar x2",
+    "image": "\\palia\\items\\copper_bar.webp"
+  },
+  {
+    "name": "Eshe",
+    "image": "\\palia\\villagers\\eshe.webp"
+  },
+  {
+    "name": "Tamala",
+    "image": "\\palia\\villagers\\tamala.webp"
+  }
+]},{"desc_list": [
+  {
+    "name": "Copper Ore x4",
+    "image": "\\palia\\items\\copper_ore.webp"
+  },
+  {
+    "name": "Einar",
+    "image": "\\palia\\villagers\\einar.webp"
+  },
+  {
+    "name": "Hodari",
+    "image": "\\palia\\villagers\\hodari.webp"
+  },
+  {
+    "name": "Najuma",
+    "image": "\\palia\\villagers\\najuma.webp"
+  },
+  {
+    "name": "Zeki",
+    "image": "\\palia\\villagers\\zeki.webp"
+  }
+]},{"desc_list": [
+  {
+    "name": "Lily x6",
+    "image": "\\palia\\items\\lily.webp"
+  },
+  {
+    "name": "Ashura",
+    "image": "\\palia\\villagers\\ashura.webp"
+  },
+  {
+    "name": "Chayne",
+    "image": "\\palia\\villagers\\chayne.webp"
+  },
+  {
+    "name": "Jel",
+    "image": "\\palia\\villagers\\jel.webp"
+  },
+  {
+    "name": "Kenli",
+    "image": "\\palia\\villagers\\kenli.webp"
+  },
+  {
+    "name": "Tau",
+    "image": "\\palia\\villagers\\tau.webp"
+  },
+  {
+    "name": "Tish",
+    "image": "\\palia\\villagers\\tish.webp"
+  }
+]},{"desc_list": [
+  {
+    "name": "Mushroom x2",
+    "image": "\\palia\\items\\mushroom.webp"
+  },
+  {
+    "name": "Jina",
+    "image": "\\palia\\villagers\\jina.webp"
+  },
+  {
+    "name": "Reth",
+    "image": "\\palia\\villagers\\reth.webp"
+  },
+  {
+    "name": "Sweet Leaf x2",
+    "image": "\\palia\\items\\sweet_leaf.webp"
+  },
+  {
+    "name": "Caleri",
+    "image": "\\palia\\villagers\\caleri.webp"
+  },
+  {
+    "name": "Delaila",
+    "image": "\\palia\\villagers\\delaila.webp"
+  }
+]}]

@@ -18,6 +18,7 @@ String useFavKey({String? path}) => '${path ?? defaultFile}_useFavs';
 String saveScrollPositionKey({String? path}) =>
     '${path ?? defaultFile}_saveScrollPosition';
 String hideActionsKey({String? path}) => '${path ?? defaultFile}_hideActions';
+String scaleKey({String? path}) => '${path ?? defaultFile}_uiScale';
 String cacheSearchStrKey({String? path}) =>
     '${path ?? defaultFile}_cacheSearchStr';
 String listScrollCacheKey({String? path}) =>

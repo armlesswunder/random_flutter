@@ -64,6 +64,7 @@ Future loadFile(String path, {bool setDefault = true}) async {
     useFavs = prefs.getBool(useFavKey()) ?? false;
     saveScrollPosition = prefs.getBool(saveScrollPositionKey()) ?? false;
     hideActions = prefs.getBool(hideActionsKey()) ?? false;
+    scaleFactor = prefs.getDouble(scaleKey()) ?? 1.0; //
     searchDisplayController.text = prefs.getString(cacheSearchStrKey()) ?? "";
     cachePos = prefs.getDouble(cachePosKey());
     return;
@@ -100,6 +101,7 @@ Future loadFile(String path, {bool setDefault = true}) async {
     useFavs = prefs.getBool(useFavKey()) ?? false;
     saveScrollPosition = prefs.getBool(saveScrollPositionKey()) ?? false;
     hideActions = prefs.getBool(hideActionsKey()) ?? false;
+    scaleFactor = prefs.getDouble(scaleKey()) ?? 1.0;
     searchDisplayController.text = prefs.getString(cacheSearchStrKey()) ?? "";
     cachePos = prefs.getDouble(cachePosKey());
   }

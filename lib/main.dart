@@ -6,6 +6,7 @@ import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:random_app/model/number_ext.dart';
 import 'package:random_app/model/utils.dart';
 import 'package:random_app/view/color_spec.dart';
 import 'package:random_app/view/theme.dart';
@@ -288,7 +289,11 @@ class _MyHomePageState extends State<MyHomePage>
     List<Widget> temp = [];
     for (int i = 0; i < getFilteredLists().length; i++) {
       DisplayItem item = getFilteredLists()[i];
-      temp.add(buildContainer(Text(item.getDisplayData()),
+      temp.add(buildContainer(
+          Text(
+            item.getDisplayData(),
+            style: textSizeStyle,
+          ),
           color: i == listIndex ? Colors.white24 : Colors.white10));
     }
     return temp;
@@ -442,7 +447,7 @@ class _MyHomePageState extends State<MyHomePage>
                           // list changed logic
                           filteredListChosen(listIndex);
                         },
-                        icon: Icon(Icons.arrow_back_ios_new)),
+                        icon: Icon(Icons.arrow_back_ios_new, size: 18.0.ds)),
                 Expanded(child: buildMainSearchBar()),
                 historyList.length < 2 || historyIndex == 0
                     ? Container()
@@ -457,7 +462,8 @@ class _MyHomePageState extends State<MyHomePage>
                           // list changed logic
                           filteredListChosen(listIndex);
                         },
-                        icon: Icon(Icons.arrow_forward_ios_rounded))
+                        icon: Icon(Icons.arrow_forward_ios_rounded,
+                            size: 18.0.ds))
               ]),
               buildTabs(),
             ],
@@ -698,7 +704,7 @@ class _MyHomePageState extends State<MyHomePage>
                 decoration: BoxDecoration(
                     color: !darkMode ? Colors.black12 : Colors.white10,
                     borderRadius: const BorderRadius.all(Radius.circular(12))),
-                margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+                margin: EdgeInsets.fromLTRB(12.0.ds, 8.0.ds, 12.0.ds, 0),
                 child: Row(
                   children: [
                     Expanded(child: content),
@@ -801,8 +807,9 @@ class _MyHomePageState extends State<MyHomePage>
                       color: !darkMode ? Colors.black12 : Colors.white10,
                       borderRadius:
                           const BorderRadius.all(Radius.circular(12))),
-                  margin: const EdgeInsets.fromLTRB(0, 8, 12, 0),
-                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                  margin: EdgeInsets.fromLTRB(0, 8.0.ds, 12.0.ds, 0),
+                  padding:
+                      EdgeInsets.fromLTRB(12.0.ds, 8.0.ds, 12.0.ds, 8.0.ds),
                   child: Text(decodeString(element),
                       style: TextStyle(color: getColorSpec(element))));
           dataArr.add(dataWidget);
@@ -813,7 +820,7 @@ class _MyHomePageState extends State<MyHomePage>
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Expanded(
           child: Container(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0.ds),
               child: Column(children: [
                 Align(alignment: Alignment.centerLeft, child: head),
                 Align(
@@ -836,12 +843,14 @@ class _MyHomePageState extends State<MyHomePage>
       children: [
         Expanded(
             child: Container(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(child: Text(displayItem.getDisplayData())))),
+                padding: EdgeInsets.all(8.0.ds),
+                child: Center(
+                    child: Text(displayItem.getDisplayData(),
+                        style: textSizeStyle)))),
         hideActions
             ? Container()
             : Container(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0.ds),
                 child: Row(children: [fav, btn])),
         const SizedBox(
           width: 16,
@@ -905,8 +914,7 @@ class _MyHomePageState extends State<MyHomePage>
       return false;
     }
 
-    bool checked =
-        checkedItems.contains(displayItem.trueData.replaceAll('\n', '<nl>'));
+    bool checked = checkedItems.contains(displayItem.getCheckedItem());
     if ((cbViewMode == 1 && !checked)) return false;
     if ((cbViewMode == 2 && checked)) return false;
     bool fav = favItems.contains(displayItem.trueData);

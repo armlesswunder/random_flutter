@@ -143,19 +143,40 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
             prefs.setBool(hideActionsKey(), hideActions);
             state(() {});
           }),
-      SizedBox(width: 16),
+      const SizedBox(width: 16),
+    ]),
+    Row(children: [
+      const SizedBox(width: 16),
+      Text('UI Scale :: ${scaleFactor.toStringAsPrecision(1)} ::'),
+      const SizedBox(width: 16),
+      Slider(
+          label: scaleFactor.toStringAsPrecision(1),
+          min: .5,
+          max: 4.0,
+          value: scaleFactor,
+          onChanged: (value) {
+            scaleFactor = value;
+            prefs.setDouble(scaleKey(), scaleFactor);
+            state(() {});
+          }),
+      const SizedBox(width: 16),
     ]),
     if (!isWeb())
-      IconButton(
-        icon: Icon(
-          Icons.edit,
-          color: darkMode ? Colors.white70 : Colors.black87,
-        ),
-        tooltip: 'Edit',
-        onPressed: () {
-          editPressed(context);
-        },
-      ),
+      Row(children: [
+        const SizedBox(width: 16),
+        const Text('Text Editor'),
+        const SizedBox(width: 16),
+        IconButton(
+          icon: Icon(
+            Icons.edit,
+            color: darkMode ? Colors.white70 : Colors.black87,
+          ),
+          tooltip: 'Edit',
+          onPressed: () {
+            editPressed(context);
+          },
+        )
+      ]),
     !useCheckboxes || isWeb()
         ? Container(width: 1)
         : TextButton(
