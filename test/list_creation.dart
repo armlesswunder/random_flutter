@@ -82,4 +82,137 @@ void main() {
       }
     }
   });
+  test('ssbm bonus conversion', () async {
+    WidgetsFlutterBinding.ensureInitialized();
+    var ps = '\\';
+    String documentsDir = 'C:\\Users\\000ab\\Documents';
+    String inputFilePath = '$documentsDir\\random_data\\inputFiles';
+    String outputFilePath = '$documentsDir\\random_data\\outputFiles';
+    var inDir = Directory(inputFilePath);
+    var outDir = Directory(outputFilePath);
+
+    for (FileSystemEntity file in inDir.listSync(recursive: true)) {
+      try {
+        List<Map<String, dynamic>> temp = [];
+        List<String> list = File(file.path).readAsLinesSync();
+        for (int i = 0; i < list.length; i++) {
+          var str = list[i];
+          var arr = str.split('\t');
+          var bonusName = arr[0];
+          var points = arr[1];
+          var bonusDescription = arr[2].replaceAll('"', '');
+
+          temp.add({"name": bonusName, "description": bonusDescription});
+        }
+
+        var fileName = file.path.replaceAll(inputFilePath, '');
+        var outFile = File('${outDir.path}$fileName');
+        if (!outFile.existsSync()) {
+          outFile.createSync(recursive: true);
+        }
+        outFile
+            .writeAsStringSync(JsonUtils.getPrettyPrintJson(jsonEncode(temp)));
+      } catch (e) {
+        print(e);
+      }
+    }
+  });
+  test('palia fish conversion', () async {
+    WidgetsFlutterBinding.ensureInitialized();
+    var ps = '\\';
+    String documentsDir = 'C:\\Users\\000ab\\Documents';
+    String inputFilePath = '$documentsDir\\random_data\\inputFiles';
+    String outputFilePath = '$documentsDir\\random_data\\outputFiles';
+    var inDir = Directory(inputFilePath);
+    var outDir = Directory(outputFilePath);
+
+    for (FileSystemEntity file in inDir.listSync(recursive: true)) {
+      try {
+        List<Map<String, dynamic>> temp = [];
+        List<String> list = File(file.path).readAsLinesSync();
+        for (int i = 0; i < list.length; i++) {
+          var str = list[i];
+          var arr = str.split('\t');
+          var name = arr[0].replaceAll('"', '').trim();
+          var description = arr[1].replaceAll('"', '').trim();
+          var rarity = arr[2].replaceAll('"', '').trim();
+          var location = arr[3].replaceAll('"', '').trim();
+          var times = arr[4].replaceAll('"', '').trim();
+          var bait = arr[5].replaceAll('"', '').trim();
+          var value = arr[6].replaceAll('"', '').trim();
+          var starValue = arr[7].replaceAll('"', '').trim();
+          var neededFor = arr[8].replaceAll('"', '').trim();
+          var nf = neededFor.trim().isEmpty ? '' : ', Uses: $neededFor';
+          var ig = '65px-${name.replaceAll(' ', '_')}';
+          var img = '\\palia\\fish\\$ig.png';
+
+          temp.add({
+            "name": name,
+            "description": "$location, $times$nf",
+            "image": img,
+            "info":
+                "$rarity\n$location\n$description\nBait: $bait\n$value/$starValue"
+          });
+        }
+
+        var fileName = file.path.replaceAll(inputFilePath, '');
+        var outFile = File('${outDir.path}$fileName');
+        if (!outFile.existsSync()) {
+          outFile.createSync(recursive: true);
+        }
+        outFile
+            .writeAsStringSync(JsonUtils.getPrettyPrintJson(jsonEncode(temp)));
+      } catch (e) {
+        print(e);
+      }
+    }
+  });
+  test('palia insect conversion', () async {
+    WidgetsFlutterBinding.ensureInitialized();
+    var ps = '\\';
+    String documentsDir = 'C:\\Users\\000ab\\Documents';
+    String inputFilePath = '$documentsDir\\random_data\\inputFiles';
+    String outputFilePath = '$documentsDir\\random_data\\outputFiles';
+    var inDir = Directory(inputFilePath);
+    var outDir = Directory(outputFilePath);
+
+    for (FileSystemEntity file in inDir.listSync(recursive: true)) {
+      try {
+        List<Map<String, dynamic>> temp = [];
+        List<String> list = File(file.path).readAsLinesSync();
+        for (int i = 0; i < list.length; i++) {
+          var str = list[i];
+          var arr = str.split('\t');
+          var name = arr[0].replaceAll('"', '').trim();
+          var description = arr[1].replaceAll('"', '').trim();
+          var rarity = arr[2].replaceAll('"', '').trim();
+          var location = arr[3].replaceAll('"', '').trim();
+          var times = arr[4].replaceAll('"', '').trim();
+          var behavior = arr[5].replaceAll('"', '').trim();
+          var value = arr[6].replaceAll('"', '').trim();
+          var starValue = arr[7].replaceAll('"', '').trim();
+          var ig = '65px-${name.replaceAll(' ', '_')}';
+          var img = '\\palia\\insects\\$ig.png';
+
+          temp.add({
+            "name": name,
+            "description": "$location, $times",
+            "image": img,
+            "info":
+                "$rarity\n$location\n$description\nBehavior: $behavior\n$value/$starValue"
+          });
+        }
+
+        var fileName = file.path.replaceAll(inputFilePath, '');
+        var outFile = File('${outDir.path}$fileName');
+        if (!outFile.existsSync()) {
+          outFile.createSync(recursive: true);
+        }
+        outFile
+            .writeAsStringSync(JsonUtils.getPrettyPrintJson(jsonEncode(temp)));
+      } catch (e) {
+        print(e);
+      }
+    }
+  });
 }

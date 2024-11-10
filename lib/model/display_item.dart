@@ -62,7 +62,7 @@ class DisplayItem {
   }
 
   Widget buildJSONItem(BuildContext context, int index) {
-    String title = map?['title'] ?? "";
+    String title = map?['title'] ?? map?['name'] ?? "";
     String description = map?['description'] ?? "";
     String info = map?['info'] ?? "";
     List<dynamic>? infoList = map?['info_list'];

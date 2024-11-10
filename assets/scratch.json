@@ -1,139 +1,242 @@
-[{"desc_list": [
+[
   {
-    "name": "Arrows x5",
-    "image": "\\palia\\items\\arrows.webp"
+    "name": "Ancient Amber Beetle",
+    "description": "Bahari Forest, Any Time",
+    "image": "\\palia\\insects\\65px-Ancient_Amber_Beetle.png",
+    "info": "Epic\nBahari Forest\nOne of the oldest known insects species in Palia, was said to exist in the time of humans.\nBehavior: Running\n440 Gold/660 Gold"
   },
   {
-    "name": "Hassain",
-    "image": "\\palia\\villagers\\hassain.webp"
+    "name": "Ancient Flowbug",
+    "description": "Temple of the Gales, Any Time",
+    "image": "\\palia\\insects\\65px-Ancient_Flowbug.png",
+    "info": "Legendary\nTemple of the Gales\nA rare species of bioluminescent fauna that was previously thought to be a myth. Bahari Glowbugs are said to have descended from them.\nBehavior: Flying\n/"
   },
   {
-    "name": "Kenyatta",
-    "image": "\\palia\\villagers\\kenyatta.webp"
+    "name": "Azure Stonehopper",
+    "description": "Bahari Fields, Any Time",
+    "image": "\\palia\\insects\\65px-Azure_Stonehopper.png",
+    "info": "Rare\nBahari Fields\nThis little blue beauty has been known to camouflage itself as a shiny blue pebble.\nBehavior: Jumping\n150 Gold/225 Gold"
   },
   {
-    "name": "Naio",
-    "image": "\\palia\\villagers\\naio.webp"
+    "name": "Bahari Bee",
+    "description": "Bahari Fields Bahari Forest, Any Time",
+    "image": "\\palia\\insects\\65px-Bahari_Bee.png",
+    "info": "Uncommon\nBahari Fields Bahari Forest\nA local species of bees, known to produce delicious honey.\nBehavior: Dashing\n46 Gold/69 Gold"
   },
   {
-    "name": "Sifuu",
-    "image": "\\palia\\villagers\\sifuu.webp"
+    "name": "Bahari Crab",
+    "description": "Bahari Coast Flooded Fortress, Any Time",
+    "image": "\\palia\\insects\\65px-Bahari_Crab.png",
+    "info": "Common\nBahari Coast Flooded Fortress\nA local crab, known to taste good with drawn butter.\nBehavior: Running\n21 Gold/31 Gold"
   },
   {
-    "name": "Subira",
-    "image": "\\palia\\villagers\\subira.webp"
+    "name": "Bahari Glowbug",
+    "description": "Bahari Fields, Evening and Night (6:00 PM - 3:00 AM)",
+    "image": "\\palia\\insects\\65px-Bahari_Glowbug.png",
+    "info": "Rare\nBahari Fields\nA local species of bioluminescent fauna. Discovered by Professor Bonlin Amepongo.\nBehavior: Flying\n145 Gold/217 Gold"
+  },
+  {
+    "name": "Brighteye Butterfly",
+    "description": "Bahari Forest, Morning and Day (3:00 AM - 6:00 PM)",
+    "image": "\\palia\\insects\\65px-Brighteye_Butterfly.png",
+    "info": "Rare\nBahari Forest\nWhenever you see the sun out, you can see the eyes of this intricately patterned butterfly looking around Bahari Bay.\nBehavior: Flying\n130 Gold/195 Gold"
+  },
+  {
+    "name": "Brushtail Dragonfly",
+    "description": "Kilima Lake Bahari Rivers Bahari Ponds, Any Time",
+    "image": "\\palia\\insects\\65px-Brushtail_Dragonfly.png",
+    "info": "Common\nKilima Lake Bahari Rivers Bahari Ponds\nThe tail of this Dragonfly is so bright and vibrant, some early Majiri were said to have used it as a paintbrush.\nBehavior: Dashing\n17 Gold/25 Gold"
+  },
+  {
+    "name": "Cerulean Cicada",
+    "description": "Bahari Fields Bahari Forest, Morning and Day (3:00 AM - 6:00 PM)",
+    "image": "\\palia\\insects\\65px-Cerulean_Cicada.png",
+    "info": "Uncommon\nBahari Fields Bahari Forest\nThe call of this cicada is so soothing, it was said to be the inspiration for Ayana's fourth symphony.\nBehavior: Flying\n46 Gold/69 Gold"
+  },
+  {
+    "name": "Common Bark Cicada",
+    "description": "Bahari Fields Bahari Forest, Morning and Day (3:00 AM - 6:00 PM)",
+    "image": "\\palia\\insects\\65px-Common_Bark_Cicada.png",
+    "info": "Common\nBahari Fields Bahari Forest\nA common cicada.\nBehavior: Flying\n21 Gold/31 Gold"
+  },
+  {
+    "name": "Common Blue Butterfly",
+    "description": "Kilima Fields Bahari Fields Bahari Forest, Morning and Day (3:00 AM - 6:00 PM)",
+    "image": "\\palia\\insects\\65px-Common_Blue_Butterfly.png",
+    "info": "Common\nKilima Fields Bahari Fields Bahari Forest\nEver resilient. Butterflies of this type can be found in almost every climate in Palia.\nBehavior: Flying\n15 Gold/22 Gold"
+  },
+  {
+    "name": "Common Field Cricket",
+    "description": "Kilima Fields Bahari Fields, Any Time",
+    "image": "\\palia\\insects\\65px-Common_Field_Cricket.png",
+    "info": "Common\nKilima Fields Bahari Fields\nField crickets can be found anywhere you can find a field.\nBehavior: Jumping\n20 Gold/30 Gold"
+  },
+  {
+    "name": "Duskwing Butterfly",
+    "description": "Dragon Shrine, Morning and Day (3:00 AM - 6:00 PM)",
+    "image": "\\palia\\insects\\65px-Duskwing_Butterfly.png",
+    "info": "Uncommon\nDragon Shrine\nA beautiful butterfly with wings the color of dusk. Unique to the Kilima Valley.\nBehavior: Flying\n40 Gold/60 Gold"
+  },
+  {
+    "name": "Fairy Mantis",
+    "description": "Bahari Fields, Any Time",
+    "image": "\\palia\\insects\\65px-Fairy_Mantis.png",
+    "info": "Epic\nBahari Fields\nA mantis from early Majiri legend only recently confirmed to exist by modern entomologists. Said to have magical properties.\nBehavior: Jumping\n440 Gold/660 Gold"
+  },
+  {
+    "name": "Firebreathing Dragonfly",
+    "description": "Kilima Fields, Any Time",
+    "image": "\\palia\\insects\\65px-Firebreathing_Dragonfly.png",
+    "info": "Rare\nKilima Fields\nThis dragonfly is notoriously difficult to catch, in part due to its fiery breath.\nBehavior: Dashing\n150 Gold/225 Gold"
+  },
+  {
+    "name": "Garden Ladybug",
+    "description": "Bahari Fields, Any Time",
+    "image": "\\palia\\insects\\65px-Garden_Ladybug.png",
+    "info": "Uncommon\nBahari Fields\nA black and red ladybug, popular for controlling garden pests.\nBehavior: Running\n46 Gold/69 Gold"
+  },
+  {
+    "name": "Garden Leafhopper",
+    "description": "Kilima Fields, Any Time",
+    "image": "\\palia\\insects\\65px-Garden_Leafhopper.png",
+    "info": "Uncommon\nKilima Fields\nThe Garden Leafhopper is such a delight in Palia that many children keep them as pets. They are said to bring good luck.\nBehavior: Jumping\n49 Gold/73 Gold"
+  },
+  {
+    "name": "Garden Mantis",
+    "description": "Kilima Lake, Any Time",
+    "image": "\\palia\\insects\\65px-Garden_Mantis.png",
+    "info": "Uncommon\nKilima Lake\nNothing to see here. Just your garden variety mantis.\nBehavior: Jumping\n43 Gold/64 Gold"
+  },
+  {
+    "name": "Garden Millipede",
+    "description": "Kilima Fields, Any Time",
+    "image": "\\palia\\insects\\65px-Garden_Millipede.png",
+    "info": "Uncommon\nKilima Fields\nA brown and green millipede that loves feasting on garden crops.\nBehavior: Running\n43 Gold/64 Gold"
+  },
+  {
+    "name": "Garden Snail",
+    "description": "Bahari Coast Bahari Forest Flooded Fortress, Any Time",
+    "image": "\\palia\\insects\\65px-Garden_Snail.png",
+    "info": "Uncommon\nBahari Coast Bahari Forest Flooded Fortress\nA snail that has evolved over time to look like a leaf. Good for hiding from predators, bad for hiding from the Leafstalker Mantis.\nBehavior: Running\n43 Gold/64 Gold"
+  },
+  {
+    "name": "Golden Glory Bee",
+    "description": "Kilima Fields, Morning and Day (3:00 AM - 6:00 PM)",
+    "image": "\\palia\\insects\\65px-Golden_Glory_Bee.png",
+    "info": "Rare\nKilima Fields\nA rare bee, imported from the Akwindu province. Mead made from this bee's honey is said to be heavily consumed by the Queen of the province and her family.\nBehavior: Flying\n150 Gold/225 Gold"
+  },
+  {
+    "name": "Gossamer Veil Moth",
+    "description": "Kilima Fields, Evening and Night (6:00 PM - 3:00 AM)",
+    "image": "\\palia\\insects\\65px-Gossamer_Veil_Moth.png",
+    "info": "Rare\nKilima Fields\nThe wings of this moth are so thin that some say you can see a peek of the Dragon Realm by looking through them.\nBehavior: Flying\n130 Gold/195 Gold"
+  },
+  {
+    "name": "Hairy Millipede",
+    "description": "Bahari Forest, Any Time",
+    "image": "\\palia\\insects\\65px-Hairy_Millipede.png",
+    "info": "Rare\nBahari Forest\nA millipede with a hair growth problem.\nBehavior: Running\n140 Gold/210 Gold"
+  },
+  {
+    "name": "Inky Dragonfly",
+    "description": "Bahari Rivers Bahari Ponds, Any Time",
+    "image": "\\palia\\insects\\65px-Inky_Dragonfly.png",
+    "info": "Uncommon\nBahari Rivers Bahari Ponds\nThis stealthy Dragonfly is used as a component in various black dyes and inks.\nBehavior: Dashing\n49 Gold/73 Gold"
+  },
+  {
+    "name": "Jewelwing Dragonfly",
+    "description": "Cliffs Above Pavel Mines, Any Time",
+    "image": "\\palia\\insects\\65px-Jewelwing_Dragonfly.png",
+    "info": "Epic\nCliffs Above Pavel Mines\nA Dragonfly with wings as bright and colorful as any precious stone.\nBehavior: Dashing\n440 Gold/660 Gold"
+  },
+  {
+    "name": "Kilima Night Moth",
+    "description": "Kilima Fields Bahari Fields Bahari Forest, Evening and Night (6:00 PM - 3:00 AM)",
+    "image": "\\palia\\insects\\65px-Kilima_Night_Moth.png",
+    "info": "Common\nKilima Fields Bahari Fields Bahari Forest\nWhile beautiful, the Kilima night moth is so prevalent on hot summer nights that some consider it to be a pest. Keep away from stored cloth.\nBehavior: Flying\n15 Gold/22 Gold"
+  },
+  {
+    "name": "Leafstalker Mantis",
+    "description": "Bahari Forest, Any Time",
+    "image": "\\palia\\insects\\65px-Leafstalker_Mantis.png",
+    "info": "Rare\nBahari Forest\nAn herbivorous mantis that exclusively eats leaves.\nBehavior: Jumping\n140 Gold/210 Gold"
+  },
+  {
+    "name": "Lunar Fairy Moth",
+    "description": "Bahari Fields Bahari Forest, Evening and Night (6:00 PM - 3:00 AM)",
+    "image": "\\palia\\insects\\65px-Lunar_Fairy_Moth.png",
+    "info": "Uncommon\nBahari Fields Bahari Forest\nThe Lunar Fairy Moth is said to have a very special connection to the Dragon Moon, and is said to only appear at special times during its cycle.\nBehavior: Flying\n40 Gold/60 Gold"
+  },
+  {
+    "name": "Paper Lantern Bug",
+    "description": "Bahari Coast Bahari Forest, Evening and Night (6:00 PM - 3:00 AM)",
+    "image": "\\palia\\insects\\65px-Paper_Lantern_Bug.png",
+    "info": "Common\nBahari Coast Bahari Forest\nThis bug glows as brightly as a colorful feast day lantern taking flight into the Palian night sky.\nBehavior: Flying\n20 Gold/30 Gold"
+  },
+  {
+    "name": "Princess Ladybug",
+    "description": "Kilima Lake, Any Time",
+    "image": "\\palia\\insects\\65px-Princess_Ladybug.png",
+    "info": "Rare\nKilima Lake\nA very regal looking lady bug, made popular by the children's fairytale, The Princess Who Turned Into A Ladybug.\nBehavior: Running\n145 Gold/217 Gold"
+  },
+  {
+    "name": "Proudhorned Stag Beetle",
+    "description": "Kilima Fields, Any Time",
+    "image": "\\palia\\insects\\65px-Proudhorned_Stag_Beetle.png",
+    "info": "Uncommon\nKilima Fields\nThe horns of this stag beetle are said to resemble that of the Proudhorned Sernuk.\nBehavior: Running\n46 Gold/69 Gold"
+  },
+  {
+    "name": "Rainbow-Tipped Butterfly",
+    "description": "Bahari Fields, Morning and Day (3:00 AM - 6:00 PM)",
+    "image": "\\palia\\insects\\65px-Rainbow-Tipped_Butterfly.png",
+    "info": "Epic\nBahari Fields\nAncient legends say this rare butterfly got its beautiful coloring from dipping the tip of its wings in a Well of Flow.\nBehavior: Flying\n440 Gold/660 Gold"
+  },
+  {
+    "name": "Raspberry Beetle",
+    "description": "Daiya Family Farm, Any Time",
+    "image": "\\palia\\insects\\65px-Raspberry_Beetle.png",
+    "info": "Rare\nDaiya Family Farm\nA beetle whose entire diet consists of raspberries.\nBehavior: Running\n145 Gold/217 Gold"
+  },
+  {
+    "name": "Scintillating Centipede",
+    "description": "Bahari Fields Bahari Forest Caves, Any Time",
+    "image": "\\palia\\insects\\65px-Scintillating_Centipede.png",
+    "info": "Rare\nBahari Fields Bahari Forest Caves\nA rare centipede with a shiny hard shell.\nBehavior: Running\n130 Gold/195 Gold"
+  },
+  {
+    "name": "Spineshell Crab",
+    "description": "Bahari Coast Flooded Fortress, Any Time",
+    "image": "\\palia\\insects\\65px-Spineshell_Crab.png",
+    "info": "Uncommon\nBahari Coast Flooded Fortress\nA crab with a very spiny shell.\nBehavior: Running\n46 Gold/69 Gold"
+  },
+  {
+    "name": "Spitfire Cicada",
+    "description": "Bahari Fields Bahari Forest, Morning and Day (3:00 AM - 6:00 PM)",
+    "image": "\\palia\\insects\\65px-Spitfire_Cicada.png",
+    "info": "Rare\nBahari Fields Bahari Forest\nA spirited cicada, whose bark is worse than its bite.\nBehavior: Flying\n145 Gold/217 Gold"
+  },
+  {
+    "name": "Spotted Mantis",
+    "description": "Dragon Shrine, Any Time",
+    "image": "\\palia\\insects\\65px-Spotted_Mantis.png",
+    "info": "Rare\nDragon Shrine\nA rare mantis with a beautiful set of spots.\nBehavior: Jumping\n130 Gold/195 Gold"
+  },
+  {
+    "name": "Spotted Stinkbug",
+    "description": "Bahari Fields Bahari Forest Daiya Family Farm Dragon Shrine Kilima Fields, Any Time",
+    "image": "\\palia\\insects\\65px-Spotted_Stinkbug.png",
+    "info": "Common\nBahari Fields Bahari Forest Daiya Family Farm Dragon Shrine Kilima Fields\nA bug known more for his strong musk than its striking colors.\nBehavior: Running\n18 Gold/27 Gold"
+  },
+  {
+    "name": "Stripeshell Snail",
+    "description": "Bahari Coast Flooded Fortress, Evening and Night (6:00 PM - 3:00 AM)",
+    "image": "\\palia\\insects\\65px-Stripeshell_Snail.png",
+    "info": "Rare\nBahari Coast Flooded Fortress\nA snail with such distinctive stripes, that its shell was once used as a currency among the early Majiri.\nBehavior: Running\n140 Gold/210 Gold"
+  },
+  {
+    "name": "Vampire Crab",
+    "description": "Flooded Fortress, Evening and Night (6:00 PM - 3:00 AM)",
+    "image": "\\palia\\insects\\65px-Vampire_Crab.png",
+    "info": "Rare\nFlooded Fortress\nAn invasive species of crab that sucks the life out of the local population.\nBehavior: Running\n145 Gold/217 Gold"
   }
-]},{"desc_list": [
-  {
-    "name": "Bugs x2",
-    "image": "\\palia\\items\\bugs.webp"
-  },
-  {
-    "name": "Auni",
-    "image": "\\palia\\villagers\\auni.webp"
-  },
-  {
-    "name": "Elouisa",
-    "image": "\\palia\\villagers\\elouisa.webp"
-  }
-]},{"desc_list": [
-  {
-    "name": "Carrot Seed x2",
-    "image": "\\palia\\items\\carrot_seed.webp"
-  },
-  {
-    "name": "Badruu",
-    "image": "\\palia\\villagers\\badruu.webp"
-  },
-  {
-    "name": "Hekla",
-    "image": "\\palia\\villagers\\hekla.webp"
-  },
-  {
-    "name": "Copper Bar x2",
-    "image": "\\palia\\items\\copper_bar.webp"
-  },
-  {
-    "name": "Eshe",
-    "image": "\\palia\\villagers\\eshe.webp"
-  },
-  {
-    "name": "Tamala",
-    "image": "\\palia\\villagers\\tamala.webp"
-  }
-]},{"desc_list": [
-  {
-    "name": "Copper Ore x4",
-    "image": "\\palia\\items\\copper_ore.webp"
-  },
-  {
-    "name": "Einar",
-    "image": "\\palia\\villagers\\einar.webp"
-  },
-  {
-    "name": "Hodari",
-    "image": "\\palia\\villagers\\hodari.webp"
-  },
-  {
-    "name": "Najuma",
-    "image": "\\palia\\villagers\\najuma.webp"
-  },
-  {
-    "name": "Zeki",
-    "image": "\\palia\\villagers\\zeki.webp"
-  }
-]},{"desc_list": [
-  {
-    "name": "Lily x6",
-    "image": "\\palia\\items\\lily.webp"
-  },
-  {
-    "name": "Ashura",
-    "image": "\\palia\\villagers\\ashura.webp"
-  },
-  {
-    "name": "Chayne",
-    "image": "\\palia\\villagers\\chayne.webp"
-  },
-  {
-    "name": "Jel",
-    "image": "\\palia\\villagers\\jel.webp"
-  },
-  {
-    "name": "Kenli",
-    "image": "\\palia\\villagers\\kenli.webp"
-  },
-  {
-    "name": "Tau",
-    "image": "\\palia\\villagers\\tau.webp"
-  },
-  {
-    "name": "Tish",
-    "image": "\\palia\\villagers\\tish.webp"
-  }
-]},{"desc_list": [
-  {
-    "name": "Mushroom x2",
-    "image": "\\palia\\items\\mushroom.webp"
-  },
-  {
-    "name": "Jina",
-    "image": "\\palia\\villagers\\jina.webp"
-  },
-  {
-    "name": "Reth",
-    "image": "\\palia\\villagers\\reth.webp"
-  },
-  {
-    "name": "Sweet Leaf x2",
-    "image": "\\palia\\items\\sweet_leaf.webp"
-  },
-  {
-    "name": "Caleri",
-    "image": "\\palia\\villagers\\caleri.webp"
-  },
-  {
-    "name": "Delaila",
-    "image": "\\palia\\villagers\\delaila.webp"
-  }
-]}]
+]
