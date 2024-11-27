@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:random_app/widget/page/settings/file_settings.dart';
 import 'package:random_app/widget/page/settings/random.dart';
 
+import '../../../model/data.dart';
 import '../../../model/utils.dart';
 import 'audit.dart';
 import 'episodes.dart';
@@ -24,6 +25,14 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  @override
+  void dispose() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      mainState!(() {});
+    });
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

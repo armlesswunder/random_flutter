@@ -336,27 +336,34 @@ class _MyHomePageState extends State<MyHomePage>
 
   Widget _buildForPlatform() {
     if (isMobile()) {
-      return GestureDetector(
-          onPanUpdate: (details) async {
-            // Swiping in right direction.
-            int sensitivity = 8;
-
-            num currentTime = DateTime.now().millisecondsSinceEpoch;
-            num timeDifference = currentTime - lastHotkeyPress;
-            if (timeDifference < 200) return;
-
-            if (details.delta.dx > sensitivity) {
-              lastHotkeyPress = currentTime;
-              await prevSelectedList();
-            }
-
-            // Swiping in left direction.
-            if (details.delta.dx < -sensitivity) {
-              lastHotkeyPress = currentTime;
-              await nextSelectedList();
+      return PopScope(
+          canPop: showBackBtn(),
+          onPopInvoked: (b) {
+            if (!showBackBtn()) {
+              backPressed();
             }
           },
-          child: _buildMainContent());
+          child: GestureDetector(
+              onPanUpdate: (details) async {
+                // Swiping in right direction.
+                int sensitivity = 8;
+
+                num currentTime = DateTime.now().millisecondsSinceEpoch;
+                num timeDifference = currentTime - lastHotkeyPress;
+                if (timeDifference < 200) return;
+
+                if (details.delta.dx > sensitivity) {
+                  lastHotkeyPress = currentTime;
+                  await prevSelectedList();
+                }
+
+                // Swiping in left direction.
+                if (details.delta.dx < -sensitivity) {
+                  lastHotkeyPress = currentTime;
+                  await nextSelectedList();
+                }
+              },
+              child: _buildMainContent()));
     } else {
       return RawKeyboardListener(
           autofocus: true,
@@ -429,43 +436,31 @@ class _MyHomePageState extends State<MyHomePage>
                                 child: const Text('View Not Favorites'))
                           ]))
                   : Container(),
-              Row(children: [
-                historyList.length < 2 || historyIndex + 1 >= historyList.length
-                    ? Container()
-                    : IconButton(
-                        padding: EdgeInsets.all(0),
-                        visualDensity: VisualDensity.compact,
-                        onPressed: () {
-                          if (historyIndex >= historyList.length) {
-                            historyIndex = 0;
-                          } else {
-                            historyIndex += 1;
-                          }
-                          var selected =
-                              getFilteredLists()[historyList[historyIndex]];
-                          listIndex = historyList[historyIndex];
-                          // list changed logic
-                          filteredListChosen(listIndex);
-                        },
-                        icon: Icon(Icons.arrow_back_ios_new, size: 18.0.ds)),
-                Expanded(child: buildMainSearchBar()),
-                historyList.length < 2 || historyIndex == 0
-                    ? Container()
-                    : IconButton(
-                        padding: EdgeInsets.all(0),
-                        visualDensity: VisualDensity.compact,
-                        onPressed: () {
-                          historyIndex -= 1;
-                          var selected =
-                              getFilteredLists()[historyList[historyIndex]];
-                          listIndex = historyList[historyIndex];
-                          // list changed logic
-                          filteredListChosen(listIndex);
-                        },
-                        icon: Icon(Icons.arrow_forward_ios_rounded,
-                            size: 18.0.ds))
-              ]),
-              buildTabs(),
+              if (!hideSearchBar)
+                Row(children: [
+                  showBackBtn()
+                      ? Container()
+                      : IconButton(
+                          padding: const EdgeInsets.all(0),
+                          visualDensity: VisualDensity.compact,
+                          onPressed: backPressed,
+                          icon: Icon(Icons.arrow_back_ios_new, size: 18.0.ds)),
+                  Expanded(child: buildMainSearchBar()),
+                  showFwdBtn()
+                      ? Container()
+                      : IconButton(
+                          padding: const EdgeInsets.all(0),
+                          visualDensity: VisualDensity.compact,
+                          onPressed: () {
+                            historyIndex -= 1;
+                            listIndex = historyList[historyIndex];
+                            // list changed logic
+                            filteredListChosen(listIndex);
+                          },
+                          icon: Icon(Icons.arrow_forward_ios_rounded,
+                              size: 18.0.ds))
+                ]),
+              if (!hideTabs) buildTabs(),
             ],
           ),
           Expanded(
@@ -504,6 +499,25 @@ class _MyHomePageState extends State<MyHomePage>
         ],
       ),
     );
+  }
+
+  bool showBackBtn() {
+    return historyList.length < 2 || historyIndex + 1 >= historyList.length;
+  }
+
+  bool showFwdBtn() {
+    return historyList.length < 2 || historyIndex == 0;
+  }
+
+  void backPressed() {
+    if (historyIndex >= historyList.length) {
+      historyIndex = 0;
+    } else {
+      historyIndex += 1;
+    }
+    listIndex = historyList[historyIndex];
+    // list changed logic
+    filteredListChosen(listIndex);
   }
 
   void listsPressed() {
@@ -742,7 +756,7 @@ class _MyHomePageState extends State<MyHomePage>
               child: useCheckboxes
                   ? _buildDataListCheckbox(index)
                   : _buildMoveToBottomButton(index)),
-      const SizedBox(width: 16)
+      SizedBox(width: hideActions ? 0 : 16)
     ]);
   }
 

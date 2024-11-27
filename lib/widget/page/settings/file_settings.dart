@@ -146,6 +146,44 @@ List<Widget> buildBtns(BuildContext context, StateSetter state) {
       const SizedBox(width: 16),
     ]),
     Row(children: [
+      SizedBox(width: 16),
+      const Text('Hide Searchbar:'),
+      Expanded(child: SizedBox()),
+      Checkbox(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0),
+          ),
+          side: MaterialStateBorderSide.resolveWith(
+            (states) => const BorderSide(width: 2.0, color: Colors.white70),
+          ),
+          value: hideSearchBar,
+          onChanged: (condition) {
+            hideSearchBar = condition ?? false;
+            prefs.setBool(hideSearchBarKey(), hideSearchBar);
+            state(() {});
+          }),
+      const SizedBox(width: 16),
+    ]),
+    Row(children: [
+      SizedBox(width: 16),
+      const Text('Hide Tabs:'),
+      Expanded(child: SizedBox()),
+      Checkbox(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0),
+          ),
+          side: MaterialStateBorderSide.resolveWith(
+            (states) => const BorderSide(width: 2.0, color: Colors.white70),
+          ),
+          value: hideTabs,
+          onChanged: (condition) {
+            hideTabs = condition ?? false;
+            prefs.setBool(hideTabsKey(), hideTabs);
+            state(() {});
+          }),
+      const SizedBox(width: 16),
+    ]),
+    Row(children: [
       const SizedBox(width: 16),
       Text('UI Scale :: ${scaleFactor.toStringAsPrecision(1)} ::'),
       const SizedBox(width: 16),

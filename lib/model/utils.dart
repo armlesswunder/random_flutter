@@ -45,6 +45,15 @@ extension StrExt on String {
     }
     return this;
   }
+
+  /// Maps advanced string formatting in a string to display item format
+  String get asf {
+    return trim()
+        .replaceAll('.', '<period>')
+        .replaceAll(',', '<comma>')
+        .replaceAll('\n', '<nl>')
+        .replaceAll('|', '<vert_bar>');
+  }
 }
 
 void showSnackbarMsg(BuildContext context, String txt) {
