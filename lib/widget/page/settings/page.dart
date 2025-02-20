@@ -5,6 +5,7 @@ import 'package:random_app/widget/page/settings/random.dart';
 import '../../../model/data.dart';
 import '../../../model/utils.dart';
 import 'audit.dart';
+import 'black_screen.dart';
 import 'episodes.dart';
 import 'global_settings.dart';
 
@@ -79,6 +80,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => const GlobalSettingsPage()));
+            }),
+            buildSettingsTile(
+                Icons.fit_screen_rounded, 'Black Screen', 'A black backdrop.',
+                () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const BlackScreen()));
             }),
           ],
         )));

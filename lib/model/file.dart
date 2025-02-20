@@ -13,6 +13,7 @@ import 'package:random_app/model/audit.dart';
 import 'package:random_app/model/my_json_utils.dart';
 import 'package:random_app/model/prefs.dart';
 import 'package:random_app/model/web_client.dart';
+import 'package:random_app/widget/page/settings/global_settings.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'data.dart';
@@ -129,8 +130,10 @@ Future loadFile(String path, {bool setDefault = true}) async {
 
 Future<Directory> getBaseDir() async {
   if (isDesktop()) return await getApplicationDocumentsDirectory();
-  return await getExternalStorageDirectory() ??
-      await getApplicationDocumentsDirectory();
+
+  var extS = await getExternalStorageDirectory();
+  var androidStor = await getApplicationDocumentsDirectory();
+  return extS ?? androidStor;
 }
 
 String getCheckedFilePath({String? filePath}) {
@@ -367,10 +370,15 @@ void openFile(BuildContext context, StateSetter state) async {
           final bytes = File(path).readAsBytesSync();
           final archive = ZipDecoder().decodeBytes(bytes);
           for (final file in archive) {
-            final filename = file.name;
+            var filename = file.name;
             if (file.isFile) {
+              if (!filename.toLowerCase().startsWith('playlists') &&
+                  !filename.toLowerCase().startsWith('assets')) {
+                filename = 'playlists${Platform.pathSeparator}$filename';
+              }
               final data = file.content as List<int>;
-              var newPath = '$defaultDir${Platform.pathSeparator}$filename';
+              var newPath =
+                  '${isAndroid() ? documentsDir.path : defaultDir}${Platform.pathSeparator}$filename';
               print(newPath);
               if (File(newPath).existsSync()) {
                 File(newPath).deleteSync();
@@ -517,19 +525,62 @@ void exportAllFiles() async {
   print(appDirPath);
 
   if (isMobile()) {
+    var ps = Platform.pathSeparator;
     var encoder = ZipFileEncoder();
     String zipPath =
         '$appDirPath${Platform.pathSeparator}playlist_backup_${getFileTimestamp(DateTime.now())}.zip';
     print(zipPath);
+    var exportDir = Directory(appDir.path + ps + 'export');
+    if (exportDir.existsSync()) {
+      exportDir.deleteSync(recursive: true);
+    }
+    exportDir.createSync();
+    if (exportLists || exportData) {
+      for (FileSystemEntity f
+          in Directory(playlistDir).listSync(recursive: true)) {
+        File file = File(f.path);
+        if ((file.path.endsWith('_cb') || file.path.endsWith('_fav')) &&
+            !exportData) {
+          continue;
+        }
+        if (!file.path.endsWith('_cb') &&
+            !file.path.endsWith('_fav') &&
+            !exportLists) {
+          continue;
+        }
+        if (file.existsSync()) {
+          var newFile = File(f.path
+              .replaceAll('${ps}playlists$ps', '${ps}export/playlists$ps'));
+          if (!newFile.existsSync()) {
+            newFile.createSync(recursive: true);
+          }
+          newFile.writeAsBytesSync(file.readAsBytesSync());
+        }
+      }
+    }
+    if (exportAssets) {
+      for (FileSystemEntity f
+          in Directory(assetDir).listSync(recursive: true)) {
+        File file = File(f.path);
+        if (file.existsSync()) {
+          var newFile = File(
+              f.path.replaceAll('${ps}assets$ps', '${ps}export/assets$ps'));
+          if (!newFile.existsSync()) {
+            newFile.createSync(recursive: true);
+          }
+          newFile.writeAsBytesSync(file.readAsBytesSync());
+        }
+      }
+    }
+
     encoder.create(zipPath);
-    Directory(playlistDir).listSync().forEach((e) {
+    exportDir.listSync().forEach((e) {
       if (File(e.path).existsSync()) {
         encoder.addFile(File(e.path));
       } else {
         encoder.addDirectory(Directory(e.path));
       }
     });
-    //encoder.addDirectory(Directory(playlistDir));
     encoder.close();
     XFile xfile = XFile(zipPath);
     await Share.shareXFiles([xfile], text: 'Export Backup Data');

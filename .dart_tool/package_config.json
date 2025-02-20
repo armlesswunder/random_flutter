@@ -512,6 +512,36 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "screen_retriever",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/screen_retriever-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "screen_retriever_linux",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/screen_retriever_linux-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "screen_retriever_macos",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/screen_retriever_macos-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "screen_retriever_platform_interface",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/screen_retriever_platform_interface-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "screen_retriever_windows",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/screen_retriever_windows-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "share_plus",
       "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/share_plus-4.5.2",
       "packageUri": "lib/",
@@ -806,6 +836,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "window_manager",
+      "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/window_manager-0.4.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "xdg_directories",
       "rootUri": "file:///C:/Users/000ab/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.0.3",
       "packageUri": "lib/",
@@ -830,7 +866,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-10-08T15:14:28.977377Z",
+  "generated": "2025-02-04T16:12:32.854779Z",
   "generator": "pub",
   "generatorVersion": "3.2.6"
 }

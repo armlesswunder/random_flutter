@@ -28,8 +28,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  path_provider: ^2.0.0
+  path_provider: any
   path: ^1.8.2
+  window_manager: ^0.4.2
   share_plus: 4.5.2
   encrypt: ^5.0.1
   shared_preferences: any

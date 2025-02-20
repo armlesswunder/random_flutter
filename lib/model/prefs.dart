@@ -64,6 +64,9 @@ Future getSettings() async {
   showSystemFiles = prefs.getBool('SHOW_SYSTEM_FILES') ?? false;
   isWebMode = prefs.getBool('WEB_MODE') ?? false;
   webPath = prefs.getString('WEB_PATH') ?? '';
+  if (defaultDir.isEmpty && isAndroid()) {
+    defaultDir = (await getBaseDir()).path;
+  }
   cacheListsPosition = prefs.getDouble(listScrollCacheKey()) ?? 0;
   getAuditData();
 }

@@ -68,6 +68,9 @@ class DisplayItem {
     List<dynamic>? infoList = map?['info_list'];
     List<dynamic> descList = map?['desc_list'] ?? [];
     String image = map?['image'] ?? "";
+    ImageProperties imageProperties = ImageProperties(
+        map?['image_properties'] ??
+            {'width': imgSize.ds, 'height': imgSize.ds});
 
     Widget btn = useCheckboxes
         ? _buildDataListCheckbox(index)
@@ -88,7 +91,10 @@ class DisplayItem {
               child: Column(children: [
             Row(children: [
               if (image.isNotEmpty) ...[
-                ImageBuilder(imageStr: image),
+                ImageBuilder(
+                  imageStr: image,
+                  imageProperties: imageProperties,
+                ),
                 const SizedBox(width: 8)
               ],
               if (title.isNotEmpty)
